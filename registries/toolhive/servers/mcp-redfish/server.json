@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/nokia/mcp-redfish:0.4.1": {
+        "ghcr.io/nokia/mcp-redfish:0.5.0": {
           "metadata": {
             "last_updated": "2026-08-31T21:25:10Z",
             "stars": 6
@@ -143,7 +143,7 @@
           "name": "MCP_REDFISH_LOG_LEVEL"
         }
       ],
-      "identifier": "ghcr.io/nokia/mcp-redfish:0.4.1",
+      "identifier": "ghcr.io/nokia/mcp-redfish:0.5.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
