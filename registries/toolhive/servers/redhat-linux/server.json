@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.6.0": {
           "metadata": {
-            "last_updated": "2026-06-29T14:06:57Z",
+            "last_updated": "2026-09-11T01:46:26Z",
             "stars": 203
           },
           "overview": "## Red Hat Linux MCP Server\n\nThe redhat-linux MCP server provides read-only Linux sysadmin, diagnostics, and troubleshooting optimized for RHEL-based systems. This server delivers comprehensive Linux system diagnostics through real-time monitoring of CPU, memory, disk, and network metrics; process and service management with status and log access; network diagnostics including active connections and listening ports; and file system exploration with configurable path restrictions. All capabilities operate in read-only mode via SSH-based remote execution with secure key-based authentication, preventing system modifications.",
@@ -112,21 +112,21 @@
               },
               "description": "Get systemd journal logs.",
               "inputSchema": {
-                "$defs": {
-                  "Transport": {
-                    "description": "Valid journalctl transport types for filtering journal entries.\n\nTransports identify the source/mechanism that submitted log messages to the journal.\n\nAUDIT - Linux audit subsystem messages (security events, syscall auditing)\nDRIVER - Kernel driver messages logged via dev_printk().\nJOURNAL - Messages logged directly to the journal via sd_journal_* APIs.\nKERNEL - Kernel ring buffer messages (dmesg/printk).\nSTDOUT - stdout/stderr from services with StandardOutput/StandardError=journal.\nSYSLOG - Messages received via the syslog socket (/dev/log).",
-                    "enum": [
-                      "audit",
-                      "driver",
-                      "journal",
-                      "kernel",
-                      "stdout",
-                      "syslog"
-                    ],
-                    "type": "string"
-                  }
-                },
                 "properties": {
+                  "first_lines": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Number of first log lines to retrieve after applying filters (journalctl -n +N). Mutually exclusive with last_lines."
+                  },
                   "host": {
                     "anyOf": [
                       {
@@ -139,12 +139,19 @@
                     "default": null,
                     "description": "Remote host to connect to via SSH"
                   },
-                  "lines": {
-                    "default": 100,
-                    "description": "Number of log lines to retrieve. Default: 100",
-                    "maximum": 10000,
-                    "minimum": 1,
-                    "type": "integer"
+                  "last_lines": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Number of last log lines to retrieve after applying filters (journalctl -n N). Default: 100. Mutually exclusive with first_lines."
                   },
                   "priority": {
                     "default": "",
@@ -175,7 +182,16 @@
                   "transport": {
                     "anyOf": [
                       {
-                        "$ref": "#/$defs/Transport"
+                        "description": "Valid journalctl transport types for filtering journal entries.\n\nTransports identify the source/mechanism that submitted log messages to the journal.\n\nAUDIT - Linux audit subsystem messages (security events, syscall auditing)\nDRIVER - Kernel driver messages logged via dev_printk().\nJOURNAL - Messages logged directly to the journal via sd_journal_* APIs.\nKERNEL - Kernel ring buffer messages (dmesg/printk).\nSTDOUT - stdout/stderr from services with StandardOutput/StandardError=journal.\nSYSLOG - Messages received via the syslog socket (/dev/log).",
+                        "enum": [
+                          "audit",
+                          "driver",
+                          "journal",
+                          "kernel",
+                          "stdout",
+                          "syslog"
+                        ],
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -480,23 +496,6 @@
               },
               "description": "List directories under a specified path with various sorting options.",
               "inputSchema": {
-                "$defs": {
-                  "OrderBy": {
-                    "enum": [
-                      "size",
-                      "name",
-                      "modified"
-                    ],
-                    "type": "string"
-                  },
-                  "SortBy": {
-                    "enum": [
-                      "ascending",
-                      "descending"
-                    ],
-                    "type": "string"
-                  }
-                },
                 "properties": {
                   "host": {
                     "anyOf": [
@@ -511,9 +510,14 @@
                     "description": "Remote host to connect to via SSH"
                   },
                   "order_by": {
-                    "$ref": "#/$defs/OrderBy",
                     "default": "name",
-                    "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')"
+                    "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')",
+                    "enum": [
+                      "size",
+                      "name",
+                      "modified"
+                    ],
+                    "type": "string"
                   },
                   "path": {
                     "description": "Absolute path to the directory to analyze",
@@ -528,9 +532,13 @@
                     "type": "string"
                   },
                   "sort": {
-                    "$ref": "#/$defs/SortBy",
                     "default": "ascending",
-                    "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')"
+                    "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')",
+                    "enum": [
+                      "ascending",
+                      "descending"
+                    ],
+                    "type": "string"
                   },
                   "top_n": {
                     "anyOf": [
@@ -560,23 +568,6 @@
               },
               "description": "List files under a specified path with various sorting options.",
               "inputSchema": {
-                "$defs": {
-                  "OrderBy": {
-                    "enum": [
-                      "size",
-                      "name",
-                      "modified"
-                    ],
-                    "type": "string"
-                  },
-                  "SortBy": {
-                    "enum": [
-                      "ascending",
-                      "descending"
-                    ],
-                    "type": "string"
-                  }
-                },
                 "properties": {
                   "host": {
                     "anyOf": [
@@ -591,9 +582,14 @@
                     "description": "Remote host to connect to via SSH"
                   },
                   "order_by": {
-                    "$ref": "#/$defs/OrderBy",
                     "default": "name",
-                    "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')"
+                    "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')",
+                    "enum": [
+                      "size",
+                      "name",
+                      "modified"
+                    ],
+                    "type": "string"
                   },
                   "path": {
                     "description": "Absolute path to the directory to analyze",
@@ -608,9 +604,13 @@
                     "type": "string"
                   },
                   "sort": {
-                    "$ref": "#/$defs/SortBy",
                     "default": "ascending",
-                    "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')"
+                    "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')",
+                    "enum": [
+                      "ascending",
+                      "descending"
+                    ],
+                    "type": "string"
                   },
                   "top_n": {
                     "anyOf": [
@@ -729,6 +729,20 @@
               "description": "Read a specific log file.",
               "inputSchema": {
                 "properties": {
+                  "first_lines": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Number of first lines to retrieve from the log file. Mutually exclusive with last_lines."
+                  },
                   "host": {
                     "anyOf": [
                       {
@@ -741,12 +755,19 @@
                     "default": null,
                     "description": "Remote host to connect to via SSH"
                   },
-                  "lines": {
-                    "default": 100,
-                    "description": "Number of lines to retrieve from the end.",
-                    "maximum": 10000,
-                    "minimum": 1,
-                    "type": "integer"
+                  "last_lines": {
+                    "anyOf": [
+                      {
+                        "maximum": 10000,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Number of last lines to retrieve from the log file. Default: 100. Mutually exclusive with first_lines."
                   },
                   "log_path": {
                     "description": "Absolute path to the log file (must be in allowed list)",
