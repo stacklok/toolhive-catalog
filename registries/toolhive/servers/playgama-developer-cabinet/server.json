@@ -45,7 +45,7 @@
       }
     }
   },
-  "description": "Publish and manage HTML5 games on Playgama: game form, builds, covers, in-app catalog, leaderboards, sandbox",
+  "description": "Manage Playgama HTML5 games: forms, builds, covers, in-app catalog, leaderboards, sandbox.",
   "name": "io.github.stacklok/playgama-developer-cabinet",
   "remotes": [
     {
