@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/github/github-mcp-server:v1.11.0": {
+        "ghcr.io/github/github-mcp-server:v1.12.1": {
           "metadata": {
-            "last_updated": "2026-08-31T21:13:15Z",
+            "last_updated": "2026-09-11T01:45:22Z",
             "stars": 28440
           },
           "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -318,7 +318,7 @@
                 "readOnlyHint": false,
                 "title": "Create or update file"
               },
-              "description": "Create or update a single file in a GitHub repository. \nIf updating, you should provide the SHA of the file you want to update. Use this tool to create or update a file in a GitHub repository remotely; do not use it for local file operations.\n\nIn order to obtain the SHA of original file version before updating, use the following git command:\ngit rev-parse \u003cbranch\u003e:\u003cpath to file\u003e\n\nSHA MUST be provided for existing file updates.\n",
+              "description": "Create or update a single file in a GitHub repository. \nIf updating, you should provide the SHA of the file you want to update. Use this tool to create or update a file in a GitHub repository remotely; do not use it for local file operations.\n\nTo obtain the current blob SHA before updating, call the get_file_contents tool with the same owner, repo, and path, and set its ref parameter to this tool's branch value. The first text result reports the blob SHA for the requested path.\n\nSHA MUST be provided for existing file updates.\n",
               "inputSchema": {
                 "properties": {
                   "allow_symlink_write": {
@@ -353,7 +353,7 @@
                     "x-mcp-header": "repo"
                   },
                   "sha": {
-                    "description": "The blob SHA of the file being replaced. Required if the file already exists.",
+                    "description": "The blob SHA of the file being replaced. Required if the file already exists. Retrieve it with get_file_contents using the same owner, repo, and path, with ref set to this tool's branch value.",
                     "type": "string"
                   }
                 },
@@ -1596,6 +1596,10 @@
                     "description": "Title for merge commit",
                     "type": "string"
                   },
+                  "expectedHeadSha": {
+                    "description": "The expected SHA of the pull request's HEAD ref",
+                    "type": "string"
+                  },
                   "merge_method": {
                     "description": "Merge method",
                     "enum": [
@@ -1643,7 +1647,7 @@
                     "type": "string"
                   },
                   "method": {
-                    "description": "Action to specify what pull request data needs to be retrieved from GitHub. \nPossible options: \n 1. get - Get details of a specific pull request.\n 2. get_diff - Get the diff of a pull request.\n 3. get_status - Get combined commit status of a head commit in a pull request.\n 4. get_files - Get the list of files changed in a pull request. Use with pagination parameters to control the number of results returned.\n 5. get_commits - Get the list of commits on a pull request. Use with pagination parameters to control the number of results returned.\n 6. get_review_comments - Get review threads on a pull request. Each thread contains logically grouped review comments made on the same code location during pull request reviews. Returns threads with metadata (isResolved, isOutdated, isCollapsed) and their associated comments. Use cursor-based pagination (perPage, after) to control results.\n 7. get_reviews - Get the reviews on a pull request. When asked for review comments, use get_review_comments method. Use with pagination parameters to control the number of results returned.\n 8. get_comments - Get comments on a pull request. Use this if user doesn't specifically want review comments. Use with pagination parameters to control the number of results returned.\n 9. get_check_runs - Get check runs for the head commit of a pull request. Check runs are the individual CI/CD jobs and checks that run on the PR.\n",
+                    "description": "Action to specify what pull request data needs to be retrieved from GitHub. \nPossible options: \n 1. get - Get details of a specific pull request.\n 2. get_diff - Get the diff of a pull request.\n 3. get_status - Get combined commit status of a head commit in a pull request.\n 4. get_files - Get the list of files changed in a pull request. Use with pagination parameters to control the number of results returned.\n 5. get_commits - Get the list of commits on a pull request. Use with pagination parameters to control the number of results returned.\n 6. get_review_comments - Get review threads on a pull request. Each thread contains logically grouped review comments made on the same code location during pull request reviews. Returns thread metadata and comments with nullable current and original line-range coordinates (line, start_line, original_line, original_start_line). Current coordinates are omitted when unavailable, such as for outdated comments. Use cursor-based pagination (perPage, after) to control results.\n 7. get_reviews - Get the reviews on a pull request. When asked for review comments, use get_review_comments method. Use with pagination parameters to control the number of results returned.\n 8. get_comments - Get comments on a pull request. Use this if user doesn't specifically want review comments. Use with pagination parameters to control the number of results returned.\n 9. get_check_runs - Get check runs for the head commit of a pull request. Check runs are the individual CI/CD jobs and checks that run on the PR.\n",
                     "enum": [
                       "get",
                       "get_diff",
@@ -2505,7 +2509,7 @@
           "name": "GITHUB_READ_ONLY"
         }
       ],
-      "identifier": "ghcr.io/github/github-mcp-server:v1.11.0",
+      "identifier": "ghcr.io/github/github-mcp-server:v1.12.1",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
