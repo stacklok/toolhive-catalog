@@ -226,7 +226,7 @@ jobs:
           cache: true
 
       - name: Install ToolHive
-        uses: StacklokLabs/toolhive-actions/install@87b30f145f84b3186fd20e74c133111a5da24710 # v0
+        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0
         with:
           version: 'v0.2.9'
 
