@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "mcr.microsoft.com/playwright/mcp:v0.0.79": {
+        "mcr.microsoft.com/playwright/mcp:v0.0.80": {
           "metadata": {
             "last_updated": "2026-08-07T00:29:37Z",
             "stars": 28552
@@ -1026,7 +1026,7 @@
           "name": "PLAYWRIGHT_MCP_VIEWPORT_SIZE"
         }
       ],
-      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.79",
+      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.80",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
