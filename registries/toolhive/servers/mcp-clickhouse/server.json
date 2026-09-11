@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.2.0": {
+        "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.6.0": {
           "metadata": {
             "last_updated": "2026-06-19T03:23:16Z",
             "stars": 807
@@ -186,7 +186,7 @@
           "name": "CHDB_DATA_PATH"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.2.0",
+      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.6.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
