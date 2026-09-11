@@ -8,7 +8,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-08-31T21:13:00Z",
+            "last_updated": "2026-09-11T01:45:07Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -399,6 +399,65 @@
                 "destructiveHint": false,
                 "idempotentHint": false,
                 "readOnlyHint": false,
+                "title": "Create Cluster Secret"
+              },
+              "description": "Create cluster secret",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Optional description of the secret",
+                    "type": "string"
+                  },
+                  "key": {
+                    "description": "Secret key; must start with a letter, contain only letters, numbers, and underscores, be at most 255 characters, and not start with buildkite or bk (case-insensitive)",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Access policy as a YAML list of rules; omitting it allows access from all agents in the cluster",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "value": {
+                    "description": "Required non-blank write-only secret value under 8 KiB; it is never returned by the API",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "telemetry",
+                  "org_slug",
+                  "cluster_id",
+                  "key",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "name": "create_cluster_secret"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "readOnlyHint": false,
                 "title": "Create Pipeline"
               },
               "description": "Set up a new CI/CD pipeline in Buildkite with YAML configuration, repository connection, and cluster assignment",
@@ -450,6 +509,13 @@
                       "null",
                       "array"
                     ]
+                  },
+                  "teams": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Team UUIDs mapped to their access level on the pipeline: read_only, build_and_read or manage_build_and_read. Organizations with teams enabled require at least one team, unless the user is an organization administrator",
+                    "type": "object"
                   },
                   "telemetry": {
                     "additionalProperties": false,
@@ -735,11 +801,15 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a Buildkite build failure in one call. Returns build state, job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, downstream failed or broken jobs, promised failures from running jobs, and size-bounded diagnostic content from logs, annotations, and failed Test Engine executions. Start with this tool before calling individual job, log, annotation, or test tools.",
+              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, downstream failed or broken jobs, promised failures from running jobs, and size-bounded diagnostic content from logs, annotations, and failed Test Engine executions. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
                     "type": "string"
+                  },
+                  "content_limit_bytes": {
+                    "description": "Maximum bytes for the response payload (default and max 262144); lower it to fit clients with small tool-result limits, combining with log_tail and max_jobs for finer trimming",
+                    "type": "integer"
                   },
                   "include_annotations": {
                     "description": "Include error and warning annotation bodies (default true)",
@@ -949,6 +1019,50 @@
                 "type": "object"
               },
               "name": "get_cluster_queue"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Cluster Secret"
+              },
+              "description": "Get cluster secret information",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "secret_id": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "telemetry",
+                  "org_slug",
+                  "cluster_id",
+                  "secret_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_cluster_secret"
             },
             {
               "annotations": {
@@ -1249,10 +1363,22 @@
                 "readOnlyHint": true,
                 "title": "Get Test"
               },
-              "description": "Get a specific test in Buildkite Test Engine. This provides additional metadata for failed test executions",
+              "description": "Get a specific test in Buildkite Test Engine, including execution metrics aggregated over a selected time window. This provides additional metadata for failed test executions.",
               "inputSchema": {
                 "properties": {
+                  "max_timestamp": {
+                    "description": "End of the aggregation window in RFC3339 format. Defaults to the current time when omitted.",
+                    "type": "string"
+                  },
+                  "min_timestamp": {
+                    "description": "Start of the aggregation window in RFC3339 format. When omitted, defaults to the organization's default Test Engine period before the current time.",
+                    "type": "string"
+                  },
                   "org_slug": {
+                    "type": "string"
+                  },
+                  "period": {
+                    "description": "Relative aggregation window for the returned metrics, such as '7days' or '28days'. Whether selected by period or timestamps, the aggregation window cannot exceed the organization's maximum Test Engine window. Cannot be combined with min_timestamp or max_timestamp.",
                     "type": "string"
                   },
                   "telemetry": {
@@ -1398,7 +1524,7 @@
                 "readOnlyHint": true,
                 "title": "List Annotations"
               },
-              "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id",
+              "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id. Annotation content is in the body_html field; there is no body field",
               "inputSchema": {
                 "properties": {
                   "build_number": {
@@ -1671,6 +1797,54 @@
                 "type": "object"
               },
               "name": "list_cluster_queues"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Cluster Secrets"
+              },
+              "description": "List cluster secrets",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "Page number for pagination (min 1)",
+                    "type": "integer"
+                  },
+                  "per_page": {
+                    "description": "Results per page for pagination (min 1, max 100)",
+                    "type": "integer"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "telemetry",
+                  "org_slug",
+                  "cluster_id"
+                ],
+                "type": "object"
+              },
+              "name": "list_cluster_secrets"
             },
             {
               "annotations": {
@@ -2051,6 +2225,54 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "List Test Suites for Pipeline"
+              },
+              "description": "List the Buildkite Test Engine suites that have recorded at least one run attributed to a pipeline, ordered by creation time. Use this to find the test_suite_slug needed by the other Test Engine tools.",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "Page number for pagination (min 1)",
+                    "type": "integer"
+                  },
+                  "per_page": {
+                    "description": "Results per page for pagination (min 1, max 100)",
+                    "type": "integer"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "telemetry",
+                  "org_slug",
+                  "pipeline_slug"
+                ],
+                "type": "object"
+              },
+              "name": "list_test_suites_for_pipeline"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "List Tests"
               },
               "description": "List tests in a Buildkite Test Engine suite with execution metrics aggregated over a selected time window. Supports filtering, metric sorting, and pagination.",
@@ -2067,6 +2289,10 @@
                   "max_timestamp": {
                     "description": "End of the aggregation window in RFC3339 format. Defaults to the current time when omitted.",
                     "type": "string"
+                  },
+                  "min_executions": {
+                    "description": "Return only tests with at least this many executions after applying the selected time window and execution filters (min 1).",
+                    "type": "integer"
                   },
                   "min_timestamp": {
                     "description": "Start of the aggregation window in RFC3339 format. When omitted, defaults to the organization's default Test Engine period before the current time.",
@@ -3105,6 +3331,7 @@
             "create_build",
             "create_cluster",
             "create_cluster_queue",
+            "create_cluster_secret",
             "create_pipeline",
             "create_pipeline_schedule",
             "current_user",
@@ -3115,6 +3342,7 @@
             "get_build_test_engine_runs",
             "get_cluster",
             "get_cluster_queue",
+            "get_cluster_secret",
             "get_failed_executions",
             "get_job",
             "get_job_env",
@@ -3129,6 +3357,7 @@
             "list_artifacts_for_job",
             "list_builds",
             "list_cluster_queues",
+            "list_cluster_secrets",
             "list_clusters",
             "list_jobs",
             "list_pipeline_schedules",
@@ -3136,6 +3365,7 @@
             "list_skills",
             "list_step_uploads",
             "list_test_runs",
+            "list_test_suites_for_pipeline",
             "list_tests",
             "list_tests_for_build",
             "load_skill",
