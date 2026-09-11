@@ -3,13 +3,13 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/grafana/mcp-grafana:1.3.0": {
+        "docker.io/grafana/mcp-grafana:1.4.0": {
           "args": [
             "--transport",
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-08-31T21:12:34Z",
+            "last_updated": "2026-09-11T01:44:52Z",
             "stars": 3239
           },
           "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -794,6 +794,29 @@
                 "type": "object"
               },
               "name": "create_snapshot"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": false,
+                "title": "Delete Annotation"
+              },
+              "description": "Permanently delete an annotation by ID. The annotation cannot be recovered afterwards.",
+              "inputSchema": {
+                "properties": {
+                  "id": {
+                    "description": "Annotation ID to delete",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "type": "object"
+              },
+              "name": "delete_annotation"
             },
             {
               "annotations": {
@@ -1812,7 +1835,7 @@
                 "readOnlyHint": true,
                 "title": "List Loki label names"
               },
-              "description": "Lists all available label/field names (keys) found in logs within a specified Loki or VictoriaLogs datasource and time range. Returns a list of unique label strings (e.g., `[\"app\", \"env\", \"pod\"]`). If the time range is not provided, it defaults to the last hour.",
+              "description": "Lists all available label/field names (keys) found in logs within a specified Loki or VictoriaLogs datasource and time range. Returns a list of unique label strings (e.g., `[\"app\", \"env\", \"pod\"]`). If the time range is not provided, it defaults to the last hour. Optionally narrow the search to a subset of streams with `matcher` (e.g. `{namespace=\"prod\"}`).",
               "inputSchema": {
                 "properties": {
                   "datasourceUid": {
@@ -1821,6 +1844,10 @@
                   },
                   "endRfc3339": {
                     "description": "Optionally, the end time of the query in RFC3339 format or relative time (e.g. 'now') (defaults to now)",
+                    "type": "string"
+                  },
+                  "matcher": {
+                    "description": "Optionally, a stream selector to narrow the search to matching streams (Loki: LogQL, e.g. '{namespace=\"prod\"}'; VictoriaLogs: LogsQL). Defaults to searching across all streams.",
                     "type": "string"
                   },
                   "startRfc3339": {
@@ -1843,7 +1870,7 @@
                 "readOnlyHint": true,
                 "title": "List Loki label values"
               },
-              "description": "Retrieves all unique values associated with a specific `labelName` within a Loki or VictoriaLogs datasource and time range. Returns a list of string values (e.g., for `labelName=\"env\"`, might return `[\"prod\", \"staging\", \"dev\"]`). Useful for discovering filter options. Defaults to the last hour if the time range is omitted.",
+              "description": "Retrieves all unique values associated with a specific `labelName` within a Loki or VictoriaLogs datasource and time range. Returns a list of string values (e.g., for `labelName=\"env\"`, might return `[\"prod\", \"staging\", \"dev\"]`). Useful for discovering filter options. Defaults to the last hour if the time range is omitted. Optionally narrow the search to a subset of streams with `matcher` (e.g. `{namespace=\"prod\"}`) — for example, to list `service` values seen only within a specific namespace.",
               "inputSchema": {
                 "properties": {
                   "datasourceUid": {
@@ -1856,6 +1883,10 @@
                   },
                   "labelName": {
                     "description": "The name of the label to retrieve values for (e.g. 'app', 'env', 'pod')",
+                    "type": "string"
+                  },
+                  "matcher": {
+                    "description": "Optionally, a stream selector to narrow the search to matching streams (Loki: LogQL, e.g. '{namespace=\"prod\"}'; VictoriaLogs: LogsQL). Defaults to searching across all streams.",
                     "type": "string"
                   },
                   "startRfc3339": {
@@ -2674,9 +2705,13 @@
                 "readOnlyHint": true,
                 "title": "Search dashboards"
               },
-              "description": "Search for Grafana dashboards by a query string. Returns a list of matching dashboards with details like title, UID, folder, tags, and URL.",
+              "description": "Search Grafana dashboards by query and/or folderUid, tag, and starred. Returns matching dashboards with title, UID, folder, tags, and URL.",
               "inputSchema": {
                 "properties": {
+                  "folderUid": {
+                    "description": "Optional immediate folder UID (not nested)",
+                    "type": "string"
+                  },
                   "limit": {
                     "default": 50,
                     "description": "Maximum number of results to return (max 100)",
@@ -2688,8 +2723,19 @@
                     "type": "integer"
                   },
                   "query": {
-                    "description": "The query to search for",
+                    "description": "Optional query. Omit to filter by folderUid, tag, or starred",
                     "type": "string"
+                  },
+                  "starred": {
+                    "description": "If true, only starred dashboards",
+                    "type": "boolean"
+                  },
+                  "tag": {
+                    "description": "Optional tags to match (AND)",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
                   }
                 },
                 "required": [],
@@ -3126,6 +3172,7 @@
             "create_folder",
             "create_incident",
             "create_snapshot",
+            "delete_annotation",
             "delete_snapshot",
             "find_error_pattern_logs",
             "find_slow_requests",
@@ -3222,7 +3269,7 @@
           "name": "GRAFANA_ORG_ID"
         }
       ],
-      "identifier": "docker.io/grafana/mcp-grafana:1.3.0",
+      "identifier": "docker.io/grafana/mcp-grafana:1.4.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
