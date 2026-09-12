@@ -1,0 +1,70 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://developer.playgama.com/api/mcp": {
+          "custom_metadata": {
+            "author": "Playgama",
+            "homepage": "https://playgama.com/mcp/",
+            "license": "MIT"
+          },
+          "overview": "## Playgama MCP Server\n\nPlaygama hosts HTML5 games. This server puts the Playgama developer cabinet behind an MCP endpoint, so a coding agent can take a game from a local build to a public link without leaving the editor.\n\nThe agent creates a game and fills in its form, uploads a build and polls until the engine analysis finishes, uploads covers in the exact sizes the form requires, edits the in-app catalog and leaderboards, gets a QA Tool link, and publishes a sandbox — a public link anyone can play, with no moderation step.\n\n20 tools, 10 of them read-only; every write is annotated as destructive so the client asks first. Submitting to moderation, deleting and payouts are deliberately left out: the agent prepares everything, a human presses the button.\n\nAuthentication is an API key issued in the cabinet at developer.playgama.com/mcp and sent as `Authorization: Bearer pgm_mcp_...`. Sign-up is open to any developer.",
+          "status": "Active",
+          "tags": [
+            "games",
+            "game-development",
+            "html5-games",
+            "game-publishing",
+            "remote"
+          ],
+          "tier": "Community",
+          "tools": [
+            "list_applications",
+            "create_application",
+            "get_application",
+            "update_application_form",
+            "get_submission_state",
+            "list_moderation_comments",
+            "list_leaderboards",
+            "create_leaderboard",
+            "update_leaderboard",
+            "list_in_app_products",
+            "replace_in_app_products",
+            "start_archive_upload",
+            "get_archive_status",
+            "get_archive_qa_tool_link",
+            "confirm_archive_upload",
+            "start_cover_upload",
+            "confirm_cover_upload",
+            "get_local_game_qa_tool_link",
+            "get_sandbox_state",
+            "publish_sandbox"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Manage Playgama HTML5 games: forms, builds, covers, in-app catalog, leaderboards, sandbox.",
+  "name": "io.github.stacklok/playgama-developer-cabinet",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "Bearer token issued in the Playgama developer cabinet: Bearer pgm_mcp_...",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "Authorization"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://developer.playgama.com/api/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/Playgama/developer-cabinet-mcp"
+  },
+  "title": "Playgama (Remote)",
+  "version": "1.0.0"
+}
