@@ -9,7 +9,7 @@
             "homepage": "https://playgama.com/mcp/",
             "license": "MIT"
           },
-          "overview": "## Playgama MCP Server\n\nPlaygama hosts HTML5 games. This server puts the Playgama developer cabinet behind an MCP endpoint, so a coding agent can take a game from a local build to a public link without leaving the editor.\n\nThe agent creates a game and fills in its form, uploads a build and polls until the engine analysis finishes, uploads covers in the exact sizes the form requires, edits the in-app catalog and leaderboards, gets a QA Tool link, and publishes a sandbox — a public link anyone can play, with no moderation step.\n\n20 tools, 10 of them read-only; every write is annotated as destructive so the client asks first. Submitting to moderation, deleting and payouts are deliberately left out: the agent prepares everything, a human presses the button.\n\nAuthentication is an API key issued in the cabinet at developer.playgama.com/mcp and sent as `Authorization: Bearer pgm_mcp_...`. Sign-up is open to any developer.",
+          "overview": "## Playgama MCP Server\n\nPublish in seconds, get the audience, start monetization, get all analytics - without leaving your agent.\n\nPlaygama hosts HTML5 games. This server puts the Playgama developer cabinet behind an MCP endpoint, so a coding agent can take a game from a local build to a public link without leaving the editor.\n\nThe agent creates a game and fills in its form, uploads a build and polls until the engine analysis finishes, uploads covers in the exact sizes the form requires, edits the in-app catalog and leaderboards, gets a QA Tool link, and publishes a sandbox - a public link anyone can play, with no moderation step. It can also check whether Playgama DSP can bring players to that sandbox and start a campaign built from the game's covers; the first run per game is free.\n\n22 tools, 11 of them read-only; every write is annotated as destructive so the client asks first. Submitting to moderation, deleting and payouts are deliberately left out: the agent prepares everything, a human presses the button.\n\n**After the link is live.** The game takes its first players from the Playgama network, and Playgama DSP can send more the same day (beta). Once it clears the session threshold you can switch on advertising - Playgama Ad serves rewarded, interstitial and banner formats through a single JS SDK (access by request). Playgama Wrap turns the same game into a standalone site on your own domain with player accounts, in-game purchases and indexable SEO pages (early access), and Playgama Bridge SDK gives one API for ads, leaderboards, payments and platform SDKs when you publish across platforms. Playtime, retention and revenue reports are in the developer dashboard; payouts start at 100 USD.\n\nAuthentication is an API key issued in the cabinet at developer.playgama.com/mcp and sent as `Authorization: Bearer pgm_mcp_...`. Sign-up is open to any developer.",
           "status": "Active",
           "tags": [
             "games",
@@ -39,13 +39,15 @@
             "confirm_cover_upload",
             "get_local_game_qa_tool_link",
             "get_sandbox_state",
-            "publish_sandbox"
+            "publish_sandbox",
+            "get_sandbox_traffic",
+            "start_sandbox_traffic"
           ]
         }
       }
     }
   },
-  "description": "Manage Playgama HTML5 games: forms, builds, covers, in-app catalog, leaderboards, sandbox.",
+  "description": "Publish HTML5 games in seconds from an AI agent: audience, monetization, analytics.",
   "name": "io.github.stacklok/playgama-developer-cabinet",
   "remotes": [
     {
@@ -66,5 +68,5 @@
     "url": "https://github.com/Playgama/developer-cabinet-mcp"
   },
   "title": "Playgama (Remote)",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
