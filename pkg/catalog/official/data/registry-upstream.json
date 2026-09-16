@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/stacklok/toolhive-core/main/registry/types/data/upstream-registry.schema.json",
   "version": "1.0.0",
   "meta": {
-    "last_updated": "2026-09-08T08:45:55Z"
+    "last_updated": "2026-09-16T15:56:20Z"
   },
   "data": {
     "servers": [
@@ -412,7 +412,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/apollographql/apollo-mcp-server:v1.17.0",
+            "identifier": "ghcr.io/apollographql/apollo-mcp-server:v1.18.0",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:5000"
@@ -433,7 +433,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/apollographql/apollo-mcp-server:v1.17.0": {
+              "ghcr.io/apollographql/apollo-mcp-server:v1.18.0": {
                 "metadata": {
                   "last_updated": "2026-04-27T03:05:26Z",
                   "stars": 279
@@ -668,7 +668,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "public.ecr.aws/awslabs-mcp/awslabs/aws-api-mcp-server:1.5.3",
+            "identifier": "public.ecr.aws/awslabs-mcp/awslabs/aws-api-mcp-server:1.5.5",
             "transport": {
               "type": "stdio"
             },
@@ -732,7 +732,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "public.ecr.aws/awslabs-mcp/awslabs/aws-api-mcp-server:1.5.3": {
+              "public.ecr.aws/awslabs-mcp/awslabs/aws-api-mcp-server:1.5.5": {
                 "metadata": {
                   "last_updated": "2026-07-24T02:54:40Z",
                   "stars": 8859
@@ -1204,7 +1204,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.0",
+            "identifier": "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.1",
             "transport": {
               "type": "stdio"
             },
@@ -1240,9 +1240,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.0": {
+              "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.1": {
                 "metadata": {
-                  "last_updated": "2026-08-31T21:14:35Z",
+                  "last_updated": "2026-09-11T01:44:40Z",
                   "stars": 8594
                 },
                 "overview": "## AWS Pricing MCP Server\n\nThe aws-pricing MCP server is a Model Context Protocol (MCP) server that gives AI assistants programmatic access to AWS pricing data through a structured interface. It allows AI-driven workflows to retrieve up-to-date pricing information for AWS services, instances, and usage dimensions, enabling cost estimation, comparison, and optimization tasks without manual navigation of pricing pages or spreadsheets. This server is particularly useful for cost modeling, architectural tradeoff analysis, and budget-aware automation inside AI assistants.",
@@ -4791,7 +4791,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.20.0",
+            "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.22.0",
             "transport": {
               "type": "stdio"
             },
@@ -4828,12 +4828,12 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/buildkite/buildkite-mcp-server:1.20.0": {
+              "ghcr.io/buildkite/buildkite-mcp-server:1.22.0": {
                 "args": [
                   "stdio"
                 ],
                 "metadata": {
-                  "last_updated": "2026-08-31T21:13:00Z",
+                  "last_updated": "2026-09-11T01:45:07Z",
                   "stars": 50
                 },
                 "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -5224,6 +5224,65 @@
                       "destructiveHint": false,
                       "idempotentHint": false,
                       "readOnlyHint": false,
+                      "title": "Create Cluster Secret"
+                    },
+                    "description": "Create cluster secret",
+                    "inputSchema": {
+                      "properties": {
+                        "cluster_id": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "description": "Optional description of the secret",
+                          "type": "string"
+                        },
+                        "key": {
+                          "description": "Secret key; must start with a letter, contain only letters, numbers, and underscores, be at most 255 characters, and not start with buildkite or bk (case-insensitive)",
+                          "type": "string"
+                        },
+                        "org_slug": {
+                          "type": "string"
+                        },
+                        "policy": {
+                          "description": "Access policy as a YAML list of rules; omitting it allows access from all agents in the cluster",
+                          "type": "string"
+                        },
+                        "telemetry": {
+                          "additionalProperties": false,
+                          "description": "Analytics metadata describing the tool call's purpose",
+                          "properties": {
+                            "context": {
+                              "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                              "maxLength": 256,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "context"
+                          ],
+                          "type": "object"
+                        },
+                        "value": {
+                          "description": "Required non-blank write-only secret value under 8 KiB; it is never returned by the API",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "telemetry",
+                        "org_slug",
+                        "cluster_id",
+                        "key",
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "create_cluster_secret"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": false,
+                      "readOnlyHint": false,
                       "title": "Create Pipeline"
                     },
                     "description": "Set up a new CI/CD pipeline in Buildkite with YAML configuration, repository connection, and cluster assignment",
@@ -5275,6 +5334,13 @@
                             "null",
                             "array"
                           ]
+                        },
+                        "teams": {
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "description": "Team UUIDs mapped to their access level on the pipeline: read_only, build_and_read or manage_build_and_read. Organizations with teams enabled require at least one team, unless the user is an organization administrator",
+                          "type": "object"
                         },
                         "telemetry": {
                           "additionalProperties": false,
@@ -5560,11 +5626,15 @@
                       "readOnlyHint": true,
                       "title": "Get Build Failure Summary"
                     },
-                    "description": "Diagnose a Buildkite build failure in one call. Returns build state, job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, downstream failed or broken jobs, promised failures from running jobs, and size-bounded diagnostic content from logs, annotations, and failed Test Engine executions. Start with this tool before calling individual job, log, annotation, or test tools.",
+                    "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, downstream failed or broken jobs, promised failures from running jobs, and size-bounded diagnostic content from logs, annotations, and failed Test Engine executions. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
                     "inputSchema": {
                       "properties": {
                         "build_number": {
                           "type": "string"
+                        },
+                        "content_limit_bytes": {
+                          "description": "Maximum bytes for the response payload (default and max 262144); lower it to fit clients with small tool-result limits, combining with log_tail and max_jobs for finer trimming",
+                          "type": "integer"
                         },
                         "include_annotations": {
                           "description": "Include error and warning annotation bodies (default true)",
@@ -5774,6 +5844,50 @@
                       "type": "object"
                     },
                     "name": "get_cluster_queue"
+                  },
+                  {
+                    "annotations": {
+                      "idempotentHint": false,
+                      "readOnlyHint": true,
+                      "title": "Get Cluster Secret"
+                    },
+                    "description": "Get cluster secret information",
+                    "inputSchema": {
+                      "properties": {
+                        "cluster_id": {
+                          "type": "string"
+                        },
+                        "org_slug": {
+                          "type": "string"
+                        },
+                        "secret_id": {
+                          "type": "string"
+                        },
+                        "telemetry": {
+                          "additionalProperties": false,
+                          "description": "Analytics metadata describing the tool call's purpose",
+                          "properties": {
+                            "context": {
+                              "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                              "maxLength": 256,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "context"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "telemetry",
+                        "org_slug",
+                        "cluster_id",
+                        "secret_id"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "get_cluster_secret"
                   },
                   {
                     "annotations": {
@@ -6074,10 +6188,22 @@
                       "readOnlyHint": true,
                       "title": "Get Test"
                     },
-                    "description": "Get a specific test in Buildkite Test Engine. This provides additional metadata for failed test executions",
+                    "description": "Get a specific test in Buildkite Test Engine, including execution metrics aggregated over a selected time window. This provides additional metadata for failed test executions.",
                     "inputSchema": {
                       "properties": {
+                        "max_timestamp": {
+                          "description": "End of the aggregation window in RFC3339 format. Defaults to the current time when omitted.",
+                          "type": "string"
+                        },
+                        "min_timestamp": {
+                          "description": "Start of the aggregation window in RFC3339 format. When omitted, defaults to the organization's default Test Engine period before the current time.",
+                          "type": "string"
+                        },
                         "org_slug": {
+                          "type": "string"
+                        },
+                        "period": {
+                          "description": "Relative aggregation window for the returned metrics, such as '7days' or '28days'. Whether selected by period or timestamps, the aggregation window cannot exceed the organization's maximum Test Engine window. Cannot be combined with min_timestamp or max_timestamp.",
                           "type": "string"
                         },
                         "telemetry": {
@@ -6223,7 +6349,7 @@
                       "readOnlyHint": true,
                       "title": "List Annotations"
                     },
-                    "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id",
+                    "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id. Annotation content is in the body_html field; there is no body field",
                     "inputSchema": {
                       "properties": {
                         "build_number": {
@@ -6496,6 +6622,54 @@
                       "type": "object"
                     },
                     "name": "list_cluster_queues"
+                  },
+                  {
+                    "annotations": {
+                      "idempotentHint": false,
+                      "readOnlyHint": true,
+                      "title": "List Cluster Secrets"
+                    },
+                    "description": "List cluster secrets",
+                    "inputSchema": {
+                      "properties": {
+                        "cluster_id": {
+                          "type": "string"
+                        },
+                        "org_slug": {
+                          "type": "string"
+                        },
+                        "page": {
+                          "description": "Page number for pagination (min 1)",
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "description": "Results per page for pagination (min 1, max 100)",
+                          "type": "integer"
+                        },
+                        "telemetry": {
+                          "additionalProperties": false,
+                          "description": "Analytics metadata describing the tool call's purpose",
+                          "properties": {
+                            "context": {
+                              "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                              "maxLength": 256,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "context"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "telemetry",
+                        "org_slug",
+                        "cluster_id"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "list_cluster_secrets"
                   },
                   {
                     "annotations": {
@@ -6876,6 +7050,54 @@
                     "annotations": {
                       "idempotentHint": false,
                       "readOnlyHint": true,
+                      "title": "List Test Suites for Pipeline"
+                    },
+                    "description": "List the Buildkite Test Engine suites that have recorded at least one run attributed to a pipeline, ordered by creation time. Use this to find the test_suite_slug needed by the other Test Engine tools.",
+                    "inputSchema": {
+                      "properties": {
+                        "org_slug": {
+                          "type": "string"
+                        },
+                        "page": {
+                          "description": "Page number for pagination (min 1)",
+                          "type": "integer"
+                        },
+                        "per_page": {
+                          "description": "Results per page for pagination (min 1, max 100)",
+                          "type": "integer"
+                        },
+                        "pipeline_slug": {
+                          "type": "string"
+                        },
+                        "telemetry": {
+                          "additionalProperties": false,
+                          "description": "Analytics metadata describing the tool call's purpose",
+                          "properties": {
+                            "context": {
+                              "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                              "maxLength": 256,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "context"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "telemetry",
+                        "org_slug",
+                        "pipeline_slug"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "list_test_suites_for_pipeline"
+                  },
+                  {
+                    "annotations": {
+                      "idempotentHint": false,
+                      "readOnlyHint": true,
                       "title": "List Tests"
                     },
                     "description": "List tests in a Buildkite Test Engine suite with execution metrics aggregated over a selected time window. Supports filtering, metric sorting, and pagination.",
@@ -6892,6 +7114,10 @@
                         "max_timestamp": {
                           "description": "End of the aggregation window in RFC3339 format. Defaults to the current time when omitted.",
                           "type": "string"
+                        },
+                        "min_executions": {
+                          "description": "Return only tests with at least this many executions after applying the selected time window and execution filters (min 1).",
+                          "type": "integer"
                         },
                         "min_timestamp": {
                           "description": "Start of the aggregation window in RFC3339 format. When omitted, defaults to the organization's default Test Engine period before the current time.",
@@ -7930,6 +8156,7 @@
                   "create_build",
                   "create_cluster",
                   "create_cluster_queue",
+                  "create_cluster_secret",
                   "create_pipeline",
                   "create_pipeline_schedule",
                   "current_user",
@@ -7940,6 +8167,7 @@
                   "get_build_test_engine_runs",
                   "get_cluster",
                   "get_cluster_queue",
+                  "get_cluster_secret",
                   "get_failed_executions",
                   "get_job",
                   "get_job_env",
@@ -7954,6 +8182,7 @@
                   "list_artifacts_for_job",
                   "list_builds",
                   "list_cluster_queues",
+                  "list_cluster_secrets",
                   "list_clusters",
                   "list_jobs",
                   "list_pipeline_schedules",
@@ -7961,6 +8190,7 @@
                   "list_skills",
                   "list_step_uploads",
                   "list_test_runs",
+                  "list_test_suites_for_pipeline",
                   "list_tests",
                   "list_tests_for_build",
                   "load_skill",
@@ -10359,7 +10589,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "quay.io/crowdstrike/falcon-mcp:0.18.0",
+            "identifier": "quay.io/crowdstrike/falcon-mcp:0.19.0",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:8000"
@@ -10408,7 +10638,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "quay.io/crowdstrike/falcon-mcp:0.18.0": {
+              "quay.io/crowdstrike/falcon-mcp:0.19.0": {
                 "args": [
                   "--transport",
                   "streamable-http",
@@ -10605,7 +10835,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.10.0",
+            "identifier": "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.11.0",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:5000"
@@ -10615,7 +10845,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.10.0": {
+              "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.11.0": {
                 "args": [
                   "--address",
                   "0.0.0.0"
@@ -14767,7 +14997,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/github/github-mcp-server:v1.11.0",
+            "identifier": "ghcr.io/github/github-mcp-server:v1.12.1",
             "transport": {
               "type": "stdio"
             },
@@ -14796,9 +15026,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/github/github-mcp-server:v1.11.0": {
+              "ghcr.io/github/github-mcp-server:v1.12.1": {
                 "metadata": {
-                  "last_updated": "2026-08-31T21:13:15Z",
+                  "last_updated": "2026-09-11T01:45:22Z",
                   "stars": 28440
                 },
                 "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -15111,7 +15341,7 @@
                       "readOnlyHint": false,
                       "title": "Create or update file"
                     },
-                    "description": "Create or update a single file in a GitHub repository. \nIf updating, you should provide the SHA of the file you want to update. Use this tool to create or update a file in a GitHub repository remotely; do not use it for local file operations.\n\nIn order to obtain the SHA of original file version before updating, use the following git command:\ngit rev-parse \u003cbranch\u003e:\u003cpath to file\u003e\n\nSHA MUST be provided for existing file updates.\n",
+                    "description": "Create or update a single file in a GitHub repository. \nIf updating, you should provide the SHA of the file you want to update. Use this tool to create or update a file in a GitHub repository remotely; do not use it for local file operations.\n\nTo obtain the current blob SHA before updating, call the get_file_contents tool with the same owner, repo, and path, and set its ref parameter to this tool's branch value. The first text result reports the blob SHA for the requested path.\n\nSHA MUST be provided for existing file updates.\n",
                     "inputSchema": {
                       "properties": {
                         "allow_symlink_write": {
@@ -15146,7 +15376,7 @@
                           "x-mcp-header": "repo"
                         },
                         "sha": {
-                          "description": "The blob SHA of the file being replaced. Required if the file already exists.",
+                          "description": "The blob SHA of the file being replaced. Required if the file already exists. Retrieve it with get_file_contents using the same owner, repo, and path, with ref set to this tool's branch value.",
                           "type": "string"
                         }
                       },
@@ -16389,6 +16619,10 @@
                           "description": "Title for merge commit",
                           "type": "string"
                         },
+                        "expectedHeadSha": {
+                          "description": "The expected SHA of the pull request's HEAD ref",
+                          "type": "string"
+                        },
                         "merge_method": {
                           "description": "Merge method",
                           "enum": [
@@ -16436,7 +16670,7 @@
                           "type": "string"
                         },
                         "method": {
-                          "description": "Action to specify what pull request data needs to be retrieved from GitHub. \nPossible options: \n 1. get - Get details of a specific pull request.\n 2. get_diff - Get the diff of a pull request.\n 3. get_status - Get combined commit status of a head commit in a pull request.\n 4. get_files - Get the list of files changed in a pull request. Use with pagination parameters to control the number of results returned.\n 5. get_commits - Get the list of commits on a pull request. Use with pagination parameters to control the number of results returned.\n 6. get_review_comments - Get review threads on a pull request. Each thread contains logically grouped review comments made on the same code location during pull request reviews. Returns threads with metadata (isResolved, isOutdated, isCollapsed) and their associated comments. Use cursor-based pagination (perPage, after) to control results.\n 7. get_reviews - Get the reviews on a pull request. When asked for review comments, use get_review_comments method. Use with pagination parameters to control the number of results returned.\n 8. get_comments - Get comments on a pull request. Use this if user doesn't specifically want review comments. Use with pagination parameters to control the number of results returned.\n 9. get_check_runs - Get check runs for the head commit of a pull request. Check runs are the individual CI/CD jobs and checks that run on the PR.\n",
+                          "description": "Action to specify what pull request data needs to be retrieved from GitHub. \nPossible options: \n 1. get - Get details of a specific pull request.\n 2. get_diff - Get the diff of a pull request.\n 3. get_status - Get combined commit status of a head commit in a pull request.\n 4. get_files - Get the list of files changed in a pull request. Use with pagination parameters to control the number of results returned.\n 5. get_commits - Get the list of commits on a pull request. Use with pagination parameters to control the number of results returned.\n 6. get_review_comments - Get review threads on a pull request. Each thread contains logically grouped review comments made on the same code location during pull request reviews. Returns thread metadata and comments with nullable current and original line-range coordinates (line, start_line, original_line, original_start_line). Current coordinates are omitted when unavailable, such as for outdated comments. Use cursor-based pagination (perPage, after) to control results.\n 7. get_reviews - Get the reviews on a pull request. When asked for review comments, use get_review_comments method. Use with pagination parameters to control the number of results returned.\n 8. get_comments - Get comments on a pull request. Use this if user doesn't specifically want review comments. Use with pagination parameters to control the number of results returned.\n 9. get_check_runs - Get check runs for the head commit of a pull request. Check runs are the individual CI/CD jobs and checks that run on the PR.\n",
                           "enum": [
                             "get",
                             "get_diff",
@@ -17577,7 +17811,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "docker.io/grafana/mcp-grafana:1.3.0",
+            "identifier": "docker.io/grafana/mcp-grafana:1.4.0",
             "transport": {
               "type": "stdio"
             },
@@ -17603,13 +17837,13 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "docker.io/grafana/mcp-grafana:1.3.0": {
+              "docker.io/grafana/mcp-grafana:1.4.0": {
                 "args": [
                   "--transport",
                   "stdio"
                 ],
                 "metadata": {
-                  "last_updated": "2026-08-31T21:12:28Z",
+                  "last_updated": "2026-09-11T01:44:52Z",
                   "stars": 3239
                 },
                 "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -18394,6 +18628,29 @@
                       "type": "object"
                     },
                     "name": "create_snapshot"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": true,
+                      "idempotentHint": false,
+                      "openWorldHint": false,
+                      "readOnlyHint": false,
+                      "title": "Delete Annotation"
+                    },
+                    "description": "Permanently delete an annotation by ID. The annotation cannot be recovered afterwards.",
+                    "inputSchema": {
+                      "properties": {
+                        "id": {
+                          "description": "Annotation ID to delete",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "id"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "delete_annotation"
                   },
                   {
                     "annotations": {
@@ -19412,7 +19669,7 @@
                       "readOnlyHint": true,
                       "title": "List Loki label names"
                     },
-                    "description": "Lists all available label/field names (keys) found in logs within a specified Loki or VictoriaLogs datasource and time range. Returns a list of unique label strings (e.g., `[\"app\", \"env\", \"pod\"]`). If the time range is not provided, it defaults to the last hour.",
+                    "description": "Lists all available label/field names (keys) found in logs within a specified Loki or VictoriaLogs datasource and time range. Returns a list of unique label strings (e.g., `[\"app\", \"env\", \"pod\"]`). If the time range is not provided, it defaults to the last hour. Optionally narrow the search to a subset of streams with `matcher` (e.g. `{namespace=\"prod\"}`).",
                     "inputSchema": {
                       "properties": {
                         "datasourceUid": {
@@ -19421,6 +19678,10 @@
                         },
                         "endRfc3339": {
                           "description": "Optionally, the end time of the query in RFC3339 format or relative time (e.g. 'now') (defaults to now)",
+                          "type": "string"
+                        },
+                        "matcher": {
+                          "description": "Optionally, a stream selector to narrow the search to matching streams (Loki: LogQL, e.g. '{namespace=\"prod\"}'; VictoriaLogs: LogsQL). Defaults to searching across all streams.",
                           "type": "string"
                         },
                         "startRfc3339": {
@@ -19443,7 +19704,7 @@
                       "readOnlyHint": true,
                       "title": "List Loki label values"
                     },
-                    "description": "Retrieves all unique values associated with a specific `labelName` within a Loki or VictoriaLogs datasource and time range. Returns a list of string values (e.g., for `labelName=\"env\"`, might return `[\"prod\", \"staging\", \"dev\"]`). Useful for discovering filter options. Defaults to the last hour if the time range is omitted.",
+                    "description": "Retrieves all unique values associated with a specific `labelName` within a Loki or VictoriaLogs datasource and time range. Returns a list of string values (e.g., for `labelName=\"env\"`, might return `[\"prod\", \"staging\", \"dev\"]`). Useful for discovering filter options. Defaults to the last hour if the time range is omitted. Optionally narrow the search to a subset of streams with `matcher` (e.g. `{namespace=\"prod\"}`) — for example, to list `service` values seen only within a specific namespace.",
                     "inputSchema": {
                       "properties": {
                         "datasourceUid": {
@@ -19456,6 +19717,10 @@
                         },
                         "labelName": {
                           "description": "The name of the label to retrieve values for (e.g. 'app', 'env', 'pod')",
+                          "type": "string"
+                        },
+                        "matcher": {
+                          "description": "Optionally, a stream selector to narrow the search to matching streams (Loki: LogQL, e.g. '{namespace=\"prod\"}'; VictoriaLogs: LogsQL). Defaults to searching across all streams.",
                           "type": "string"
                         },
                         "startRfc3339": {
@@ -20274,9 +20539,13 @@
                       "readOnlyHint": true,
                       "title": "Search dashboards"
                     },
-                    "description": "Search for Grafana dashboards by a query string. Returns a list of matching dashboards with details like title, UID, folder, tags, and URL.",
+                    "description": "Search Grafana dashboards by query and/or folderUid, tag, and starred. Returns matching dashboards with title, UID, folder, tags, and URL.",
                     "inputSchema": {
                       "properties": {
+                        "folderUid": {
+                          "description": "Optional immediate folder UID (not nested)",
+                          "type": "string"
+                        },
                         "limit": {
                           "default": 50,
                           "description": "Maximum number of results to return (max 100)",
@@ -20288,8 +20557,19 @@
                           "type": "integer"
                         },
                         "query": {
-                          "description": "The query to search for",
+                          "description": "Optional query. Omit to filter by folderUid, tag, or starred",
                           "type": "string"
+                        },
+                        "starred": {
+                          "description": "If true, only starred dashboards",
+                          "type": "boolean"
+                        },
+                        "tag": {
+                          "description": "Optional tags to match (AND)",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
                         }
                       },
                       "required": [],
@@ -20726,6 +21006,7 @@
                   "create_folder",
                   "create_incident",
                   "create_snapshot",
+                  "delete_annotation",
                   "delete_snapshot",
                   "find_error_pattern_logs",
                   "find_slow_requests",
@@ -27865,7 +28146,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.2.0",
+            "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.6.0",
             "transport": {
               "type": "stdio"
             },
@@ -27921,9 +28202,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.2.0": {
+              "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.6.0": {
                 "metadata": {
-                  "last_updated": "2026-06-12T03:23:54Z",
+                  "last_updated": "2026-09-11T01:46:01Z",
                   "stars": 800
                 },
                 "overview": "## ClickHouse MCP Server\n\nThe mcp-clickhouse server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with ClickHouse, the high-performance, column-oriented analytical database. It allows AI-driven workflows to query large datasets, inspect schemas, and analyze analytical workloads without requiring users to switch tools or embed ClickHouse-specific client logic. This server is especially useful for analytics, observability, log analysis, and data exploration workflows where fast, read-heavy queries and large-scale datasets are common.",
@@ -27963,14 +28244,16 @@
                   },
                   {
                     "annotations": {},
-                    "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nArgs:\n    database: The database to list tables from\n    like: Optional LIKE pattern to filter table names\n    not_like: Optional NOT LIKE pattern to exclude table names\n    page_token: Token for pagination, obtained from a previous call\n    page_size: Number of tables to return per page (default: 50)\n    include_detailed_columns: Whether to include detailed column metadata (default: True).\n        When False, the columns array will be empty but create_table_query still contains\n        all column information. This reduces payload size for large schemas.\n\nReturns:\n    A dictionary containing:\n    - tables: List of table information (as dictionaries)\n    - next_page_token: Token for the next page, or None if no more pages\n    - total_tables: Total number of tables matching the filters",
+                    "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nIntegers outside [-9007199254740991, 9007199254740991] in table metadata are\nreturned as decimal strings.\nPagination tokens are single-use and retained for up to one hour.",
                     "inputSchema": {
                       "properties": {
                         "database": {
+                          "description": "The database to list tables from",
                           "type": "string"
                         },
                         "include_detailed_columns": {
                           "default": true,
+                          "description": "Whether to include detailed column metadata (default: True).\nWhen False, the columns array will be empty but create_table_query still contains\nall column information. This reduces payload size for large schemas.",
                           "type": "boolean"
                         },
                         "like": {
@@ -27982,7 +28265,8 @@
                               "type": "null"
                             }
                           ],
-                          "default": null
+                          "default": null,
+                          "description": "Optional LIKE pattern to filter table names"
                         },
                         "not_like": {
                           "anyOf": [
@@ -27993,10 +28277,13 @@
                               "type": "null"
                             }
                           ],
-                          "default": null
+                          "default": null,
+                          "description": "Optional NOT LIKE pattern to exclude table names"
                         },
                         "page_size": {
                           "default": 50,
+                          "description": "Number of tables to return per page (default: 50, must be greater than 0)",
+                          "exclusiveMinimum": 0,
                           "type": "integer"
                         },
                         "page_token": {
@@ -28008,7 +28295,8 @@
                               "type": "null"
                             }
                           ],
-                          "default": null
+                          "default": null,
+                          "description": "Single-use token from a previous call, retained for up to one hour"
                         }
                       },
                       "required": [
@@ -28020,7 +28308,7 @@
                   },
                   {
                     "annotations": {},
-                    "description": "Run a SELECT query in a ClickHouse database",
+                    "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE, DELETE, UPDATE, REPLACE TABLE/PARTITION, CREATE OR REPLACE, CLEAR COLUMN/INDEX/PROJECTION, DETACH PERMANENTLY). That gate is a best-effort accident guard, not a security boundary. Integers outside [-9007199254740991, 9007199254740991] are returned as decimal strings.",
                     "inputSchema": {
                       "properties": {
                         "query": {
@@ -28032,13 +28320,13 @@
                       ],
                       "type": "object"
                     },
-                    "name": "run_select_query"
+                    "name": "run_query"
                   }
                 ],
                 "tools": [
                   "list_databases",
                   "list_tables",
-                  "run_select_query"
+                  "run_query"
                 ]
               }
             }
@@ -29156,7 +29444,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "docker.io/mongodb/mongodb-mcp-server:2.1.0",
+            "identifier": "docker.io/mongodb/mongodb-mcp-server:2.1.1",
             "transport": {
               "type": "stdio"
             },
@@ -29210,7 +29498,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "docker.io/mongodb/mongodb-mcp-server:2.1.0": {
+              "docker.io/mongodb/mongodb-mcp-server:2.1.1": {
                 "metadata": {
                   "last_updated": "2026-08-14T03:00:21Z",
                   "stars": 1097
@@ -46247,7 +46535,7 @@
             "io.github.stacklok": {
               "mcr.microsoft.com/playwright/mcp:v0.0.79": {
                 "metadata": {
-                  "last_updated": "2026-08-07T00:29:40Z",
+                  "last_updated": "2026-09-11T14:22:40Z",
                   "stars": 28552
                 },
                 "overview": "## Playwright MCP Server\n\nThe playwright MCP server provides browser automation capabilities using Playwright. The server enables comprehensive browser automation supporting Chromium, Firefox, and WebKit, with full control over page interactions including clicks, typing, navigation, and screenshots. Additional capabilities include network request monitoring, console message capture for debugging, form filling, file uploads, and dialog handling for complete workflow automation.",
@@ -47197,7 +47485,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.4.1",
+            "identifier": "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.6.0",
             "transport": {
               "type": "stdio"
             },
@@ -47230,9 +47518,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.4.1": {
+              "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.6.0": {
                 "metadata": {
-                  "last_updated": "2026-07-31T20:54:06Z",
+                  "last_updated": "2026-09-11T01:46:25Z",
                   "stars": 273
                 },
                 "overview": "## Red Hat Linux MCP Server\n\nThe redhat-linux MCP server provides read-only Linux sysadmin, diagnostics, and troubleshooting optimized for RHEL-based systems. This server delivers comprehensive Linux system diagnostics through real-time monitoring of CPU, memory, disk, and network metrics; process and service management with status and log access; network diagnostics including active connections and listening ports; and file system exploration with configurable path restrictions. All capabilities operate in read-only mode via SSH-based remote execution with secure key-based authentication, preventing system modifications.",
@@ -47329,21 +47617,21 @@
                     },
                     "description": "Get systemd journal logs.",
                     "inputSchema": {
-                      "$defs": {
-                        "Transport": {
-                          "description": "Valid journalctl transport types for filtering journal entries.\n\nTransports identify the source/mechanism that submitted log messages to the journal.\n\nAUDIT - Linux audit subsystem messages (security events, syscall auditing)\nDRIVER - Kernel driver messages logged via dev_printk().\nJOURNAL - Messages logged directly to the journal via sd_journal_* APIs.\nKERNEL - Kernel ring buffer messages (dmesg/printk).\nSTDOUT - stdout/stderr from services with StandardOutput/StandardError=journal.\nSYSLOG - Messages received via the syslog socket (/dev/log).",
-                          "enum": [
-                            "audit",
-                            "driver",
-                            "journal",
-                            "kernel",
-                            "stdout",
-                            "syslog"
-                          ],
-                          "type": "string"
-                        }
-                      },
                       "properties": {
+                        "first_lines": {
+                          "anyOf": [
+                            {
+                              "maximum": 10000,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null,
+                          "description": "Number of first log lines to retrieve after applying filters (journalctl -n +N). Mutually exclusive with last_lines."
+                        },
                         "host": {
                           "anyOf": [
                             {
@@ -47356,12 +47644,19 @@
                           "default": null,
                           "description": "Remote host to connect to via SSH"
                         },
-                        "lines": {
-                          "default": 100,
-                          "description": "Number of log lines to retrieve. Default: 100",
-                          "maximum": 10000,
-                          "minimum": 1,
-                          "type": "integer"
+                        "last_lines": {
+                          "anyOf": [
+                            {
+                              "maximum": 10000,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null,
+                          "description": "Number of last log lines to retrieve after applying filters (journalctl -n N). Default: 100. Mutually exclusive with first_lines."
                         },
                         "priority": {
                           "default": "",
@@ -47392,7 +47687,16 @@
                         "transport": {
                           "anyOf": [
                             {
-                              "$ref": "#/$defs/Transport"
+                              "description": "Valid journalctl transport types for filtering journal entries.\n\nTransports identify the source/mechanism that submitted log messages to the journal.\n\nAUDIT - Linux audit subsystem messages (security events, syscall auditing)\nDRIVER - Kernel driver messages logged via dev_printk().\nJOURNAL - Messages logged directly to the journal via sd_journal_* APIs.\nKERNEL - Kernel ring buffer messages (dmesg/printk).\nSTDOUT - stdout/stderr from services with StandardOutput/StandardError=journal.\nSYSLOG - Messages received via the syslog socket (/dev/log).",
+                              "enum": [
+                                "audit",
+                                "driver",
+                                "journal",
+                                "kernel",
+                                "stdout",
+                                "syslog"
+                              ],
+                              "type": "string"
                             },
                             {
                               "type": "null"
@@ -47697,23 +48001,6 @@
                     },
                     "description": "List directories under a specified path with various sorting options.",
                     "inputSchema": {
-                      "$defs": {
-                        "OrderBy": {
-                          "enum": [
-                            "size",
-                            "name",
-                            "modified"
-                          ],
-                          "type": "string"
-                        },
-                        "SortBy": {
-                          "enum": [
-                            "ascending",
-                            "descending"
-                          ],
-                          "type": "string"
-                        }
-                      },
                       "properties": {
                         "host": {
                           "anyOf": [
@@ -47728,9 +48015,14 @@
                           "description": "Remote host to connect to via SSH"
                         },
                         "order_by": {
-                          "$ref": "#/$defs/OrderBy",
                           "default": "name",
-                          "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')"
+                          "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')",
+                          "enum": [
+                            "size",
+                            "name",
+                            "modified"
+                          ],
+                          "type": "string"
                         },
                         "path": {
                           "description": "Absolute path to the directory to analyze",
@@ -47745,9 +48037,13 @@
                           "type": "string"
                         },
                         "sort": {
-                          "$ref": "#/$defs/SortBy",
                           "default": "ascending",
-                          "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')"
+                          "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')",
+                          "enum": [
+                            "ascending",
+                            "descending"
+                          ],
+                          "type": "string"
                         },
                         "top_n": {
                           "anyOf": [
@@ -47777,23 +48073,6 @@
                     },
                     "description": "List files under a specified path with various sorting options.",
                     "inputSchema": {
-                      "$defs": {
-                        "OrderBy": {
-                          "enum": [
-                            "size",
-                            "name",
-                            "modified"
-                          ],
-                          "type": "string"
-                        },
-                        "SortBy": {
-                          "enum": [
-                            "ascending",
-                            "descending"
-                          ],
-                          "type": "string"
-                        }
-                      },
                       "properties": {
                         "host": {
                           "anyOf": [
@@ -47808,9 +48087,14 @@
                           "description": "Remote host to connect to via SSH"
                         },
                         "order_by": {
-                          "$ref": "#/$defs/OrderBy",
                           "default": "name",
-                          "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')"
+                          "description": "Sort order - 'size', 'name', or 'modified' (default: 'name')",
+                          "enum": [
+                            "size",
+                            "name",
+                            "modified"
+                          ],
+                          "type": "string"
                         },
                         "path": {
                           "description": "Absolute path to the directory to analyze",
@@ -47825,9 +48109,13 @@
                           "type": "string"
                         },
                         "sort": {
-                          "$ref": "#/$defs/SortBy",
                           "default": "ascending",
-                          "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')"
+                          "description": "Sort direction - 'ascending' or 'descending' (default: 'ascending')",
+                          "enum": [
+                            "ascending",
+                            "descending"
+                          ],
+                          "type": "string"
                         },
                         "top_n": {
                           "anyOf": [
@@ -47946,6 +48234,20 @@
                     "description": "Read a specific log file.",
                     "inputSchema": {
                       "properties": {
+                        "first_lines": {
+                          "anyOf": [
+                            {
+                              "maximum": 10000,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null,
+                          "description": "Number of first lines to retrieve from the log file. Mutually exclusive with last_lines."
+                        },
                         "host": {
                           "anyOf": [
                             {
@@ -47958,12 +48260,19 @@
                           "default": null,
                           "description": "Remote host to connect to via SSH"
                         },
-                        "lines": {
-                          "default": 100,
-                          "description": "Number of lines to retrieve from the end.",
-                          "maximum": 10000,
-                          "minimum": 1,
-                          "type": "integer"
+                        "last_lines": {
+                          "anyOf": [
+                            {
+                              "maximum": 10000,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null,
+                          "description": "Number of last lines to retrieve from the log file. Default: 100. Mutually exclusive with first_lines."
                         },
                         "log_path": {
                           "description": "Absolute path to the log file (must be in allowed list)",
@@ -49675,7 +49984,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "docker.io/semgrep/semgrep:1.175.0",
+            "identifier": "docker.io/semgrep/semgrep:1.177.0",
             "transport": {
               "type": "stdio"
             },
@@ -49691,13 +50000,13 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "docker.io/semgrep/semgrep:1.175.0": {
+              "docker.io/semgrep/semgrep:1.177.0": {
                 "args": [
                   "semgrep",
                   "mcp"
                 ],
                 "metadata": {
-                  "last_updated": "2026-08-31T21:13:26Z",
+                  "last_updated": "2026-09-11T01:45:38Z",
                   "stars": 15042
                 },
                 "overview": "## Semgrep MCP Server\n\nThe semgrep MCP server scans code for security vulnerabilities using Semgrep with 5,000+ semantic analysis rules. This tool provides static security analysis across multiple programming languages, leveraging thousands of semantic rules for identifying vulnerabilities. It enables abstract syntax tree generation, supply chain security scanning, and supports custom rule creation for organization-specific security requirements.",
