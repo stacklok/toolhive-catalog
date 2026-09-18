@@ -9,7 +9,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-09-11T01:44:52Z",
+            "last_updated": "2026-09-18T18:27:58Z",
             "stars": 3239
           },
           "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -844,11 +844,70 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Diff Tempo traces"
+              },
+              "description": "Compare two complete traces. Returns a compact summary and includes the full span-level patch when it is at most 64 KiB. Request trace-patch-v0 only when full details are required; full patches are not size-bounded.",
+              "inputSchema": {
+                "properties": {
+                  "base_end": {
+                    "description": "Optional end of the baseline trace search range in RFC3339 format. Must be provided with base_start.",
+                    "type": "string"
+                  },
+                  "base_start": {
+                    "description": "Optional start of the baseline trace search range in RFC3339 format. Must be provided with base_end.",
+                    "type": "string"
+                  },
+                  "base_trace_id": {
+                    "description": "Trace ID for the baseline trace",
+                    "type": "string"
+                  },
+                  "compare_end": {
+                    "description": "Optional end of the comparison trace search range in RFC3339 format. Must be provided with compare_start.",
+                    "type": "string"
+                  },
+                  "compare_start": {
+                    "description": "Optional start of the comparison trace search range in RFC3339 format. Must be provided with compare_end.",
+                    "type": "string"
+                  },
+                  "compare_trace_id": {
+                    "description": "Trace ID for the comparison trace",
+                    "type": "string"
+                  },
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "format": {
+                    "default": "trace-summary-v0-composed",
+                    "description": "Output format. The composed format returns a compact summary and attaches the full patch only when it is at most 64 KiB. trace-patch-v0 has no output-size guarantee.",
+                    "enum": [
+                      "trace-summary-v0-composed",
+                      "trace-summary-v0-native",
+                      "trace-patch-v0"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid",
+                  "base_trace_id",
+                  "compare_trace_id"
+                ],
+                "type": "object"
+              },
+              "name": "diff_tempo_traces"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": false,
                 "title": "Find error patterns in logs"
               },
-              "description": "Searches Loki logs for elevated error patterns compared to the last day's average, waits for the analysis to complete, and returns the results including any patterns found.",
+              "description": "Searches Loki logs for elevated error patterns compared to the last day's average, waits for the analysis to complete, and returns the results including any patterns found. Use the labelSelector parameter with PromQL/LogQL syntax for pattern matching on label values (e.g. {namespace=~\"prod.*\"}).",
               "inputSchema": {
                 "properties": {
                   "end": {
@@ -856,12 +915,9 @@
                     "format": "date-time",
                     "type": "string"
                   },
-                  "labels": {
-                    "additionalProperties": {
-                      "type": "string"
-                    },
-                    "description": "Labels to scope the analysis",
-                    "type": "object"
+                  "labelSelector": {
+                    "description": "A PromQL/LogQL stream selector to scope the analysis. Supports all match operators: = (exact), != (not equal), =~ (regex), !~ (negative regex). Example: {namespace=~\"prod.*\", cluster=\"us-east-1\"}",
+                    "type": "string"
                   },
                   "name": {
                     "description": "The name of the investigation",
@@ -875,7 +931,7 @@
                 },
                 "required": [
                   "name",
-                  "labels"
+                  "labelSelector"
                 ],
                 "type": "object"
               },
@@ -888,7 +944,7 @@
                 "readOnlyHint": false,
                 "title": "Find slow requests"
               },
-              "description": "Searches relevant Tempo datasources for slow requests, waits for the analysis to complete, and returns the results.",
+              "description": "Searches relevant Tempo datasources for slow requests, waits for the analysis to complete, and returns the results. Use the labelSelector parameter with PromQL/LogQL syntax for pattern matching on label values (e.g. {namespace=~\"prod.*\"}).",
               "inputSchema": {
                 "properties": {
                   "end": {
@@ -896,12 +952,9 @@
                     "format": "date-time",
                     "type": "string"
                   },
-                  "labels": {
-                    "additionalProperties": {
-                      "type": "string"
-                    },
-                    "description": "Labels to scope the analysis",
-                    "type": "object"
+                  "labelSelector": {
+                    "description": "A PromQL/LogQL stream selector to scope the analysis. Supports all match operators: = (exact), != (not equal), =~ (regex), !~ (negative regex). Example: {namespace=~\"prod.*\", cluster=\"us-east-1\"}",
+                    "type": "string"
                   },
                   "name": {
                     "description": "The name of the investigation",
@@ -915,7 +968,7 @@
                 },
                 "required": [
                   "name",
-                  "labels"
+                  "labelSelector"
                 ],
                 "type": "object"
               },
@@ -1050,7 +1103,8 @@
                 "properties": {
                   "limit": {
                     "description": "Max results, default 100",
-                    "type": "string"
+                    "minimum": 1,
+                    "type": "integer"
                   },
                   "tag": {
                     "description": "Optional filter by tag name",
@@ -1201,12 +1255,17 @@
                 "readOnlyHint": true,
                 "title": "Get dashboard details"
               },
-              "description": "Retrieves the complete dashboard, including panels, variables, and settings, for a specific dashboard identified by its UID. The response includes 'apiVersion' and 'isV2': when 'isV2' is true the dashboard uses the v2 schema (panels live under 'elements' keyed by name, arranged by 'layout'; variables under 'variables'), otherwise it is classic v1 ('panels[]' with 'templating.list'). WARNING: Large dashboards can consume significant context window space. Consider using get_dashboard_summary for overview or get_dashboard_property for specific data instead.",
+              "description": "Retrieves the complete dashboard, including panels, variables, and settings, for a specific dashboard identified by its UID. Pass optional version to load a saved snapshot instead of the current dashboard. Saved snapshots are fetched through Grafana's legacy versions API, so 'apiVersion' is omitted and 'meta' is partial: only version, createdBy, and created are populated. For current (non-versioned) fetches, the response includes 'apiVersion' and 'isV2': when 'isV2' is true the dashboard uses the v2 schema (panels live under 'elements' keyed by name, arranged by 'layout'; variables under 'variables'), otherwise it is classic v1 ('panels[]' with 'templating.list'). WARNING: Large dashboards can consume significant context window space. Consider using get_dashboard_summary for overview or get_dashboard_property for specific data instead.",
               "inputSchema": {
                 "properties": {
                   "uid": {
                     "description": "The UID of the dashboard",
                     "type": "string"
+                  },
+                  "version": {
+                    "description": "Optional saved version. Omit for the current dashboard",
+                    "minimum": 1,
+                    "type": "integer"
                   }
                 },
                 "required": [
@@ -1608,6 +1667,63 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Tempo trace"
+              },
+              "description": "Retrieve a specific trace by ID",
+              "inputSchema": {
+                "properties": {
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "trace_id": {
+                    "description": "Trace ID to retrieve",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid",
+                  "trace_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_tempo_trace"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get TraceQL documentation"
+              },
+              "description": "Retrieve TraceQL reference documentation with examples, covering attribute filters, aggregates, structural operators, and metrics queries. Consult this before writing a non-trivial TraceQL query, or after one returns an error or no results.",
+              "inputSchema": {
+                "properties": {
+                  "topic": {
+                    "description": "Which section of the TraceQL reference to retrieve: 'basic' for attribute and duration filters, 'aggregates' for count/avg/sum and by() grouping, 'structural' for parent/child and descendant operators, 'metrics' for rate/quantile_over_time metrics queries",
+                    "enum": [
+                      "basic",
+                      "aggregates",
+                      "structural",
+                      "metrics"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "topic"
+                ],
+                "type": "object"
+              },
+              "name": "get_tempo_traceql_docs"
+            },
+            {
+              "annotations": {
                 "destructiveHint": true,
                 "openWorldHint": false,
                 "readOnlyHint": false,
@@ -1736,6 +1852,39 @@
                 "type": "object"
               },
               "name": "list_alert_groups"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List dashboard versions"
+              },
+              "description": "List saved versions of a Grafana dashboard. Returns compact metadata: version number, author, timestamp, and save message. Use get_dashboard_by_uid with version to fetch a snapshot.",
+              "inputSchema": {
+                "properties": {
+                  "limit": {
+                    "description": "Maximum number of versions to return",
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "start": {
+                    "description": "Version to start from. Only versions at or below this number are returned",
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "uid": {
+                    "description": "The UID of the dashboard",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uid"
+                ],
+                "type": "object"
+              },
+              "name": "list_dashboard_versions"
             },
             {
               "annotations": {
@@ -2397,6 +2546,65 @@
                 "idempotentHint": true,
                 "openWorldHint": false,
                 "readOnlyHint": true,
+                "title": "List Tempo attribute names"
+              },
+              "description": "List available attribute names for TraceQL queries. Always pass a scope (resource, span, etc.) to avoid very large responses.",
+              "inputSchema": {
+                "properties": {
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "scope": {
+                    "description": "Scope to filter attributes by (span, resource, event, link, instrumentation). Strongly recommended — omitting scope returns all attributes across all scopes which can be very large (100K+ chars).",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid"
+                ],
+                "type": "object"
+              },
+              "name": "list_tempo_attribute_names"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Tempo attribute values"
+              },
+              "description": "List values for a fully scoped attribute name (e.g. resource.service.name). Useful for discovering what values exist for a specific attribute.",
+              "inputSchema": {
+                "properties": {
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "filter-query": {
+                    "description": "Filter query to apply to the attribute values. It can only have one spanset and only \u0026\u0026'ed conditions like { \u003ccond\u003e \u0026\u0026 \u003ccond\u003e \u0026\u0026 ... }. This is useful for filtering the values to a specific set of values.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "The attribute name to get values for (e.g. 'span.http.method', 'resource.service.name')",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid",
+                  "name"
+                ],
+                "type": "object"
+              },
+              "name": "list_tempo_attribute_values"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
                 "title": "Query Loki logs"
               },
               "description": "Executes a log query against a Loki or VictoriaLogs datasource and returns matching log entries (or metric samples on Loki). Defaults to the last hour, a limit of 10 entries, and 'backward' direction (newest first). The `logql` parameter takes LogQL on Loki and LogsQL on VictoriaLogs (e.g., Loki: `{app=\"foo\"} |= \"error\"`; VictoriaLogs: `{app=\"foo\"} \"error\"`). To count matching log lines precisely, use a `count_over_time()` metric query with queryType='instant'. Prefer using `query_loki_stats` first to cheaply check whether a stream contains data (avoiding expensive queries against empty streams) and `list_loki_label_names` / `list_loki_label_values` to verify labels exist before querying. Note: `query_loki_stats` returns approximate storage-level counts, not exact log line counts. For broad queries that match many lines, set `format` to 'compact' to group results by stream and avoid repeating label metadata on every line. If this server enables the Loki cost guardrail, expensive queries are rejected before execution: query cost is bytes SCANNED, determined only by the stream selector and time range — line filters (|=) and parsers (| json) reduce what is returned, not what is scanned. Use a stream selector with at least one selective positive label matcher (never `{}`, `=~\".*\"`/`=~\".+\"`, or negative-only matchers), keep time ranges narrow, and check size with `query_loki_stats` first; rejected queries return rewrite guidance.",
@@ -2415,7 +2623,7 @@
                     "type": "string"
                   },
                   "format": {
-                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once (and per-line structured/parsed metadata is dropped), substantially reducing response size for broad queries. Ignored for metric queries.",
+                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries.",
                     "enum": [
                       "full",
                       "compact"
@@ -2703,6 +2911,51 @@
                 "idempotentHint": true,
                 "openWorldHint": false,
                 "readOnlyHint": true,
+                "title": "Query Tempo metrics"
+              },
+              "description": "Compute trace-derived metrics using a TraceQL metrics query. Use type 'instant' for a single value or 'range' for a time series (default). Instant queries over large time ranges may timeout — keep the window under 15 minutes for instant, or use range instead.",
+              "inputSchema": {
+                "properties": {
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "end": {
+                    "description": "End time (RFC3339 format). If not provided will search the past 1 hour.",
+                    "type": "string"
+                  },
+                  "query": {
+                    "description": "TraceQL metrics query string (e.g. '{ } | count_over_time()' or '{ } | rate()').",
+                    "type": "string"
+                  },
+                  "start": {
+                    "description": "Start time (RFC3339 format). If not provided will search the past 1 hour.",
+                    "type": "string"
+                  },
+                  "type": {
+                    "default": "range",
+                    "description": "Query type: 'instant' returns a single value at the end of the time range; 'range' returns a time series. Default is 'range'.",
+                    "enum": [
+                      "instant",
+                      "range"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid",
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "query_tempo_metrics"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
                 "title": "Search dashboards"
               },
               "description": "Search Grafana dashboards by query and/or folderUid, tag, and starred. Returns matching dashboards with title, UID, folder, tags, and URL.",
@@ -2815,6 +3068,42 @@
                 "type": "object"
               },
               "name": "search_plugin_information"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Search Tempo traces"
+              },
+              "description": "Search for traces using TraceQL queries",
+              "inputSchema": {
+                "properties": {
+                  "datasourceUid": {
+                    "description": "UID of the tempo datasource to query",
+                    "type": "string"
+                  },
+                  "end": {
+                    "description": "End time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be after start.",
+                    "type": "string"
+                  },
+                  "query": {
+                    "description": "TraceQL query string",
+                    "type": "string"
+                  },
+                  "start": {
+                    "description": "Start time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be before end.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "datasourceUid",
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "search_tempo_traces"
             },
             {
               "annotations": {
@@ -3174,6 +3463,7 @@
             "create_snapshot",
             "delete_annotation",
             "delete_snapshot",
+            "diff_tempo_traces",
             "find_error_pattern_logs",
             "find_slow_requests",
             "generate_deeplink",
@@ -3195,9 +3485,12 @@
             "get_sift_analysis",
             "get_sift_investigation",
             "get_snapshot",
+            "get_tempo_trace",
+            "get_tempo_traceql_docs",
             "grafana_api_request",
             "install_plugin",
             "list_alert_groups",
+            "list_dashboard_versions",
             "list_datasources",
             "list_incident_custom_fields",
             "list_incidents",
@@ -3216,16 +3509,20 @@
             "list_pyroscope_profile_types",
             "list_sift_investigations",
             "list_snapshots",
+            "list_tempo_attribute_names",
+            "list_tempo_attribute_values",
             "query_loki_logs",
             "query_loki_patterns",
             "query_loki_stats",
             "query_prometheus",
             "query_prometheus_histogram",
             "query_pyroscope",
+            "query_tempo_metrics",
             "search_dashboards",
             "search_docs",
             "search_folders",
             "search_plugin_information",
+            "search_tempo_traces",
             "suggest_loki_alloy_label_config",
             "update_alert_group",
             "update_annotation",
