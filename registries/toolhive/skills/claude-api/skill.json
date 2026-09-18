@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/claude-api:0.4.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/claude-api:0.5.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/anthropics/skills",
-      "ref": "3b3fad96af16a10759d930941b4520ba0c40edae",
+      "ref": "34040c9c568585f6929bedeaad110ad08f079624",
       "subfolder": "skills/claude-api"
     }
   ]

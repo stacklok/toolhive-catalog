@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/next-partial-prefetching-adoption:0.2.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/next-partial-prefetching-adoption:0.3.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/vercel/next.js",
-      "ref": "2fe6f962a1982594bdda96a7de16c594677266d2",
+      "ref": "748cc4a6e8b046f2c61cc3f28378c78c7e7a9492",
       "subfolder": "skills/next-partial-prefetching-adoption"
     }
   ]

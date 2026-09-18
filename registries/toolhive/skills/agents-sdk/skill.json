@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/agents-sdk:0.2.2"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/agents-sdk:0.3.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/cloudflare/skills",
-      "ref": "f96bff754e428838818017f75817f0f9428acd48",
+      "ref": "b052c32bab7dd493513260228a36c88294f343f1",
       "subfolder": "skills/agents-sdk"
     }
   ]
