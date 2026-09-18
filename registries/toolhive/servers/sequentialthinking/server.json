@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/server-sequential-thinking:2026.8.31": {
           "metadata": {
-            "last_updated": "2026-07-16T22:16:35Z",
+            "last_updated": "2026-09-18T18:28:27Z",
             "stars": 84056
           },
           "overview": "## Sequential Thinking MCP Server\n\nThe sequentialthinking MCP server enables dynamic problem-solving with a structured, reflective approach that adapts as understanding deepens. Key capabilities include structured reflective problem-solving, dynamic adaptation during analysis, step-by-step chain-of-thought reasoning, and branching thought processes for comprehensive exploration.",
@@ -53,15 +53,24 @@
                   },
                   "isRevision": {
                     "description": "Whether this revises previous thinking",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "string"
+                    ]
                   },
                   "needsMoreThoughts": {
                     "description": "If more thoughts are needed",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "string"
+                    ]
                   },
                   "nextThoughtNeeded": {
                     "description": "Whether another thought step is needed",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "string"
+                    ]
                   },
                   "revisesThought": {
                     "description": "Which thought is being reconsidered",
@@ -88,6 +97,7 @@
                 },
                 "required": [
                   "thought",
+                  "nextThoughtNeeded",
                   "thoughtNumber",
                   "totalThoughts"
                 ],
