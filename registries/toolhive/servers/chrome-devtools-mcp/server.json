@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.9.0": {
           "metadata": {
-            "last_updated": "2026-08-31T22:59:24Z",
+            "last_updated": "2026-09-18T18:28:20Z",
             "stars": 33303
           },
           "overview": "## Chrome DevTools MCP Server\n\nThe chrome-devtools-mcp server is a Model Context Protocol (MCP) server that lets AI assistants interact directly with Chrome DevTools via the Chrome DevTools Protocol (CDP). It enables AI-driven workflows to inspect pages, observe network activity, debug JavaScript, analyze performance, and audit rendering behavior — all from within an MCP-compatible assistant, without manually opening DevTools. This server is ideal for frontend debugging, performance analysis, web automation diagnostics, and assisted web development.",
@@ -336,7 +336,7 @@
               "annotations": {
                 "readOnlyHint": false
               },
-              "description": "Gets a network request by an optional reqid, if omitted returns the currently selected request in the DevTools Network panel.",
+              "description": "Gets a network request by an optional reqid, if omitted returns the currently selected request in the DevTools Network panel. Useful for inspecting request headers (including 'Cookie') and response headers (including 'Set-Cookie' and directives).",
               "inputSchema": {
                 "properties": {
                   "pageId": {
@@ -675,7 +675,7 @@
                     "type": "boolean"
                   },
                   "isolatedContext": {
-                    "description": "If specified, the page is created in an isolated browser context with the given name. Pages in the same browser context share cookies and storage. Pages in different browser contexts are fully isolated.",
+                    "description": "If specified, the page is created in an isolated browser context with the given name. Pages in the same browser context share cookies and storage. Pages in different browser contexts are fully isolated (useful for clean-slate testing of cookies and authentication).",
                     "type": "string"
                   },
                   "timeout": {
