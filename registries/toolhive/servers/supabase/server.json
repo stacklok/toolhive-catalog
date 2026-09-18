@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.12.0": {
           "metadata": {
-            "last_updated": "2026-08-31T21:13:32Z",
+            "last_updated": "2026-09-18T18:28:41Z",
             "stars": 2612
           },
           "overview": "## Supabase MCP Server\n\nThe supabase MCP server connects Supabase projects to AI assistants for managing tables, fetching config, and querying data. The server enables MCP-based access to Supabase platform capabilities through the Management API, database operations, Edge Functions deployment, and branch management features, authenticated via environment variables.",
@@ -727,13 +727,13 @@
                   "iso_timestamp_end": {
                     "description": "The end of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to the current time. The API caps the requested range at 24 hours.",
                     "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                     "type": "string"
                   },
                   "iso_timestamp_start": {
                     "description": "The start of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to 24 hours before the end of the window. The API caps the requested range at 24 hours.",
                     "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                     "type": "string"
                   },
                   "project_id": {
