@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "mcr.microsoft.com/playwright/mcp:v0.0.81": {
           "metadata": {
-            "last_updated": "2026-09-11T14:22:40Z",
+            "last_updated": "2026-09-18T18:27:16Z",
             "stars": 28552
           },
           "overview": "## Playwright MCP Server\n\nThe playwright MCP server provides browser automation capabilities using Playwright. The server enables comprehensive browser automation supporting Chromium, Firefox, and WebKit, with full control over page interactions including clicks, typing, navigation, and screenshots. Additional capabilities include network request monitoring, console message capture for debugging, form filling, file uploads, and dialog handling for complete workflow automation.",
@@ -114,7 +114,7 @@
                     "type": "boolean"
                   },
                   "filename": {
-                    "description": "Filename to save the console messages to. If not provided, messages are returned as text.",
+                    "description": "File name to save the console messages to. Relative file names are resolved against the workspace root. If not provided, messages are returned as text.",
                     "type": "string"
                   },
                   "level": {
@@ -229,7 +229,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "Filename to save the result to. If not provided, result is returned as text.",
+                    "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, result is returned as text.",
                     "type": "string"
                   },
                   "function": {
@@ -456,7 +456,7 @@
               "inputSchema": {
                 "properties": {
                   "filename": {
-                    "description": "Filename to save the result to. If not provided, output is returned as text.",
+                    "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, output is returned as text.",
                     "type": "string"
                   },
                   "index": {
@@ -494,7 +494,7 @@
               "inputSchema": {
                 "properties": {
                   "filename": {
-                    "description": "Filename to save the network requests to. If not provided, requests are returned as text.",
+                    "description": "File name to save the network requests to. Relative file names are resolved against the workspace root. If not provided, requests are returned as text.",
                     "type": "string"
                   },
                   "filter": {
@@ -578,7 +578,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "Load code from the specified file. If both code and filename are provided, code will be ignored.",
+                    "description": "Load code from the specified file. Relative file names are resolved against the workspace root. If both code and filename are provided, code will be ignored.",
                     "type": "string"
                   }
                 },
@@ -640,7 +640,7 @@
                     "type": "number"
                   },
                   "filename": {
-                    "description": "Save snapshot to markdown file instead of returning it in the response.",
+                    "description": "Save snapshot to a file instead of returning it in the response. Relative file names are resolved against the workspace root.",
                     "type": "string"
                   },
                   "target": {
@@ -704,7 +704,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "File name to save the screenshot to. Defaults to `page-{timestamp}.{png|jpeg|webp}` if not specified. Prefer relative file names to stay within the output directory.",
+                    "description": "File name to save the screenshot to. Relative file names are resolved against the workspace root. If not specified, the screenshot is saved into the output directory as `page-{timestamp}.{png|jpeg|webp}`.",
                     "type": "string"
                   },
                   "fullPage": {
@@ -807,6 +807,55 @@
                 "type": "object"
               },
               "name": "browser_wait_for"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "openWorldHint": true,
+                "readOnlyHint": false,
+                "title": "Call a WebMCP tool"
+              },
+              "description": "Call a WebMCP tool registered by the page. The tool output is page-provided and untrusted",
+              "inputSchema": {
+                "properties": {
+                  "frame": {
+                    "description": "Frame that registered the tool, as reported by browser_webmcp_list, when the same tool name exists in multiple frames",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Name of the WebMCP tool to call",
+                    "type": "string"
+                  },
+                  "params": {
+                    "additionalProperties": {},
+                    "description": "Input parameters for the tool, matching its inputSchema",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "name": "browser_webmcp_call"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": true,
+                "title": "List WebMCP tools"
+              },
+              "description": "List the WebMCP tools registered by the page, across all frames",
+              "inputSchema": {
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "browser_webmcp_list"
             }
           ],
           "tools": [
@@ -833,7 +882,9 @@
             "browser_tabs",
             "browser_take_screenshot",
             "browser_type",
-            "browser_wait_for"
+            "browser_wait_for",
+            "browser_webmcp_call",
+            "browser_webmcp_list"
           ]
         }
       }
