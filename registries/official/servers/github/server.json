@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/github/github-mcp-server:v1.12.2": {
           "metadata": {
-            "last_updated": "2026-09-11T01:45:22Z",
+            "last_updated": "2026-09-18T18:25:50Z",
             "stars": 28440
           },
           "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -2324,6 +2324,46 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": false,
+                "title": "Update issue comment"
+              },
+              "description": "Update the body of an existing issue or pull request conversation comment. This tool cannot update pull request review comments.",
+              "inputSchema": {
+                "properties": {
+                  "body": {
+                    "description": "New comment content",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "comment_id": {
+                    "description": "The numeric ID of the issue or pull request conversation comment to update. Do not use a pull request review comment ID.",
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "owner": {
+                    "description": "Repository owner",
+                    "type": "string",
+                    "x-mcp-header": "owner"
+                  },
+                  "repo": {
+                    "description": "Repository name",
+                    "type": "string",
+                    "x-mcp-header": "repo"
+                  }
+                },
+                "required": [
+                  "owner",
+                  "repo",
+                  "comment_id",
+                  "body"
+                ],
+                "type": "object"
+              },
+              "name": "update_issue_comment"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
                 "title": "Edit pull request"
               },
               "description": "Update an existing pull request in a GitHub repository.",
@@ -2469,6 +2509,7 @@
             "search_repositories",
             "search_users",
             "sub_issue_write",
+            "update_issue_comment",
             "update_pull_request",
             "update_pull_request_branch"
           ]
