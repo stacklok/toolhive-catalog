@@ -1,0 +1,60 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://markovo.net/mcp": {
+          "custom_metadata": {
+            "author": "Markovo",
+            "homepage": "https://markovo.net/docs/mcp"
+          },
+          "overview": "## Markovo\n\nMarkovo is a hosted Model Context Protocol server that converts documents and authorized public web pages into clean, structured Markdown for agent context. It handles PDF, DOCX, PPTX and XLSX files plus explicitly authorized public HTTPS sources such as Google Docs, Notion pages, GitHub text resources, Hacker News threads and YouTube (audio transcription). The remote endpoint authenticates with OAuth 2.1; every conversion runs under a caller-supplied Credit ceiling so the server never retries above a confirmed limit or mutates billing.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "markdown",
+            "pdf",
+            "documents",
+            "conversion",
+            "rag",
+            "context",
+            "oauth"
+          ],
+          "tier": "Community",
+          "tools": [
+            "markovo_convert",
+            "markovo_convert_url",
+            "markovo_job_status",
+            "markovo_job_assets",
+            "markovo_asset_url",
+            "markovo_asset_revoke",
+            "markovo_usage",
+            "markovo_capabilities",
+            "markovo_billing",
+            "markovo_bundle_verify",
+            "markovo_doctor"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Convert PDF, DOCX, PPTX, XLSX and authorized public HTTPS pages into clean, structured Markdown for agent context",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/markovo/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/markovo",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://markovo.net/mcp"
+    }
+  ],
+  "title": "Markovo",
+  "version": "1.0.0"
+}
