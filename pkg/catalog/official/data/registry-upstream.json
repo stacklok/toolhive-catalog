@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/stacklok/toolhive-core/main/registry/types/data/upstream-registry.schema.json",
   "version": "1.0.0",
   "meta": {
-    "last_updated": "2026-09-16T15:56:20Z"
+    "last_updated": "2026-09-21T18:18:59Z"
   },
   "data": {
     "servers": [
@@ -412,7 +412,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/apollographql/apollo-mcp-server:v1.18.0",
+            "identifier": "ghcr.io/apollographql/apollo-mcp-server:v1.19.0",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:5000"
@@ -433,7 +433,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/apollographql/apollo-mcp-server:v1.18.0": {
+              "ghcr.io/apollographql/apollo-mcp-server:v1.19.0": {
                 "metadata": {
                   "last_updated": "2026-04-27T03:05:26Z",
                   "stars": 279
@@ -861,7 +861,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/uvx/aws-documentation:1.2.0",
+            "identifier": "ghcr.io/stacklok/dockyard/uvx/aws-documentation:1.2.1",
             "transport": {
               "type": "stdio"
             },
@@ -882,7 +882,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/uvx/aws-documentation:1.2.0": {
+              "ghcr.io/stacklok/dockyard/uvx/aws-documentation:1.2.1": {
                 "metadata": {
                   "last_updated": "2026-08-31T22:25:44Z",
                   "stars": 8776
@@ -4221,7 +4221,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/brightdata-mcp:2.11.1",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/brightdata-mcp:2.11.2",
             "transport": {
               "type": "stdio"
             },
@@ -4279,7 +4279,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/brightdata-mcp:2.11.1": {
+              "ghcr.io/stacklok/dockyard/npx/brightdata-mcp:2.11.2": {
                 "metadata": {
                   "last_updated": "2026-08-07T00:30:48Z",
                   "stars": 2551
@@ -8913,7 +8913,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.8.0",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.9.0",
             "transport": {
               "type": "stdio"
             }
@@ -8922,9 +8922,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.8.0": {
+              "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.9.0": {
                 "metadata": {
-                  "last_updated": "2026-08-31T22:59:29Z",
+                  "last_updated": "2026-09-18T18:28:09Z",
                   "stars": 34184
                 },
                 "overview": "## Chrome DevTools MCP Server\n\nThe chrome-devtools-mcp server is a Model Context Protocol (MCP) server that lets AI assistants interact directly with Chrome DevTools via the Chrome DevTools Protocol (CDP). It enables AI-driven workflows to inspect pages, observe network activity, debug JavaScript, analyze performance, and audit rendering behavior — all from within an MCP-compatible assistant, without manually opening DevTools. This server is ideal for frontend debugging, performance analysis, web automation diagnostics, and assisted web development.",
@@ -9255,7 +9255,7 @@
                     "annotations": {
                       "readOnlyHint": false
                     },
-                    "description": "Gets a network request by an optional reqid, if omitted returns the currently selected request in the DevTools Network panel.",
+                    "description": "Gets a network request by an optional reqid, if omitted returns the currently selected request in the DevTools Network panel. Useful for inspecting request headers (including 'Cookie') and response headers (including 'Set-Cookie' and directives).",
                     "inputSchema": {
                       "properties": {
                         "pageId": {
@@ -9594,7 +9594,7 @@
                           "type": "boolean"
                         },
                         "isolatedContext": {
-                          "description": "If specified, the page is created in an isolated browser context with the given name. Pages in the same browser context share cookies and storage. Pages in different browser contexts are fully isolated.",
+                          "description": "If specified, the page is created in an isolated browser context with the given name. Pages in the same browser context share cookies and storage. Pages in different browser contexts are fully isolated (useful for clean-slate testing of cookies and authentication).",
                           "type": "string"
                         },
                         "timeout": {
@@ -10402,7 +10402,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/context7:4.0.4",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/context7:4.1.1",
             "transport": {
               "type": "stdio"
             },
@@ -10418,7 +10418,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/context7:4.0.4": {
+              "ghcr.io/stacklok/dockyard/npx/context7:4.1.1": {
                 "metadata": {
                   "last_updated": "2026-07-31T01:12:58Z",
                   "stars": 52568
@@ -10835,7 +10835,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.11.0",
+            "identifier": "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.12.0",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:5000"
@@ -10845,7 +10845,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.11.0": {
+              "us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.12.0": {
                 "args": [
                   "--address",
                   "0.0.0.0"
@@ -14997,7 +14997,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/github/github-mcp-server:v1.12.1",
+            "identifier": "ghcr.io/github/github-mcp-server:v1.12.2",
             "transport": {
               "type": "stdio"
             },
@@ -15026,9 +15026,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/github/github-mcp-server:v1.12.1": {
+              "ghcr.io/github/github-mcp-server:v1.12.2": {
                 "metadata": {
-                  "last_updated": "2026-09-11T01:45:22Z",
+                  "last_updated": "2026-09-18T18:25:50Z",
                   "stars": 28440
                 },
                 "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -17347,6 +17347,46 @@
                     "annotations": {
                       "idempotentHint": false,
                       "readOnlyHint": false,
+                      "title": "Update issue comment"
+                    },
+                    "description": "Update the body of an existing issue or pull request conversation comment. This tool cannot update pull request review comments.",
+                    "inputSchema": {
+                      "properties": {
+                        "body": {
+                          "description": "New comment content",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "comment_id": {
+                          "description": "The numeric ID of the issue or pull request conversation comment to update. Do not use a pull request review comment ID.",
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "owner": {
+                          "description": "Repository owner",
+                          "type": "string",
+                          "x-mcp-header": "owner"
+                        },
+                        "repo": {
+                          "description": "Repository name",
+                          "type": "string",
+                          "x-mcp-header": "repo"
+                        }
+                      },
+                      "required": [
+                        "owner",
+                        "repo",
+                        "comment_id",
+                        "body"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "update_issue_comment"
+                  },
+                  {
+                    "annotations": {
+                      "idempotentHint": false,
+                      "readOnlyHint": false,
                       "title": "Edit pull request"
                     },
                     "description": "Update an existing pull request in a GitHub repository.",
@@ -17492,6 +17532,7 @@
                   "search_repositories",
                   "search_users",
                   "sub_issue_write",
+                  "update_issue_comment",
                   "update_pull_request",
                   "update_pull_request_branch"
                 ]
@@ -17811,7 +17852,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "docker.io/grafana/mcp-grafana:1.4.0",
+            "identifier": "docker.io/grafana/mcp-grafana:1.5.1",
             "transport": {
               "type": "stdio"
             },
@@ -17837,13 +17878,13 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "docker.io/grafana/mcp-grafana:1.4.0": {
+              "docker.io/grafana/mcp-grafana:1.5.1": {
                 "args": [
                   "--transport",
                   "stdio"
                 ],
                 "metadata": {
-                  "last_updated": "2026-09-11T01:44:52Z",
+                  "last_updated": "2026-09-18T18:27:58Z",
                   "stars": 3239
                 },
                 "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -18678,11 +18719,70 @@
                   {
                     "annotations": {
                       "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "Diff Tempo traces"
+                    },
+                    "description": "Compare two complete traces. Returns a compact summary and includes the full span-level patch when it is at most 64 KiB. Request trace-patch-v0 only when full details are required; full patches are not size-bounded.",
+                    "inputSchema": {
+                      "properties": {
+                        "base_end": {
+                          "description": "Optional end of the baseline trace search range in RFC3339 format. Must be provided with base_start.",
+                          "type": "string"
+                        },
+                        "base_start": {
+                          "description": "Optional start of the baseline trace search range in RFC3339 format. Must be provided with base_end.",
+                          "type": "string"
+                        },
+                        "base_trace_id": {
+                          "description": "Trace ID for the baseline trace",
+                          "type": "string"
+                        },
+                        "compare_end": {
+                          "description": "Optional end of the comparison trace search range in RFC3339 format. Must be provided with compare_start.",
+                          "type": "string"
+                        },
+                        "compare_start": {
+                          "description": "Optional start of the comparison trace search range in RFC3339 format. Must be provided with compare_end.",
+                          "type": "string"
+                        },
+                        "compare_trace_id": {
+                          "description": "Trace ID for the comparison trace",
+                          "type": "string"
+                        },
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "format": {
+                          "default": "trace-summary-v0-composed",
+                          "description": "Output format. The composed format returns a compact summary and attaches the full patch only when it is at most 64 KiB. trace-patch-v0 has no output-size guarantee.",
+                          "enum": [
+                            "trace-summary-v0-composed",
+                            "trace-summary-v0-native",
+                            "trace-patch-v0"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid",
+                        "base_trace_id",
+                        "compare_trace_id"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "diff_tempo_traces"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
                       "openWorldHint": false,
                       "readOnlyHint": false,
                       "title": "Find error patterns in logs"
                     },
-                    "description": "Searches Loki logs for elevated error patterns compared to the last day's average, waits for the analysis to complete, and returns the results including any patterns found.",
+                    "description": "Searches Loki logs for elevated error patterns compared to the last day's average, waits for the analysis to complete, and returns the results including any patterns found. Use the labelSelector parameter with PromQL/LogQL syntax for pattern matching on label values (e.g. {namespace=~\"prod.*\"}).",
                     "inputSchema": {
                       "properties": {
                         "end": {
@@ -18690,12 +18790,9 @@
                           "format": "date-time",
                           "type": "string"
                         },
-                        "labels": {
-                          "additionalProperties": {
-                            "type": "string"
-                          },
-                          "description": "Labels to scope the analysis",
-                          "type": "object"
+                        "labelSelector": {
+                          "description": "A PromQL/LogQL stream selector to scope the analysis. Supports all match operators: = (exact), != (not equal), =~ (regex), !~ (negative regex). Example: {namespace=~\"prod.*\", cluster=\"us-east-1\"}",
+                          "type": "string"
                         },
                         "name": {
                           "description": "The name of the investigation",
@@ -18709,7 +18806,7 @@
                       },
                       "required": [
                         "name",
-                        "labels"
+                        "labelSelector"
                       ],
                       "type": "object"
                     },
@@ -18722,7 +18819,7 @@
                       "readOnlyHint": false,
                       "title": "Find slow requests"
                     },
-                    "description": "Searches relevant Tempo datasources for slow requests, waits for the analysis to complete, and returns the results.",
+                    "description": "Searches relevant Tempo datasources for slow requests, waits for the analysis to complete, and returns the results. Use the labelSelector parameter with PromQL/LogQL syntax for pattern matching on label values (e.g. {namespace=~\"prod.*\"}).",
                     "inputSchema": {
                       "properties": {
                         "end": {
@@ -18730,12 +18827,9 @@
                           "format": "date-time",
                           "type": "string"
                         },
-                        "labels": {
-                          "additionalProperties": {
-                            "type": "string"
-                          },
-                          "description": "Labels to scope the analysis",
-                          "type": "object"
+                        "labelSelector": {
+                          "description": "A PromQL/LogQL stream selector to scope the analysis. Supports all match operators: = (exact), != (not equal), =~ (regex), !~ (negative regex). Example: {namespace=~\"prod.*\", cluster=\"us-east-1\"}",
+                          "type": "string"
                         },
                         "name": {
                           "description": "The name of the investigation",
@@ -18749,7 +18843,7 @@
                       },
                       "required": [
                         "name",
-                        "labels"
+                        "labelSelector"
                       ],
                       "type": "object"
                     },
@@ -18884,7 +18978,8 @@
                       "properties": {
                         "limit": {
                           "description": "Max results, default 100",
-                          "type": "string"
+                          "minimum": 1,
+                          "type": "integer"
                         },
                         "tag": {
                           "description": "Optional filter by tag name",
@@ -19035,12 +19130,17 @@
                       "readOnlyHint": true,
                       "title": "Get dashboard details"
                     },
-                    "description": "Retrieves the complete dashboard, including panels, variables, and settings, for a specific dashboard identified by its UID. The response includes 'apiVersion' and 'isV2': when 'isV2' is true the dashboard uses the v2 schema (panels live under 'elements' keyed by name, arranged by 'layout'; variables under 'variables'), otherwise it is classic v1 ('panels[]' with 'templating.list'). WARNING: Large dashboards can consume significant context window space. Consider using get_dashboard_summary for overview or get_dashboard_property for specific data instead.",
+                    "description": "Retrieves the complete dashboard, including panels, variables, and settings, for a specific dashboard identified by its UID. Pass optional version to load a saved snapshot instead of the current dashboard. Saved snapshots are fetched through Grafana's legacy versions API, so 'apiVersion' is omitted and 'meta' is partial: only version, createdBy, and created are populated. For current (non-versioned) fetches, the response includes 'apiVersion' and 'isV2': when 'isV2' is true the dashboard uses the v2 schema (panels live under 'elements' keyed by name, arranged by 'layout'; variables under 'variables'), otherwise it is classic v1 ('panels[]' with 'templating.list'). WARNING: Large dashboards can consume significant context window space. Consider using get_dashboard_summary for overview or get_dashboard_property for specific data instead.",
                     "inputSchema": {
                       "properties": {
                         "uid": {
                           "description": "The UID of the dashboard",
                           "type": "string"
+                        },
+                        "version": {
+                          "description": "Optional saved version. Omit for the current dashboard",
+                          "minimum": 1,
+                          "type": "integer"
                         }
                       },
                       "required": [
@@ -19442,6 +19542,63 @@
                   },
                   {
                     "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "Get Tempo trace"
+                    },
+                    "description": "Retrieve a specific trace by ID",
+                    "inputSchema": {
+                      "properties": {
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "trace_id": {
+                          "description": "Trace ID to retrieve",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid",
+                        "trace_id"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "get_tempo_trace"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "Get TraceQL documentation"
+                    },
+                    "description": "Retrieve TraceQL reference documentation with examples, covering attribute filters, aggregates, structural operators, and metrics queries. Consult this before writing a non-trivial TraceQL query, or after one returns an error or no results.",
+                    "inputSchema": {
+                      "properties": {
+                        "topic": {
+                          "description": "Which section of the TraceQL reference to retrieve: 'basic' for attribute and duration filters, 'aggregates' for count/avg/sum and by() grouping, 'structural' for parent/child and descendant operators, 'metrics' for rate/quantile_over_time metrics queries",
+                          "enum": [
+                            "basic",
+                            "aggregates",
+                            "structural",
+                            "metrics"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "topic"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "get_tempo_traceql_docs"
+                  },
+                  {
+                    "annotations": {
                       "destructiveHint": true,
                       "openWorldHint": false,
                       "readOnlyHint": false,
@@ -19570,6 +19727,39 @@
                       "type": "object"
                     },
                     "name": "list_alert_groups"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "List dashboard versions"
+                    },
+                    "description": "List saved versions of a Grafana dashboard. Returns compact metadata: version number, author, timestamp, and save message. Use get_dashboard_by_uid with version to fetch a snapshot.",
+                    "inputSchema": {
+                      "properties": {
+                        "limit": {
+                          "description": "Maximum number of versions to return",
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "start": {
+                          "description": "Version to start from. Only versions at or below this number are returned",
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "uid": {
+                          "description": "The UID of the dashboard",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "uid"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "list_dashboard_versions"
                   },
                   {
                     "annotations": {
@@ -20231,6 +20421,65 @@
                       "idempotentHint": true,
                       "openWorldHint": false,
                       "readOnlyHint": true,
+                      "title": "List Tempo attribute names"
+                    },
+                    "description": "List available attribute names for TraceQL queries. Always pass a scope (resource, span, etc.) to avoid very large responses.",
+                    "inputSchema": {
+                      "properties": {
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "scope": {
+                          "description": "Scope to filter attributes by (span, resource, event, link, instrumentation). Strongly recommended — omitting scope returns all attributes across all scopes which can be very large (100K+ chars).",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "list_tempo_attribute_names"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "List Tempo attribute values"
+                    },
+                    "description": "List values for a fully scoped attribute name (e.g. resource.service.name). Useful for discovering what values exist for a specific attribute.",
+                    "inputSchema": {
+                      "properties": {
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "filter-query": {
+                          "description": "Filter query to apply to the attribute values. It can only have one spanset and only \u0026\u0026'ed conditions like { \u003ccond\u003e \u0026\u0026 \u003ccond\u003e \u0026\u0026 ... }. This is useful for filtering the values to a specific set of values.",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "The attribute name to get values for (e.g. 'span.http.method', 'resource.service.name')",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid",
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "list_tempo_attribute_values"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
                       "title": "Query Loki logs"
                     },
                     "description": "Executes a log query against a Loki or VictoriaLogs datasource and returns matching log entries (or metric samples on Loki). Defaults to the last hour, a limit of 10 entries, and 'backward' direction (newest first). The `logql` parameter takes LogQL on Loki and LogsQL on VictoriaLogs (e.g., Loki: `{app=\"foo\"} |= \"error\"`; VictoriaLogs: `{app=\"foo\"} \"error\"`). To count matching log lines precisely, use a `count_over_time()` metric query with queryType='instant'. Prefer using `query_loki_stats` first to cheaply check whether a stream contains data (avoiding expensive queries against empty streams) and `list_loki_label_names` / `list_loki_label_values` to verify labels exist before querying. Note: `query_loki_stats` returns approximate storage-level counts, not exact log line counts. For broad queries that match many lines, set `format` to 'compact' to group results by stream and avoid repeating label metadata on every line. If this server enables the Loki cost guardrail, expensive queries are rejected before execution: query cost is bytes SCANNED, determined only by the stream selector and time range — line filters (|=) and parsers (| json) reduce what is returned, not what is scanned. Use a stream selector with at least one selective positive label matcher (never `{}`, `=~\".*\"`/`=~\".+\"`, or negative-only matchers), keep time ranges narrow, and check size with `query_loki_stats` first; rejected queries return rewrite guidance.",
@@ -20249,7 +20498,7 @@
                           "type": "string"
                         },
                         "format": {
-                          "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once (and per-line structured/parsed metadata is dropped), substantially reducing response size for broad queries. Ignored for metric queries.",
+                          "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries.",
                           "enum": [
                             "full",
                             "compact"
@@ -20537,6 +20786,51 @@
                       "idempotentHint": true,
                       "openWorldHint": false,
                       "readOnlyHint": true,
+                      "title": "Query Tempo metrics"
+                    },
+                    "description": "Compute trace-derived metrics using a TraceQL metrics query. Use type 'instant' for a single value or 'range' for a time series (default). Instant queries over large time ranges may timeout — keep the window under 15 minutes for instant, or use range instead.",
+                    "inputSchema": {
+                      "properties": {
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "end": {
+                          "description": "End time (RFC3339 format). If not provided will search the past 1 hour.",
+                          "type": "string"
+                        },
+                        "query": {
+                          "description": "TraceQL metrics query string (e.g. '{ } | count_over_time()' or '{ } | rate()').",
+                          "type": "string"
+                        },
+                        "start": {
+                          "description": "Start time (RFC3339 format). If not provided will search the past 1 hour.",
+                          "type": "string"
+                        },
+                        "type": {
+                          "default": "range",
+                          "description": "Query type: 'instant' returns a single value at the end of the time range; 'range' returns a time series. Default is 'range'.",
+                          "enum": [
+                            "instant",
+                            "range"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid",
+                        "query"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "query_tempo_metrics"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
                       "title": "Search dashboards"
                     },
                     "description": "Search Grafana dashboards by query and/or folderUid, tag, and starred. Returns matching dashboards with title, UID, folder, tags, and URL.",
@@ -20649,6 +20943,42 @@
                       "type": "object"
                     },
                     "name": "search_plugin_information"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "idempotentHint": true,
+                      "openWorldHint": false,
+                      "readOnlyHint": true,
+                      "title": "Search Tempo traces"
+                    },
+                    "description": "Search for traces using TraceQL queries",
+                    "inputSchema": {
+                      "properties": {
+                        "datasourceUid": {
+                          "description": "UID of the tempo datasource to query",
+                          "type": "string"
+                        },
+                        "end": {
+                          "description": "End time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be after start.",
+                          "type": "string"
+                        },
+                        "query": {
+                          "description": "TraceQL query string",
+                          "type": "string"
+                        },
+                        "start": {
+                          "description": "Start time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be before end.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "datasourceUid",
+                        "query"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "search_tempo_traces"
                   },
                   {
                     "annotations": {
@@ -21008,6 +21338,7 @@
                   "create_snapshot",
                   "delete_annotation",
                   "delete_snapshot",
+                  "diff_tempo_traces",
                   "find_error_pattern_logs",
                   "find_slow_requests",
                   "generate_deeplink",
@@ -21029,9 +21360,12 @@
                   "get_sift_analysis",
                   "get_sift_investigation",
                   "get_snapshot",
+                  "get_tempo_trace",
+                  "get_tempo_traceql_docs",
                   "grafana_api_request",
                   "install_plugin",
                   "list_alert_groups",
+                  "list_dashboard_versions",
                   "list_datasources",
                   "list_incident_custom_fields",
                   "list_incidents",
@@ -21050,16 +21384,20 @@
                   "list_pyroscope_profile_types",
                   "list_sift_investigations",
                   "list_snapshots",
+                  "list_tempo_attribute_names",
+                  "list_tempo_attribute_values",
                   "query_loki_logs",
                   "query_loki_patterns",
                   "query_loki_stats",
                   "query_prometheus",
                   "query_prometheus_histogram",
                   "query_pyroscope",
+                  "query_tempo_metrics",
                   "search_dashboards",
                   "search_docs",
                   "search_folders",
                   "search_plugin_information",
+                  "search_tempo_traces",
                   "suggest_loki_alloy_label_config",
                   "update_alert_group",
                   "update_annotation",
@@ -23469,7 +23807,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.6",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.7",
             "transport": {
               "type": "stdio"
             },
@@ -23491,7 +23829,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.6": {
+              "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.7": {
                 "metadata": {
                   "last_updated": "2026-07-08T07:49:35Z",
                   "stars": 77
@@ -28078,7 +28416,7 @@
                   "homepage": "https://linear.app/docs/mcp"
                 },
                 "metadata": {
-                  "last_updated": "2026-04-26T03:04:32Z"
+                  "last_updated": "2026-09-18T02:27:37Z"
                 },
                 "overview": "## Linear MCP Server\n\nThe linear MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Linear, the issue tracking and project management platform. It allows AI-driven workflows to create, update, search, and reason about issues, projects, cycles, and teams — bringing planning and execution context directly into AI-assisted development workflows. This server is especially useful for product planning, engineering management, sprint execution, and triage workflows where Linear is the system of record.",
                 "status": "Active",
@@ -29444,7 +29782,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "docker.io/mongodb/mongodb-mcp-server:2.1.1",
+            "identifier": "docker.io/mongodb/mongodb-mcp-server:3.0.3",
             "transport": {
               "type": "stdio"
             },
@@ -29498,7 +29836,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "docker.io/mongodb/mongodb-mcp-server:2.1.1": {
+              "docker.io/mongodb/mongodb-mcp-server:3.0.3": {
                 "metadata": {
                   "last_updated": "2026-08-14T03:00:21Z",
                   "stars": 1097
@@ -29585,7 +29923,7 @@
                   "author": "Neon"
                 },
                 "metadata": {
-                  "last_updated": "2026-04-26T03:04:31Z"
+                  "last_updated": "2026-09-18T02:27:37Z"
                 },
                 "overview": "## Neon Remote MCP Server\n\nNeon's official remote MCP server for serverless Postgres with branching and migrations. The server enables project and organization management for Neon Postgres databases, SQL execution with schema and transaction support, database branching for development and testing workflows, plus query tuning and performance optimization features.",
                 "status": "Active",
@@ -36232,7 +36570,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/uvx/okta:1.1.5",
+            "identifier": "ghcr.io/stacklok/dockyard/uvx/okta:1.1.6",
             "transport": {
               "type": "stdio"
             },
@@ -36273,7 +36611,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/uvx/okta:1.1.5": {
+              "ghcr.io/stacklok/dockyard/uvx/okta:1.1.6": {
                 "custom_metadata": {
                   "author": "Okta",
                   "homepage": "https://github.com/okta/okta-mcp-server",
@@ -44981,7 +45319,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.4",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.10",
             "transport": {
               "type": "stdio"
             },
@@ -45002,9 +45340,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.4": {
+              "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.10": {
                 "metadata": {
-                  "last_updated": "2026-08-31T22:25:00Z",
+                  "last_updated": "2026-09-18T18:26:58Z",
                   "stars": 9311
                 },
                 "overview": "## Phoenix MCP Server\n\nThe phoenix MCP server is a Model Context Protocol (MCP) server for the Arize Phoenix observability platform. It provides AI assistants with programmatic access to Arize Phoenix, enabling dataset and experiment management for LLM evaluation workflows, prompt version control and tagging for LLM application development, span and trace querying for observability and debugging, and project-based organization for managing multiple Phoenix instances.",
@@ -46350,7 +46688,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.79",
+            "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.81",
             "transport": {
               "type": "stdio"
             },
@@ -46533,9 +46871,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "mcr.microsoft.com/playwright/mcp:v0.0.79": {
+              "mcr.microsoft.com/playwright/mcp:v0.0.81": {
                 "metadata": {
-                  "last_updated": "2026-09-11T14:22:40Z",
+                  "last_updated": "2026-09-18T18:27:16Z",
                   "stars": 28552
                 },
                 "overview": "## Playwright MCP Server\n\nThe playwright MCP server provides browser automation capabilities using Playwright. The server enables comprehensive browser automation supporting Chromium, Firefox, and WebKit, with full control over page interactions including clicks, typing, navigation, and screenshots. Additional capabilities include network request monitoring, console message capture for debugging, form filling, file uploads, and dialog handling for complete workflow automation.",
@@ -46644,7 +46982,7 @@
                           "type": "boolean"
                         },
                         "filename": {
-                          "description": "Filename to save the console messages to. If not provided, messages are returned as text.",
+                          "description": "File name to save the console messages to. Relative file names are resolved against the workspace root. If not provided, messages are returned as text.",
                           "type": "string"
                         },
                         "level": {
@@ -46759,7 +47097,7 @@
                           "type": "string"
                         },
                         "filename": {
-                          "description": "Filename to save the result to. If not provided, result is returned as text.",
+                          "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, result is returned as text.",
                           "type": "string"
                         },
                         "function": {
@@ -46986,7 +47324,7 @@
                     "inputSchema": {
                       "properties": {
                         "filename": {
-                          "description": "Filename to save the result to. If not provided, output is returned as text.",
+                          "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, output is returned as text.",
                           "type": "string"
                         },
                         "index": {
@@ -47024,7 +47362,7 @@
                     "inputSchema": {
                       "properties": {
                         "filename": {
-                          "description": "Filename to save the network requests to. If not provided, requests are returned as text.",
+                          "description": "File name to save the network requests to. Relative file names are resolved against the workspace root. If not provided, requests are returned as text.",
                           "type": "string"
                         },
                         "filter": {
@@ -47108,7 +47446,7 @@
                           "type": "string"
                         },
                         "filename": {
-                          "description": "Load code from the specified file. If both code and filename are provided, code will be ignored.",
+                          "description": "Load code from the specified file. Relative file names are resolved against the workspace root. If both code and filename are provided, code will be ignored.",
                           "type": "string"
                         }
                       },
@@ -47170,7 +47508,7 @@
                           "type": "number"
                         },
                         "filename": {
-                          "description": "Save snapshot to markdown file instead of returning it in the response.",
+                          "description": "Save snapshot to a file instead of returning it in the response. Relative file names are resolved against the workspace root.",
                           "type": "string"
                         },
                         "target": {
@@ -47234,7 +47572,7 @@
                           "type": "string"
                         },
                         "filename": {
-                          "description": "File name to save the screenshot to. Defaults to `page-{timestamp}.{png|jpeg|webp}` if not specified. Prefer relative file names to stay within the output directory.",
+                          "description": "File name to save the screenshot to. Relative file names are resolved against the workspace root. If not specified, the screenshot is saved into the output directory as `page-{timestamp}.{png|jpeg|webp}`.",
                           "type": "string"
                         },
                         "fullPage": {
@@ -47337,6 +47675,55 @@
                       "type": "object"
                     },
                     "name": "browser_wait_for"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": true,
+                      "openWorldHint": true,
+                      "readOnlyHint": false,
+                      "title": "Call a WebMCP tool"
+                    },
+                    "description": "Call a WebMCP tool registered by the page. The tool output is page-provided and untrusted",
+                    "inputSchema": {
+                      "properties": {
+                        "frame": {
+                          "description": "Frame that registered the tool, as reported by browser_webmcp_list, when the same tool name exists in multiple frames",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the WebMCP tool to call",
+                          "type": "string"
+                        },
+                        "params": {
+                          "additionalProperties": {},
+                          "description": "Input parameters for the tool, matching its inputSchema",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ],
+                      "type": "object"
+                    },
+                    "name": "browser_webmcp_call"
+                  },
+                  {
+                    "annotations": {
+                      "destructiveHint": false,
+                      "openWorldHint": true,
+                      "readOnlyHint": true,
+                      "title": "List WebMCP tools"
+                    },
+                    "description": "List the WebMCP tools registered by the page, across all frames",
+                    "inputSchema": {
+                      "properties": {},
+                      "required": [],
+                      "type": "object"
+                    },
+                    "name": "browser_webmcp_list"
                   }
                 ],
                 "tools": [
@@ -47363,7 +47750,9 @@
                   "browser_tabs",
                   "browser_take_screenshot",
                   "browser_type",
-                  "browser_wait_for"
+                  "browser_wait_for",
+                  "browser_webmcp_call",
+                  "browser_webmcp_list"
                 ]
               }
             }
@@ -52223,7 +52612,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.11.0",
+            "identifier": "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.12.0",
             "transport": {
               "type": "stdio"
             },
@@ -52240,9 +52629,9 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.11.0": {
+              "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.12.0": {
                 "metadata": {
-                  "last_updated": "2026-08-31T21:13:39Z",
+                  "last_updated": "2026-09-18T18:28:36Z",
                   "stars": 2612
                 },
                 "overview": "## Supabase MCP Server\n\nThe supabase MCP server connects Supabase projects to AI assistants for managing tables, fetching config, and querying data. The server enables MCP-based access to Supabase platform capabilities through the Management API, database operations, Edge Functions deployment, and branch management features, authenticated via environment variables.",
@@ -52964,13 +53353,13 @@
                         "iso_timestamp_end": {
                           "description": "The end of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to the current time. The API caps the requested range at 24 hours.",
                           "format": "date-time",
-                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                           "type": "string"
                         },
                         "iso_timestamp_start": {
                           "description": "The start of the log window as an ISO 8601 timestamp, including a UTC \"Z\" suffix or explicit offset. Defaults to 24 hours before the end of the window. The API caps the requested range at 24 hours.",
                           "format": "date-time",
-                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
                           "type": "string"
                         },
                         "project_id": {
@@ -56207,7 +56596,7 @@
         "packages": [
           {
             "registryType": "oci",
-            "identifier": "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.0.18-20260831",
+            "identifier": "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.0.18-20260914",
             "transport": {
               "type": "streamable-http",
               "url": "http://localhost:8080"
@@ -56243,7 +56632,7 @@
         "_meta": {
           "io.modelcontextprotocol.registry/publisher-provided": {
             "io.github.stacklok": {
-              "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.0.18-20260831": {
+              "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.0.18-20260914": {
                 "metadata": {
                   "last_updated": "2026-07-31T20:52:33Z",
                   "stars": 3
