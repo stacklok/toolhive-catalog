@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Markovo: files become Markdown">
+  <rect width="64" height="64" rx="12" fill="#f7f1e7"/>
+  <path d="M23 11L19 53M43 11L39 53" stroke="#17130f" stroke-width="9" stroke-linecap="square"/>
+  <path d="M11 24h43" stroke="#f0522d" stroke-width="9" stroke-linecap="square"/>
+  <path d="M9 40h43" stroke="#245c4a" stroke-width="9" stroke-linecap="square"/>
+  <path d="M7 20h8v8H7z" fill="#f7f1e7"/>
+  <path d="M5 36h8v8H5z" fill="#f7f1e7"/>
+  <path d="M7 20l8 8H7z" fill="#cf3e1e"/>
+  <path d="M5 36l8 8H5z" fill="#194838"/>
+</svg>
