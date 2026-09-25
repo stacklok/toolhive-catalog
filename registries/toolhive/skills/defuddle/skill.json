@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/defuddle:0.1.3"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/defuddle:0.1.4"
     },
     {
       "registryType": "git",
       "url": "https://github.com/kepano/obsidian-skills",
-      "ref": "8ccef29ae8624eccc734e77ced4a6e54baf5d83a",
+      "ref": "3ccff5338ea700537839b21900aa5358a0402c98",
       "subfolder": "skills/defuddle"
     }
   ]

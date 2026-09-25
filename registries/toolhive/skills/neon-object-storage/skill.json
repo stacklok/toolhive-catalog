@@ -1,0 +1,30 @@
+{
+  "namespace": "io.github.stacklok",
+  "name": "neon-object-storage",
+  "title": "Neon Object Storage",
+  "description": "S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch. Use when a user wants object storage, a bucket, blob/file storage, or somewhere to put uploads, images, documents, avatars, or user-generated files for their app or agent — especially when they already use (or are setting up) Lakebase Postgres and don't want to add a separate storage provider like AWS S3, Cloudflare R2, or Supabase Storage. Triggers include \"object storage\", \"bucket\", \"blob storage\", \"file storage\", \"store uploads/images/files\", \"S3-compatible storage\", \"presigned URL\", \"where do I put files\", \"storage logs\", \"bucket logs\", \"CDN in front of object storage\", \"Neon Object Storage\", \"Neon Storage\", and \"storage that branches with my database\".",
+  "version": "0.1.0",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/neondatabase/agent-skills",
+    "type": "git"
+  },
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-object-storage:0.1.0"
+    },
+    {
+      "registryType": "git",
+      "url": "https://github.com/neondatabase/agent-skills",
+      "ref": "b5beae8767c18ee7b9dc1ae1eb6c93c7cb1a96c4",
+      "subfolder": "skills/neon-object-storage"
+    }
+  ]
+}

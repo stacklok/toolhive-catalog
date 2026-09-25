@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-postgres:0.1.8"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-postgres:0.1.9"
     },
     {
       "registryType": "git",
       "url": "https://github.com/neondatabase/agent-skills",
-      "ref": "e20e68996aa1dbd5cf4d2c981e5357cdefd8f5bd",
+      "ref": "b5beae8767c18ee7b9dc1ae1eb6c93c7cb1a96c4",
       "subfolder": "skills/neon-postgres"
     }
   ]

@@ -1,0 +1,30 @@
+{
+  "namespace": "io.github.stacklok",
+  "name": "neon-auth",
+  "title": "Neon Auth",
+  "description": "Add authentication to a new app. Use for \"add auth\", \"add login\", Neon Auth (Managed Better Auth), identity routing, sign-up, sign-in, password reset, email OTP, magic links, organizations, phone OTP, OAuth, passkeys, MFA, trusted domains, invalid domain, and @neondatabase/auth. No existing identity: default to Managed Better Auth. Keep working Better Auth, Clerk, Supabase Auth, or another IdP. User asked to migrate from Supabase Auth: Managed Better Auth. A required plugin outside Managed support: self-managed Better Auth on a Neon Function or the existing app host. Also use for auth APIs in @neondatabase/neon-js.",
+  "version": "0.1.0",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/neondatabase/agent-skills",
+    "type": "git"
+  },
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-auth:0.1.0"
+    },
+    {
+      "registryType": "git",
+      "url": "https://github.com/neondatabase/agent-skills",
+      "ref": "b5beae8767c18ee7b9dc1ae1eb6c93c7cb1a96c4",
+      "subfolder": "skills/neon-auth"
+    }
+  ]
+}

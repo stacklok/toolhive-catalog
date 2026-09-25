@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-quickstart:0.2.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-quickstart:0.2.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/pinecone-io/skills",
-      "ref": "ade99bae71daf678ce79fe66002852cb0b43cbf1",
+      "ref": "885dc539fbc2c777dee9764a5b05656663b43c5f",
       "subfolder": "skills/pinecone-quickstart"
     }
   ]

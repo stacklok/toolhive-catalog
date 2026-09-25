@@ -1,0 +1,30 @@
+{
+  "namespace": "io.github.stacklok",
+  "name": "clickhouse-js-node-troubleshooting",
+  "title": "Clickhouse Js Node Troubleshooting",
+  "description": "Troubleshoot and resolve common issues with the ClickHouse Node.js client (@clickhouse/client). Use this skill whenever a user reports errors, unexpected behavior, or configuration questions involving the Node.js client specifically — including socket hang-up errors, Keep-Alive problems, stream handling issues, data type mismatches, read-only user restrictions, proxy/TLS setup problems, or long-running query timeouts. Trigger even when the user hasn't precisely named the issue; vague symptoms like \"my inserts keep failing\" or \"connection drops randomly\" in a Node.js context are strong signals to use this skill. Do NOT use for browser/Web client issues.",
+  "version": "0.1.0",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/ClickHouse/agent-skills",
+    "type": "git"
+  },
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/stacklok/dockyard/skills/clickhouse-js-node-troubleshooting:0.1.0"
+    },
+    {
+      "registryType": "git",
+      "url": "https://github.com/ClickHouse/agent-skills",
+      "ref": "2f6ec4b17a81a435dd116f9ac19d7b45d44dbd61",
+      "subfolder": "skills/clickhouse-js-node-troubleshooting"
+    }
+  ]
+}
