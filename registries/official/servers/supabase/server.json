@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.12.0": {
+        "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.13.0": {
           "metadata": {
             "last_updated": "2026-09-18T18:28:36Z",
             "stars": 2612
@@ -903,7 +903,7 @@
           "name": "SUPABASE_ACCESS_TOKEN"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.12.0",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/supabase-mcp-server:0.13.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
