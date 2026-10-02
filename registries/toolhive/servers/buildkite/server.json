@@ -3,12 +3,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/buildkite/buildkite-mcp-server:1.22.0": {
+        "ghcr.io/buildkite/buildkite-mcp-server:1.24.0": {
           "args": [
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-09-11T01:45:07Z",
+            "last_updated": "2026-10-02T01:03:30Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -62,9 +62,7 @@
                     "type": "object"
                   }
                 },
-                "required": [
-                  "telemetry"
-                ],
+                "required": [],
                 "type": "object"
               },
               "name": "access_token"
@@ -105,7 +103,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -113,6 +110,61 @@
                 "type": "object"
               },
               "name": "cancel_build"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Compare Builds"
+              },
+              "description": "Compare step outcomes, final-attempt retry counts and execution/scheduling times between builds in one pipeline. Defaults to the most recently created earlier successful build on the same branch; baseline_build_number overrides this. Matches step keys or, for unkeyed jobs, unique exact names with matching type, group, matrix and parallel coordinates. match_method identifies heuristic name_fallback matches; ambiguous or unnamed unkeyed jobs remain unmatched. Returns at most 100 comparisons, prioritizing failures, and optional bounded log evidence for three newly failing jobs. Scans at most 1000 jobs per build; refuses incomplete inventories. Historical co-occurrence does not prove a cause or that retrying is safe. Use get_build_failure_summary for deeper failure diagnosis.",
+              "inputSchema": {
+                "properties": {
+                  "baseline_build_number": {
+                    "description": "Baseline in the same pipeline. Omit to select the most recently created earlier successful build on the target branch (at most 500 candidates searched).",
+                    "type": "string"
+                  },
+                  "build_number": {
+                    "description": "Target build number, not a UUID",
+                    "type": "string"
+                  },
+                  "include_logs": {
+                    "description": "Include bounded target log tails for up to three newly failing jobs (default true)",
+                    "type": [
+                      "null",
+                      "boolean"
+                    ]
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug",
+                  "build_number"
+                ],
+                "type": "object"
+              },
+              "name": "compare_builds"
             },
             {
               "annotations": {
@@ -178,7 +230,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -281,7 +332,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "commit",
@@ -337,7 +387,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "name"
                 ],
@@ -385,7 +434,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "key"
@@ -443,7 +491,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "key",
@@ -476,7 +523,7 @@
                     "type": "string"
                   },
                   "create_webhook": {
-                    "description": "Create a GitHub webhook to trigger builds on pull-request and push events",
+                    "description": "Create a GitHub webhook after creating a pipeline. Set true when GitHub push or pull-request events should trigger this pipeline; if the repository is not connected through a compatible Buildkite GitHub App, the pipeline is created and setup instructions are returned. Set false for non-GitHub repositories, centralized or manually managed webhooks, or pipelines that must not receive events yet.",
                     "type": "boolean"
                   },
                   "default_branch": {
@@ -534,12 +581,12 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "name",
                   "repository_url",
                   "cluster_id",
-                  "configuration"
+                  "configuration",
+                  "create_webhook"
                 ],
                 "type": "object"
               },
@@ -612,7 +659,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "cronline"
@@ -620,6 +666,46 @@
                 "type": "object"
               },
               "name": "create_pipeline_schedule"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Create Pipeline Webhook"
+              },
+              "description": "Create a GitHub webhook for an existing pipeline configured with a compatible Buildkite GitHub App",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug"
+                ],
+                "type": "object"
+              },
+              "name": "create_pipeline_webhook"
             },
             {
               "annotations": {
@@ -646,9 +732,7 @@
                     "type": "object"
                   }
                 },
-                "required": [
-                  "telemetry"
-                ],
+                "required": [],
                 "type": "object"
               },
               "name": "current_user"
@@ -689,7 +773,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "agent_id"
                 ],
@@ -740,7 +823,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -786,7 +868,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -801,7 +882,7 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, downstream failed or broken jobs, promised failures from running jobs, and size-bounded diagnostic content from logs, annotations, and failed Test Engine executions. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
+              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
@@ -819,18 +900,28 @@
                     ]
                   },
                   "include_failed_tests": {
-                    "description": "Include failed Test Engine executions when the build has Test Engine runs (default true)",
+                    "description": "Include Test Engine tests whose executions in this build all failed, when the build has Test Engine runs (default true)",
                     "type": [
                       "null",
                       "boolean"
                     ]
                   },
                   "include_failure_expanded": {
-                    "description": "Include expanded test failure details such as stack traces within the summary's bounded test-content budget",
-                    "type": "boolean"
+                    "description": "Include expanded test failure details such as stack traces within the summary's bounded test-content budget (default true); set false to keep failed_tests to the one-line failure_reason",
+                    "type": [
+                      "null",
+                      "boolean"
+                    ]
                   },
                   "include_logs": {
                     "description": "Include a bounded log tail for failed, timed-out, canceled, and promised-failing jobs (default true)",
+                    "type": [
+                      "null",
+                      "boolean"
+                    ]
+                  },
+                  "include_never_ran_jobs": {
+                    "description": "Also list jobs that never ran, in the max_jobs slots left after failed and canceled jobs: waiting_failed, blocked_failed and unblocked_failed (stopped by a failed dependency) and broken (excluded by pipeline configuration) (default true). They have no log and never explain why a build failed; job_state_counts tallies them either way. Set false to omit them and shrink the response",
                     "type": [
                       "null",
                       "boolean"
@@ -845,19 +936,15 @@
                     "type": "integer"
                   },
                   "max_failed_tests": {
-                    "description": "Maximum failed test executions to return across all Test Engine runs (default 100, max 200)",
-                    "type": "integer"
-                  },
-                  "max_failed_tests_per_run": {
-                    "description": "Maximum failed test executions to return per Test Engine run (default 20, max 100)",
+                    "description": "Maximum failed Test Engine tests to return for the build (default 50, max 100)",
                     "type": "integer"
                   },
                   "max_jobs": {
-                    "description": "Maximum terminal problem or downstream-failed jobs to return (default 10, server may enforce a lower maximum, absolute max 50)",
+                    "description": "Maximum problem jobs to return (default 10, server may enforce a lower maximum, absolute max 50). Failed, timed-out, and expired jobs fill the limit first, followed by canceled jobs. Unless include_never_ran_jobs is false, remaining slots are filled first by jobs stopped by a failed dependency (waiting_failed, blocked_failed, unblocked_failed), then by broken jobs excluded by pipeline configuration.",
                     "type": "integer"
                   },
                   "max_test_runs": {
-                    "description": "Maximum Test Engine runs to inspect (default 5, max 20)",
+                    "description": "Maximum Test Engine runs to scan for failure details of the returned failed tests (default 5, max 20); the runs holding the most returned failed tests are scanned first",
                     "type": "integer"
                   },
                   "org_slug": {
@@ -883,7 +970,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -927,7 +1013,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -968,7 +1053,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id"
                 ],
@@ -1011,7 +1095,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "queue_id"
@@ -1055,7 +1138,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "secret_id"
@@ -1111,7 +1193,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "test_suite_slug",
                   "run_id"
@@ -1164,7 +1245,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "job_id"
                 ],
@@ -1210,7 +1290,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -1256,7 +1335,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug"
                 ],
@@ -1299,7 +1377,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "schedule_id"
@@ -1347,7 +1424,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -1404,7 +1480,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "test_suite_slug",
                   "test_id"
@@ -1448,7 +1523,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "test_suite_slug",
                   "run_id"
@@ -1511,7 +1585,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug"
                 ],
                 "type": "object"
@@ -1569,7 +1642,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -1621,7 +1693,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -1676,7 +1747,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -1700,7 +1770,7 @@
                     "type": "string"
                   },
                   "commit": {
-                    "description": "Filter builds by specific commit SHA",
+                    "description": "Full commit SHA",
                     "type": "string"
                   },
                   "creator": {
@@ -1743,7 +1813,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug"
                 ],
                 "type": "object"
@@ -1790,7 +1859,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id"
                 ],
@@ -1838,7 +1906,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id"
                 ],
@@ -1883,7 +1950,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug"
                 ],
                 "type": "object"
@@ -1964,7 +2030,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -2013,7 +2078,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug"
                 ],
@@ -2070,7 +2134,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug"
                 ],
                 "type": "object"
@@ -2106,9 +2169,7 @@
                     "type": "object"
                   }
                 },
-                "required": [
-                  "telemetry"
-                ],
+                "required": [],
                 "type": "object"
               },
               "name": "list_skills"
@@ -2164,7 +2225,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -2213,7 +2273,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "test_suite_slug"
                 ],
@@ -2261,7 +2320,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug"
                 ],
@@ -2353,7 +2411,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "test_suite_slug"
                 ],
@@ -2430,7 +2487,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "build_uuid"
                 ],
@@ -2468,7 +2524,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "skill_name"
                 ],
                 "type": "object"
@@ -2515,7 +2570,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "queue_id"
@@ -2528,24 +2582,72 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Read Execution Trace"
+              },
+              "description": "Read an OpenTelemetry trace summary for a Buildkite Test Engine execution, including category rollups and slowest spans",
+              "inputSchema": {
+                "properties": {
+                  "execution_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "test_suite_slug": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "test_suite_slug",
+                  "execution_id"
+                ],
+                "type": "object"
+              },
+              "name": "read_execution_trace"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Read Logs"
               },
               "description": "Read log entries from the file, optionally starting from a specific row number. ALWAYS use 'limit' parameter to avoid excessive tokens. For recent failures, use 'tail_logs' instead. Recommended limits: investigation (100-500), exploration (use seek + small limits). The json format: {ts: timestamp_ms, c: content, rn: row_number}.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
+                    "description": "Sequential build number, not the build UUID",
                     "type": "string"
                   },
                   "cache_ttl": {
+                    "description": "Go duration; defaults to 30s",
                     "type": "string"
                   },
                   "force_refresh": {
+                    "description": "Bypass cached log data",
                     "type": "boolean"
                   },
                   "job_id": {
+                    "description": "Buildkite job UUID",
                     "type": "string"
                   },
                   "limit": {
+                    "description": "Maximum entries to return; 0 reads all remaining entries",
                     "type": "integer"
                   },
                   "org_slug": {
@@ -2555,6 +2657,7 @@
                     "type": "string"
                   },
                   "seek": {
+                    "description": "Zero-based row at which to begin reading",
                     "type": "integer"
                   },
                   "telemetry": {
@@ -2574,7 +2677,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -2620,7 +2722,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -2665,7 +2766,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "queue_id"
@@ -2713,7 +2813,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -2733,48 +2832,59 @@
               "inputSchema": {
                 "properties": {
                   "after_context": {
+                    "description": "Lines after each match; ignored when context is nonzero",
                     "type": "integer"
                   },
                   "before_context": {
+                    "description": "Lines before each match; ignored when context is nonzero",
                     "type": "integer"
                   },
                   "build_number": {
+                    "description": "Sequential build number, not the build UUID",
                     "type": "string"
                   },
                   "cache_ttl": {
+                    "description": "Go duration; defaults to 30s",
                     "type": "string"
                   },
                   "case_sensitive": {
                     "type": "boolean"
                   },
                   "context": {
+                    "description": "Lines before and after each match; overrides before_context and after_context when nonzero",
                     "type": "integer"
                   },
                   "force_refresh": {
+                    "description": "Bypass cached log data",
                     "type": "boolean"
                   },
                   "invert_match": {
                     "type": "boolean"
                   },
                   "job_id": {
+                    "description": "Buildkite job UUID",
                     "type": "string"
                   },
                   "limit": {
+                    "description": "Maximum matches to return; 0 returns all",
                     "type": "integer"
                   },
                   "org_slug": {
                     "type": "string"
                   },
                   "pattern": {
+                    "description": "Go regular expression",
                     "type": "string"
                   },
                   "pipeline_slug": {
                     "type": "string"
                   },
                   "reverse": {
+                    "description": "Search from the end of the log",
                     "type": "boolean"
                   },
                   "seek_start": {
+                    "description": "Zero-based starting row; 0 uses the default (log end when reverse)",
                     "type": "integer"
                   },
                   "telemetry": {
@@ -2794,7 +2904,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -2809,21 +2918,69 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Slowest Executions for Build"
+              },
+              "description": "List the slowest test executions for a Buildkite build across every visible Test Engine suite, slowest first. Returns the identifiers needed by read_execution_trace and whether each execution has a trace.",
+              "inputSchema": {
+                "properties": {
+                  "build_uuid": {
+                    "description": "Buildkite build UUID. This is the build ID, not the pipeline build number.",
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "Maximum number of executions to return. Defaults to 20 and is capped by the organization's slowest executions quota.",
+                    "type": "integer"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "build_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "slowest_executions_for_build"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Tail Logs"
               },
               "description": "Show the last N entries from the log file. RECOMMENDED for failure diagnosis - most build failures appear in the final log entries. More token-efficient than read_logs for recent issues. The json format: {ts: timestamp_ms, c: content, rn: row_number}.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
+                    "description": "Sequential build number, not the build UUID",
                     "type": "string"
                   },
                   "cache_ttl": {
+                    "description": "Go duration; defaults to 30s",
                     "type": "string"
                   },
                   "force_refresh": {
+                    "description": "Bypass cached log data",
                     "type": "boolean"
                   },
                   "job_id": {
+                    "description": "Buildkite job UUID",
                     "type": "string"
                   },
                   "org_slug": {
@@ -2833,6 +2990,7 @@
                     "type": "string"
                   },
                   "tail": {
+                    "description": "Final log entries to return; defaults to 10",
                     "type": "integer"
                   },
                   "telemetry": {
@@ -2852,7 +3010,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -2908,7 +3065,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number",
@@ -2986,7 +3142,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id"
                 ],
@@ -3044,7 +3199,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "cluster_id",
                   "queue_id"
@@ -3149,7 +3303,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug"
                 ],
@@ -3238,7 +3391,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "schedule_id"
@@ -3272,12 +3424,46 @@
                     "type": "object"
                   }
                 },
-                "required": [
-                  "telemetry"
-                ],
+                "required": [],
                 "type": "object"
               },
               "name": "user_token_organization"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Validate Pipeline YAML"
+              },
+              "description": "Validate Buildkite pipeline YAML against the official pipeline schema without calling the Buildkite API. Use this to check a pipeline definition (e.g. .buildkite/pipeline.yml) before creating or updating a pipeline, or before committing pipeline changes",
+              "inputSchema": {
+                "properties": {
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "yaml": {
+                    "description": "The Buildkite pipeline YAML content to validate (e.g. the contents of .buildkite/pipeline.yml)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "yaml"
+                ],
+                "type": "object"
+              },
+              "name": "validate_pipeline"
             },
             {
               "annotations": {
@@ -3314,7 +3500,6 @@
                   }
                 },
                 "required": [
-                  "telemetry",
                   "org_slug",
                   "pipeline_slug",
                   "build_number"
@@ -3327,6 +3512,7 @@
           "tools": [
             "access_token",
             "cancel_build",
+            "compare_builds",
             "create_annotation",
             "create_build",
             "create_cluster",
@@ -3334,6 +3520,7 @@
             "create_cluster_secret",
             "create_pipeline",
             "create_pipeline_schedule",
+            "create_pipeline_webhook",
             "current_user",
             "get_agent",
             "get_artifact",
@@ -3370,11 +3557,13 @@
             "list_tests_for_build",
             "load_skill",
             "pause_cluster_queue_dispatch",
+            "read_execution_trace",
             "read_logs",
             "rebuild_build",
             "resume_cluster_queue_dispatch",
             "retry_job",
             "search_logs",
+            "slowest_executions_for_build",
             "tail_logs",
             "unblock_job",
             "update_cluster",
@@ -3382,6 +3571,7 @@
             "update_pipeline",
             "update_pipeline_schedule",
             "user_token_organization",
+            "validate_pipeline",
             "wait_for_build"
           ]
         }
@@ -3437,7 +3627,7 @@
           "name": "BUILDKITE_FAILURE_SUMMARY_MAX_JOBS"
         }
       ],
-      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.22.0",
+      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.24.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
