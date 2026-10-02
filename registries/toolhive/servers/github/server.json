@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/github/github-mcp-server:v1.13.0": {
           "metadata": {
-            "last_updated": "2026-09-18T18:25:42Z",
+            "last_updated": "2026-10-02T01:03:39Z",
             "stars": 28440
           },
           "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -2323,6 +2323,47 @@
             {
               "annotations": {
                 "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get UI data"
+              },
+              "description": "Fetch UI data for MCP Apps (labels, assignees, milestones, issue types, branches, issue fields, reviewers).",
+              "inputSchema": {
+                "properties": {
+                  "method": {
+                    "description": "The type of data to fetch",
+                    "enum": [
+                      "labels",
+                      "assignees",
+                      "milestones",
+                      "issue_types",
+                      "branches",
+                      "issue_fields",
+                      "reviewers"
+                    ],
+                    "type": "string"
+                  },
+                  "owner": {
+                    "description": "Repository owner (required for all methods)",
+                    "type": "string",
+                    "x-mcp-header": "owner"
+                  },
+                  "repo": {
+                    "description": "Repository name (required for labels, assignees, milestones, branches, issue fields, reviewers)",
+                    "type": "string",
+                    "x-mcp-header": "repo"
+                  }
+                },
+                "required": [
+                  "method",
+                  "owner"
+                ],
+                "type": "object"
+              },
+              "name": "ui_get"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false,
                 "title": "Update issue comment"
               },
@@ -2509,6 +2550,7 @@
             "search_repositories",
             "search_users",
             "sub_issue_write",
+            "ui_get",
             "update_issue_comment",
             "update_pull_request",
             "update_pull_request_branch"
