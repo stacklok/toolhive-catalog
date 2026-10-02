@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.10": {
+        "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.13": {
           "metadata": {
             "last_updated": "2026-09-18T18:26:58Z",
             "stars": 9311
@@ -767,7 +767,7 @@
           "name": "PHOENIX_BASE_URL"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.10",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.13",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
