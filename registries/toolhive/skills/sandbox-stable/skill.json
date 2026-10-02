@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/sandbox-stable:0.1.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/sandbox-stable:0.1.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/cloudflare/skills",
-      "ref": "b052c32bab7dd493513260228a36c88294f343f1",
+      "ref": "626547c06881a20b3322bdc2ed6e6451b33a4fb6",
       "subfolder": "skills/sandbox-stable"
     }
   ]
