@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/github/github-mcp-server:v1.12.2": {
+        "ghcr.io/github/github-mcp-server:v1.13.0": {
           "metadata": {
             "last_updated": "2026-09-18T18:25:50Z",
             "stars": 28440
@@ -2550,7 +2550,7 @@
           "name": "GITHUB_READ_ONLY"
         }
       ],
-      "identifier": "ghcr.io/github/github-mcp-server:v1.12.2",
+      "identifier": "ghcr.io/github/github-mcp-server:v1.13.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
