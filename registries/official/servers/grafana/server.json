@@ -3,13 +3,13 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/grafana/mcp-grafana:1.5.1": {
+        "docker.io/grafana/mcp-grafana:1.6.3": {
           "args": [
             "--transport",
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-09-18T18:27:58Z",
+            "last_updated": "2026-10-02T01:03:18Z",
             "stars": 3239
           },
           "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -2331,7 +2331,7 @@
                 "readOnlyHint": true,
                 "title": "List Prometheus metric names"
               },
-              "description": "DISCOVERY: Call this first to find available metrics before querying. Lists metric names in a PromQL-compatible datasource (Prometheus, Thanos, Mimir, Cloud Monitoring, etc.). Retrieves all metric names and filters them using the provided regex. Supports pagination and an optional time range to restrict results to metrics active within that window.",
+              "description": "DISCOVERY: Call this first to find available metrics before querying. Lists metric names in a PromQL-compatible datasource (Prometheus, Thanos, Mimir, Cloud Monitoring, etc.). Filters metric names using the provided regex. Supports pagination (page * limit must not exceed 10000) and an optional time range to restrict results to metrics active within that window. Cloud Monitoring ignores the time range.",
               "inputSchema": {
                 "properties": {
                   "datasourceUid": {
@@ -2913,7 +2913,7 @@
                 "readOnlyHint": true,
                 "title": "Query Tempo metrics"
               },
-              "description": "Compute trace-derived metrics using a TraceQL metrics query. Use type 'instant' for a single value or 'range' for a time series (default). Instant queries over large time ranges may timeout — keep the window under 15 minutes for instant, or use range instead.",
+              "description": "Compute trace-derived metrics using a TraceQL metrics query. The syntax is unlike PromQL; call get_tempo_traceql_docs with topic 'metrics' for the reference. Use type 'instant' for a single value or 'range' for a time series (default). Instant queries over large time ranges may timeout — keep the window under 15 minutes for instant, or use range instead.",
               "inputSchema": {
                 "properties": {
                   "datasourceUid": {
@@ -2925,7 +2925,7 @@
                     "type": "string"
                   },
                   "query": {
-                    "description": "TraceQL metrics query string (e.g. '{ } | count_over_time()' or '{ } | rate()').",
+                    "description": "TraceQL metrics query of the form '{ \u003cselector\u003e } | \u003caggregation\u003e [by (\u003cattribute\u003e)]'. Example: '{ } | quantile_over_time(span:duration, .99) by (span.name)'.",
                     "type": "string"
                   },
                   "start": {
@@ -3566,7 +3566,7 @@
           "name": "GRAFANA_ORG_ID"
         }
       ],
-      "identifier": "docker.io/grafana/mcp-grafana:1.5.1",
+      "identifier": "docker.io/grafana/mcp-grafana:1.6.3",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
