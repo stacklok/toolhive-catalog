@@ -6,9 +6,7 @@
         "docker.io/grafana/mcp-grafana:2.0.0": {
           "args": [
             "--transport",
-            "stdio",
-            "--usage-stats",
-            "disabled"
+            "stdio"
           ],
           "metadata": {
             "last_updated": "2026-10-05T21:26:30Z",
@@ -3641,6 +3639,11 @@
         {
           "description": "Organization ID for multi-organization Grafana instances",
           "name": "GRAFANA_ORG_ID"
+        },
+        {
+          "default": "disabled",
+          "description": "Anonymous usage statistics reporting to Grafana Labs: enabled, disabled, or log (print the report to stderr and send nothing). Defaults to disabled in this entry; upstream defaults to enabled.",
+          "name": "GRAFANA_USAGE_STATS"
         }
       ],
       "identifier": "docker.io/grafana/mcp-grafana:2.0.0",
