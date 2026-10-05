@@ -6,7 +6,9 @@
         "docker.io/grafana/mcp-grafana:2.0.0": {
           "args": [
             "--transport",
-            "stdio"
+            "stdio",
+            "--usage-stats",
+            "disabled"
           ],
           "metadata": {
             "last_updated": "2026-10-02T01:04:09Z",
@@ -36,8 +38,6 @@
             "metrics",
             "logs",
             "traces",
-            "sift",
-            "investigations",
             "oncall"
           ],
           "tier": "Official",
