@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.6.0": {
+        "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.7.0": {
           "metadata": {
             "last_updated": "2026-09-11T01:46:25Z",
             "stars": 273
@@ -841,7 +841,7 @@
           "name": "LINUX_MCP_LOG_LEVEL"
         }
       ],
-      "identifier": "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.6.0",
+      "identifier": "quay.io/redhat-services-prod/rhel-lightspeed-tenant/linux-mcp-server:1.7.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
