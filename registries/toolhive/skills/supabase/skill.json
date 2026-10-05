@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/supabase:0.5.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/supabase:0.5.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/supabase/agent-skills",
-      "ref": "551274ed2fe97c8fea1325f7ceb05803a542f8df",
+      "ref": "c9be0e931b7930f7d02126d04774d904c381e7d7",
       "subfolder": "skills/supabase"
     }
   ]

@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/next-cache-components-adoption:0.4.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/next-cache-components-adoption:0.4.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/vercel/next.js",
-      "ref": "50199e6bce6275e231571bbbb9294b46bf9311f1",
+      "ref": "cdf6866a1d9c4a88afff3ffdc127fe7932e184d5",
       "subfolder": "skills/next-cache-components-adoption"
     }
   ]

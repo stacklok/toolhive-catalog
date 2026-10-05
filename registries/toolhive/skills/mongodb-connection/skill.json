@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/mongodb-connection:0.3.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/mongodb-connection:0.4.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/mongodb/agent-skills",
-      "ref": "d1d2d86754ff303ac441624b2ac8e0380465aa9b",
+      "ref": "18b014ee53f5e8a824942cc6b0ced37f921e7b3c",
       "subfolder": "skills/mongodb-connection"
     }
   ]
