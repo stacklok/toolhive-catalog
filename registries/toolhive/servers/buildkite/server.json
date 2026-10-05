@@ -8,7 +8,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-10-02T01:03:30Z",
+            "last_updated": "2026-10-05T17:35:05Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -341,6 +341,79 @@
                 "type": "object"
               },
               "name": "create_build"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Create Cache Registry"
+              },
+              "description": "Create a cache registry in a cluster. Optional metadata and policy may be omitted, set, or explicitly cleared",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "description": "Hex color to set; use null to clear it; omission uses the API default",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "description": {
+                    "description": "Description to set; use null to clear it; omission uses the API default",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "emoji": {
+                    "description": "Emoji to set; use null to clear it; omission uses the API default",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "additionalProperties": true,
+                    "description": "Structured cache registry policy JSON object; use null to clear it; omission uses the API default",
+                    "type": [
+                      "null",
+                      "object"
+                    ]
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "name"
+                ],
+                "type": "object"
+              },
+              "name": "create_cache_registry"
             },
             {
               "annotations": {
@@ -1020,6 +1093,50 @@
                 "type": "object"
               },
               "name": "get_build_test_engine_runs"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Cache Registry"
+              },
+              "description": "Get a cache registry by UUID, including its structured access policy",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "registry_uuid": {
+                    "description": "Cache registry UUID; the registry slug is not accepted",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "registry_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "get_cache_registry"
             },
             {
               "annotations": {
@@ -1818,6 +1935,57 @@
                 "type": "object"
               },
               "name": "list_builds"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Cache Registries"
+              },
+              "description": "List cache registries in a cluster, ordered by slug. Returns items and cursor pagination links",
+              "inputSchema": {
+                "properties": {
+                  "after": {
+                    "description": "Cursor from links.next in a previous response; mutually exclusive with before",
+                    "type": "string"
+                  },
+                  "before": {
+                    "description": "Cursor from links.prev in a previous response; mutually exclusive with after",
+                    "type": "string"
+                  },
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "per_page": {
+                    "description": "Results per page (max 100; API default 30)",
+                    "type": "integer"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id"
+                ],
+                "type": "object"
+              },
+              "name": "list_cache_registries"
             },
             {
               "annotations": {
@@ -2779,6 +2947,54 @@
                 "destructiveHint": true,
                 "idempotentHint": false,
                 "readOnlyHint": false,
+                "title": "Retry Failed Jobs"
+              },
+              "description": "Retry the failed jobs in a build that are safe to retry, and report every job retried or skipped with a reason. Unlike the Buildkite REST API's retry_failed_jobs endpoint, which retries every job in the chosen failure states, this classifies each job and retries it individually. Only infrastructure failures are retried: expired, agent_lost (exit status -1 with no signal reason), agent_stop, agent_refused and stack_error. Soft-failed, canceled and timed-out jobs, command failures and other signal reasons are skipped because a retry would likely fail again or undo a deliberate stop. Use retry_job to retry a skipped job after inspecting it",
+              "inputSchema": {
+                "properties": {
+                  "build_number": {
+                    "type": "string"
+                  },
+                  "dry_run": {
+                    "description": "Classify jobs without retrying; 'retried' lists the jobs that would be retried",
+                    "type": "boolean"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug",
+                  "build_number"
+                ],
+                "type": "object"
+              },
+              "name": "retry_failed_jobs"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false,
                 "title": "Retry Job"
               },
               "description": "Retry a specific failed or timed out job in a Buildkite build",
@@ -2913,6 +3129,51 @@
                 "type": "object"
               },
               "name": "search_logs"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": true,
+                "readOnlyHint": false,
+                "title": "Set Default Cache Registry"
+              },
+              "description": "Set a cluster's default cache registry by UUID. A cluster always has a default, so this switches it to another registry in the same cluster rather than clearing it. Returns the updated cluster",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "registry_uuid": {
+                    "description": "UUID of a cache registry in this cluster; the registry slug is not accepted",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "registry_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "set_default_cache_registry"
             },
             {
               "annotations": {
@@ -3073,6 +3334,84 @@
                 "type": "object"
               },
               "name": "unblock_job"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Update Cache Registry"
+              },
+              "description": "Update a cache registry by UUID. Omitted fields remain unchanged; nullable metadata and policy may be set or explicitly cleared",
+              "inputSchema": {
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "description": "Hex color to set; use null to clear it; omission leaves it unchanged",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "description": {
+                    "description": "Description to set; use null to clear it; omission leaves it unchanged",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "emoji": {
+                    "description": "Emoji to set; use null to clear it; omission leaves it unchanged",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "description": "Name to set; omission leaves it unchanged and an empty string is preserved",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "additionalProperties": true,
+                    "description": "Structured cache registry policy JSON object; use null to clear it; omission leaves it unchanged",
+                    "type": [
+                      "null",
+                      "object"
+                    ]
+                  },
+                  "registry_uuid": {
+                    "description": "Cache registry UUID; the registry slug is not accepted",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "registry_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "update_cache_registry"
             },
             {
               "annotations": {
@@ -3515,6 +3854,7 @@
             "compare_builds",
             "create_annotation",
             "create_build",
+            "create_cache_registry",
             "create_cluster",
             "create_cluster_queue",
             "create_cluster_secret",
@@ -3527,6 +3867,7 @@
             "get_build",
             "get_build_failure_summary",
             "get_build_test_engine_runs",
+            "get_cache_registry",
             "get_cluster",
             "get_cluster_queue",
             "get_cluster_secret",
@@ -3543,6 +3884,7 @@
             "list_artifacts_for_build",
             "list_artifacts_for_job",
             "list_builds",
+            "list_cache_registries",
             "list_cluster_queues",
             "list_cluster_secrets",
             "list_clusters",
@@ -3561,11 +3903,14 @@
             "read_logs",
             "rebuild_build",
             "resume_cluster_queue_dispatch",
+            "retry_failed_jobs",
             "retry_job",
             "search_logs",
+            "set_default_cache_registry",
             "slowest_executions_for_build",
             "tail_logs",
             "unblock_job",
+            "update_cache_registry",
             "update_cluster",
             "update_cluster_queue",
             "update_pipeline",
