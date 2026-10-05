@@ -13,7 +13,6 @@
             "network": {
               "outbound": {
                 "allow_host": [
-                  "localhost",
                   "dolthub.com",
                   ".dolthub.com"
                 ],
@@ -1518,13 +1517,12 @@
     {
       "environmentVariables": [
         {
-          "description": "Hostname of the Dolt SQL server",
+          "description": "Container-reachable hostname of the Dolt SQL server",
           "isRequired": true,
           "name": "DOLT_HOST"
         },
         {
-          "default": "3306",
-          "description": "Dolt server port",
+          "description": "Dolt server port; defaults to 3306 for dolt and 5432 for doltgres",
           "name": "DOLT_PORT"
         },
         {

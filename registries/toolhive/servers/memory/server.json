@@ -359,7 +359,7 @@
     {
       "environmentVariables": [
         {
-          "description": "Path to the memory storage JSON file (default: memory.json in the server directory)",
+          "description": "Path to the memory storage JSONL file (default: memory.jsonl in the server directory)",
           "name": "MEMORY_FILE_PATH"
         }
       ],

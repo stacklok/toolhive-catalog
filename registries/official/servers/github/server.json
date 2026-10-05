@@ -2580,11 +2580,11 @@
           "name": "GITHUB_PERSONAL_ACCESS_TOKEN"
         },
         {
-          "description": "GitHub Enterprise Server hostname (optional)",
+          "description": "Full HTTPS URL for the GitHub Enterprise Server instance, for example https://github.example.com (optional)",
           "name": "GITHUB_HOST"
         },
         {
-          "description": "Comma-separated list of toolsets to enable (e.g., 'repos,issues,pull_requests'). If not set, all toolsets are enabled. See the README for available toolsets.",
+          "description": "Comma-separated list of toolsets to enable (e.g., 'repos,issues,pull_requests'). Defaults to context, issues, pull_requests, repos, and users. See the README for available toolsets.",
           "name": "GITHUB_TOOLSETS"
         },
         {

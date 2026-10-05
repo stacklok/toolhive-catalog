@@ -13,8 +13,8 @@
             "network": {
               "outbound": {
                 "allow_host": [
-                  "sentry.io",
-                  ".sentry.io"
+                  ".sentry.io",
+                  "api.openai.com"
                 ],
                 "allow_port": [
                   443

@@ -164,8 +164,7 @@
           "name": "CLICKHOUSE_PASSWORD"
         },
         {
-          "default": "8443",
-          "description": "The port number of your ClickHouse server",
+          "description": "ClickHouse server port; defaults to 8443 when CLICKHOUSE_SECURE is true and 8123 otherwise",
           "name": "CLICKHOUSE_PORT"
         },
         {

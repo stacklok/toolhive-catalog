@@ -16,7 +16,8 @@
             "network": {
               "outbound": {
                 "allow_host": [
-                  ".buildkite.com"
+                  ".buildkite.com",
+                  "buildkiteartifacts.com"
                 ],
                 "allow_port": [
                   443

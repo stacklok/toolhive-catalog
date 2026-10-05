@@ -762,9 +762,8 @@
           "name": "PHOENIX_API_KEY"
         },
         {
-          "default": "http://localhost:6006",
-          "description": "Base URL for Phoenix instance",
-          "name": "PHOENIX_BASE_URL"
+          "description": "Container-reachable URL for the Phoenix instance",
+          "name": "PHOENIX_ENDPOINT"
         }
       ],
       "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.15",

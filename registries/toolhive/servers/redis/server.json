@@ -1541,7 +1541,7 @@
         },
         {
           "description": "Path to the trusted CA certificates file",
-          "name": "REDIS_CA_CERTS"
+          "name": "REDIS_SSL_CA_CERTS"
         },
         {
           "description": "Enable Redis Cluster mode (True|False, default False)",
