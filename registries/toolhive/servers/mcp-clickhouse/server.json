@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/uvx/mcp-clickhouse:0.6.0": {
           "metadata": {
-            "last_updated": "2026-09-11T01:46:21Z",
+            "last_updated": "2026-10-05T22:37:37Z",
             "stars": 807
           },
           "overview": "## ClickHouse MCP Server\n\nThe mcp-clickhouse server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with ClickHouse, the high-performance, column-oriented analytical database. It allows AI-driven workflows to query large datasets, inspect schemas, and analyze analytical workloads without requiring users to switch tools or embed ClickHouse-specific client logic. This server is especially useful for analytics, observability, log analysis, and data exploration workflows where fast, read-heavy queries and large-scale datasets are common.",
@@ -164,8 +164,7 @@
           "name": "CLICKHOUSE_PASSWORD"
         },
         {
-          "default": "8443",
-          "description": "The port number of your ClickHouse server",
+          "description": "ClickHouse server port; defaults to 8443 when CLICKHOUSE_SECURE is true and 8123 otherwise",
           "name": "CLICKHOUSE_PORT"
         },
         {
