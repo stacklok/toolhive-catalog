@@ -1,0 +1,53 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://agentstack.tech/mcp": {
+          "custom_metadata": {
+            "author": "AgentStack",
+            "homepage": "https://agentstack.tech"
+          },
+          "overview": "## AgentStack Remote MCP Server\n\nBackend platform for AI agents: one agentstack.execute tool runs batched steps over ~668 actions (hosting, storage, auth, payments, CRM, app builder).\n\n### Authentication\n\nOAuth 2.1 (Dynamic Client Registration + PKCE). Alternatively, pass an API key in the `X-API-Key` header.\n\nOfficial MCP registry name: `io.github.agentstacktech/agentstack`.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "backend",
+            "hosting",
+            "storage",
+            "auth",
+            "payments",
+            "crm",
+            "oauth"
+          ],
+          "tier": "Community",
+          "tools": [
+            "agentstack.execute"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Backend platform for AI agents: one agentstack.execute tool runs batched steps over ~668 actions (hosting, storage, auth, payments, CRM, app builder).",
+  "name": "io.github.stacklok/agentstack",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://agentstack.tech/mcp",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "description": "Optional AgentStack API key (alternative to OAuth 2.1 with DCR + PKCE)",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/agentstacktech/AgentStack"
+  },
+  "title": "AgentStack (agentstack.tech)",
+  "version": "1.0.0"
+}
