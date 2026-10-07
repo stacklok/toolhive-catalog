@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/uvx/blender-mcp:2.1.9": {
           "metadata": {
-            "last_updated": "2026-10-07T22:27:57Z"
+            "last_updated": "2026-10-07T22:39:26Z"
           },
           "overview": "## MCP for Blender\n\nMCP for Blender connects an AI assistant to a running Blender instance for prompt-assisted 3D modeling, scene creation, and manipulation. It can create and modify objects, materials, and scenes; inspect the viewport; run Blender Python; and work with supported 3D-asset sources. Install and enable the MCP for Blender addon in Blender, then configure this server to reach its socket endpoint. The server can execute Python inside Blender, so use it only with trusted prompts and enable safe mode where appropriate.",
           "permissions": {
