@@ -1,0 +1,75 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.8.0": {
+          "overview": "## SearXNG MCP Server\n\nSearXNG MCP Server connects AI assistants to an operator-controlled or trusted SearXNG instance for privacy-respecting web search. It supports searching, query suggestions, instance discovery, and reading selected public URLs as text or Markdown. Configure the SearXNG endpoint to a service you operate or trust, because that service receives search queries. URL reading intentionally reaches user-supplied public URLs, so the server requires broad outbound-network access.",
+          "permissions": {
+            "network": {
+              "outbound": {
+                "insecure_allow_all": true
+              }
+            }
+          },
+          "provenance": {
+            "cert_issuer": "https://token.actions.githubusercontent.com",
+            "repository_uri": "https://github.com/stacklok/dockyard",
+            "runner_environment": "github-hosted",
+            "signer_identity": "/.github/workflows/build-containers.yml",
+            "sigstore_url": "tuf-repo-cdn.sigstore.dev"
+          },
+          "status": "Active",
+          "tags": [
+            "search",
+            "web-search",
+            "searxng",
+            "privacy",
+            "url-reader"
+          ],
+          "tier": "Community",
+          "tools": [
+            "searxng_web_search",
+            "searxng_search_suggestions",
+            "searxng_instance_info",
+            "web_url_read"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Connects AI assistants to a SearXNG instance for private web search and URL reading",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/mcp-searxng/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/mcp-searxng",
+  "packages": [
+    {
+      "environmentVariables": [
+        {
+          "description": "Base URL of the SearXNG instance, optionally including Basic Auth credentials",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "SEARXNG_URL"
+        }
+      ],
+      "identifier": "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.8.0",
+      "registryType": "oci",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/ihor-sokoliuk/mcp-searxng"
+  },
+  "title": "SearXNG MCP Server",
+  "version": "1.0.0"
+}
