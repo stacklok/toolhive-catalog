@@ -1,0 +1,47 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.dayyad/manycp-mcp",
+  "description": "Submit an MCP server to many MCP directories and track each listing from an AI assistant",
+  "version": "1.0.0",
+  "title": "ManyCP MCP server",
+  "websiteUrl": "https://manycp.com",
+  "repository": {
+    "url": "https://github.com/dayyad/manycp-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://manycp.com/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://manycp.com/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "mcp-directories",
+            "mcp-registry",
+            "directory-submission",
+            "github",
+            "listing-sync",
+            "remote-mcp"
+          ],
+          "tools": [
+            "check_listings",
+            "list_directories",
+            "add_server",
+            "list_servers",
+            "get_server",
+            "update_listing",
+            "submit_server",
+            "sync_server"
+          ]
+        }
+      }
+    }
+  }
+}
