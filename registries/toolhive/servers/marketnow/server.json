@@ -1,0 +1,46 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.alicelabs-llc/marketnow",
+  "description": "Trust layer for AI agents: verify MCP tools before connecting them \u2014 68,388 indexed servers with install-risk flags, scam-domain checks, credential verification (8 formats), and a 12-stage audit pipeline.",
+  "title": "marketnow",
+  "repository": {
+    "url": "https://github.com/eddyflores100-lang/marketnow-mcp",
+    "source": "github"
+  },
+  "version": "1.15.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.marketnow.site/api/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://www.marketnow.site/api/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "security",
+            "trust",
+            "verification",
+            "mcp",
+            "agents",
+            "registry"
+          ],
+          "tools": [
+            "marketnow_verify_trust",
+            "marketnow_translate_credential",
+            "marketnow_list_formats",
+            "marketnow_get_pipeline",
+            "marketnow_check_domain",
+            "marketnow_search_skills",
+            "marketnow_check_revocation",
+            "marketnow_fingerprint_tool",
+            "marketnow_submit_skill"
+          ]
+        }
+      }
+    }
+  }
+}
