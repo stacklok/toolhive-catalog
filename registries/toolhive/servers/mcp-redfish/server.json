@@ -152,7 +152,7 @@
   ],
   "repository": {
     "source": "github",
-    "url": "https://github.com/nokia/mcp-redfish"
+    "url": "https://github.com/nokia-steward/mcp-redfish"
   },
   "title": "Redfish",
   "version": "1.0.0"
