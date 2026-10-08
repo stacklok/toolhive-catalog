@@ -47,10 +47,6 @@
       "url": "https://mcp.browserbase.com/mcp"
     }
   ],
-  "repository": {
-    "source": "github",
-    "url": "https://github.com/browserbase/mcp-server-browserbase"
-  },
   "title": "Browserbase (Remote)",
   "version": "1.0.0"
 }
