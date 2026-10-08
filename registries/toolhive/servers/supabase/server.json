@@ -912,7 +912,7 @@
   ],
   "repository": {
     "source": "github",
-    "url": "https://github.com/supabase-community/supabase-mcp"
+    "url": "https://github.com/supabase/mcp"
   },
   "title": "Supabase",
   "version": "1.0.0"

@@ -625,7 +625,7 @@
   ],
   "repository": {
     "source": "github",
-    "url": "https://github.com/getsentry/sentry-mcp"
+    "url": "https://github.com/getsentry/toolkit"
   },
   "title": "Sentry",
   "version": "1.0.0"
