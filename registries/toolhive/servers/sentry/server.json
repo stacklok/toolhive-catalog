@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/sentry-mcp-server:0.37.0": {
+        "ghcr.io/stacklok/dockyard/npx/sentry-mcp-server:0.42.0": {
           "metadata": {
-            "last_updated": "2026-07-17T15:09:14Z",
+            "last_updated": "2026-10-08T14:16:56Z",
             "stars": 619
           },
           "overview": "## Sentry MCP Server\n\nThe sentry MCP server is a Model Context Protocol (MCP) service for human-in-the-loop coding agents and developer workflow debugging. The server enables comprehensive Sentry project and organization management, real-time error tracking with event search and issue monitoring, AI-powered issue analysis through Sentry Seer integration, and integrated documentation search for platform guidance.",
@@ -13,8 +13,8 @@
             "network": {
               "outbound": {
                 "allow_host": [
-                  "sentry.io",
-                  ".sentry.io"
+                  ".sentry.io",
+                  "api.openai.com"
                 ],
                 "allow_port": [
                   443
@@ -75,8 +75,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The region URL for the organization you're querying, if known. For Sentry's Cloud Service (sentry.io), this is typically the region-specific URL like 'https://us.sentry.io'. For self-hosted Sentry installations, this parameter is usually not needed and should be omitted. You can find the correct regionUrl from the organization details using the `find_organizations()` tool."
+                    "default": null
                   }
                 },
                 "required": [],
@@ -97,6 +96,9 @@
                     "additionalProperties": {},
                     "default": {},
                     "description": "Arguments for the target tool, matching the schema returned by search_sentry_tools.",
+                    "propertyNames": {
+                      "type": "string"
+                    },
                     "type": "object"
                   },
                   "name": {
@@ -114,6 +116,7 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true
               },
@@ -130,8 +133,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "Search query to filter results by name or slug. Use this to narrow down results when there are many items."
+                    "default": null
                   }
                 },
                 "required": [],
@@ -141,10 +143,11 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true
               },
-              "description": "Find projects in Sentry.\n\nUse this tool when you need to:\n- View projects in a Sentry organization\n- Find a project's slug to aid other tool requests\n- Search for specific projects by name or slug\n\nReturns up to 25 results. If you hit this limit, use the query parameter to narrow down results.",
+              "description": "Find projects in Sentry.\n\nUse this tool when you need to:\n- View projects in a Sentry organization\n- Find a project's slug to aid other tool requests\n- Search for specific projects by name or slug\n\nReturns up to 25 results. When hasMore is true, use the query parameter to narrow down results.",
               "inputSchema": {
                 "properties": {
                   "organizationSlug": {
@@ -161,8 +164,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "Search query to filter results by name or slug. Use this to narrow down results when there are many items."
+                    "default": null
                   },
                   "regionUrl": {
                     "anyOf": [
@@ -174,8 +176,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The region URL for the organization you're querying, if known. For Sentry's Cloud Service (sentry.io), this is typically the region-specific URL like 'https://us.sentry.io'. For self-hosted Sentry installations, this parameter is usually not needed and should be omitted. You can find the correct regionUrl from the organization details using the `find_organizations()` tool."
+                    "default": null
                   }
                 },
                 "required": [
@@ -187,10 +188,11 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true
               },
-              "description": "Fetch a Sentry resource by URL, or by resourceType plus resourceId.\nPass a Sentry URL directly when possible; the resource type is auto-detected.\n\nSupports issues, events, traces, spans, AI conversations, breadcrumbs, replays, monitors, preprod snapshots, and snapshot images.\nTrace lookups return a condensed overview by default.\n\nAI Conversations: A conversation is a set of spans sharing the same gen_ai.conversation.id. Use resourceType='ai_conversation' with a conversation ID, or pass a Sentry conversation URL, to fetch the transcript/details. To discover or list conversations, use search_ai_conversations. Conversations are NOT issues — do not use search_issues for conversation queries.\n\nFor preprod snapshot URLs (matching 'sentry.io/preprod/snapshots/'):\n- Without ?selectedSnapshot=: returns the snapshot diff summary (changed, added, removed images)\n- With ?selectedSnapshot=\u003cimage_file_name\u003e: returns the image preview and metadata. Use the Sentry tool `get_snapshot_image` for full-resolution image bytes.\n\nResource IDs:\n- span: \u003ctraceId\u003e:\u003cspanId\u003e\n- monitor: \u003cmonitorSlug\u003e\n- snapshot: \u003csnapshotId\u003e\n- snapshotImage: \u003csnapshotId\u003e:\u003cimage_file_name\u003e\n\n\u003cexamples\u003e\nget_sentry_resource(url='https://sentry.io/issues/PROJECT-123/')\nget_sentry_resource(resourceType='issue', organizationSlug='my-org', resourceId='PROJECT-123')\nget_sentry_resource(resourceType='span', organizationSlug='my-org', resourceId='\u003ctraceId\u003e:\u003cspanId\u003e')\nget_sentry_resource(resourceType='ai_conversation', organizationSlug='my-org', resourceId='conversation-123')\nget_sentry_resource(url='https://sentry.sentry.io/preprod/snapshots/123/')\nget_sentry_resource(url='https://sentry.sentry.io/preprod/snapshots/123/?selectedSnapshot=login_screen.png')\n\u003c/examples\u003e",
+              "description": "Fetch a Sentry resource by URL, or by resourceType plus resourceId.\nPass a Sentry URL directly when possible; the resource type is auto-detected.\n\nSupports issues, events, traces, spans, agent conversations, replays, monitors, preprod snapshots, and snapshot images.\nTrace lookups return a condensed overview by default.\n\nAgent Conversations: A conversation is a set of spans sharing the same gen_ai.conversation.id. Use resourceType='ai_conversation' with a conversation ID, or pass a Sentry conversation URL, to fetch the transcript/details. To discover or list conversations, use search_agent_conversations. Conversations are NOT issues — do not use search_issues for conversation queries.\n\nFor preprod snapshot URLs (matching 'sentry.io/preprod/snapshots/'):\n- Without ?selectedSnapshot=: returns the snapshot diff summary (changed, added, removed images)\n- With ?selectedSnapshot=\u003cimage_file_name\u003e: returns the image preview and metadata. Use the Sentry tool `get_snapshot_image` for full-resolution image bytes.\n\nResource IDs:\n- monitor: \u003cmonitorSlug\u003e\n- snapshot: \u003csnapshotId\u003e\n\n\u003cexamples\u003e\nget_sentry_resource(url='https://sentry.io/issues/PROJECT-123/')\nget_sentry_resource(resourceType='issue', organizationSlug='my-org', resourceId='PROJECT-123')\nget_sentry_resource(resourceType='ai_conversation', organizationSlug='my-org', resourceId='conversation-123')\nget_sentry_resource(url='https://sentry.sentry.io/preprod/snapshots/123/')\nget_sentry_resource(url='https://sentry.sentry.io/preprod/snapshots/123/?selectedSnapshot=login_screen.png')\n\u003c/examples\u003e",
               "inputSchema": {
                 "properties": {
                   "organizationSlug": {
@@ -198,22 +200,19 @@
                     "type": "string"
                   },
                   "resourceId": {
-                    "description": "Resource identifier: issue shortId (e.g., 'PROJECT-123'), event ID, trace ID, AI conversation ID, replay ID, monitor slug when inspect monitor tools are available, snapshot artifact ID, `\u003csnapshotId\u003e:\u003cimage_file_name\u003e` for snapshot image resources, or `traceId:spanId` for span resources. Required when not using a URL.",
+                    "description": "Resource identifier: issue shortId (e.g., 'PROJECT-123'), event ID, trace ID, agent conversation ID, replay ID, monitor slug when inspect monitor tools are available, or snapshot artifact ID. Required when not using a URL.",
                     "type": "string"
                   },
                   "resourceType": {
-                    "description": "Resource type. With a URL, can override the auto-detected type for breadcrumbs on an issue/event URL or for `trace` on a span-focused trace URL. Use `monitor` with a monitor slug only when inspect monitor tools are available, `snapshot` with a snapshot artifact ID, or `snapshotImage` with `\u003csnapshotId\u003e:\u003cimage_file_name\u003e`.",
+                    "description": "Resource type. With a URL, can override a span-focused trace URL with `trace`. Use `monitor` with a monitor slug only when inspect monitor tools are available or `snapshot` with a snapshot artifact ID.",
                     "enum": [
                       "issue",
                       "event",
                       "trace",
-                      "span",
                       "ai_conversation",
-                      "breadcrumbs",
                       "replay",
                       "monitor",
-                      "snapshot",
-                      "snapshotImage"
+                      "snapshot"
                     ],
                     "type": "string"
                   },
@@ -230,10 +229,11 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true
               },
-              "description": "Search Sentry events and replays. Use for event counts/statistics.\n\n`query` can be natural language or Sentry search syntax. With an agent configured, it fixes dataset, query, fields, and sort before running.\n\nSupports TWO query types:\n1. AGGREGATIONS (counts, sums, averages): 'how many errors', 'total tokens'\n2. Individual events with timestamps: 'error logs from last hour'\n\nDatasets:\n- errors: Exception/crash events with stack traces, usually grouped into issues\n- logs: Application log entries, including error-severity log messages\n- spans: Raw trace/span events for performance, AI/LLM calls, requests, and operations\n- metrics: Metric rows and aggregates: counters, gauges, distributions, values\n- profiles: Transaction/continuous profile results, profile IDs, profiled transactions\n- replays: Session replay results: rage clicks, dead clicks, visited pages, replay users\nIf the user says logs, log messages, error logs, or warning logs, choose logs instead of errors.\n\nReplay searches return replay lists only; replay count()/avg()/sum() are not supported.\n\nNOT for grouped issue lists (use search_issues) or app screenshots/images (use get_latest_base_snapshot).\n\n\u003cexamples\u003e\nsearch_events(organizationSlug='my-org', query='how many errors today')\nsearch_events(organizationSlug='my-org', dataset='errors', query='level:error')\nsearch_events(organizationSlug='my-org', dataset='errors', fields=['issue', 'count()'], sort='-count()')\nsearch_events(organizationSlug='my-org', dataset='spans', query='span.op:db', sort='-span.duration')\nsearch_events(organizationSlug='my-org', dataset='replays', query='count_errors:\u003e0', sort='-count_errors')\n\u003c/examples\u003e\n\n\u003chints\u003e\n- If the user passes a parameter in the form of name/otherName, it's likely in the format of \u003corganizationSlug\u003e/\u003cprojectSlug\u003e.\n- Parse org/project notation directly without calling find_organizations or find_projects.\n- Use fields with aggregate functions like count(), avg(), sum() for statistics\n- Sort by -count() for most common, -timestamp for newest\n\u003c/hints\u003e",
+              "description": "Search Sentry events and replays. Use for event counts/statistics.\n\n`query` is natural language or Sentry search syntax; a configured agent fixes dataset, query, fields, and sort.\n\nSupports THREE query types:\n1. AGGREGATIONS (counts, sums, averages): 'how many errors', 'total tokens'\n2. Individual events with timestamps: 'error logs from last hour'\n3. TIME SERIES (metric over time): 'errors per hour', 'error trend over time'\n\nDatasets:\n- errors: Exception/crash events with stack traces, usually grouped into issues\n- logs: Application log entries, including error-severity log messages\n- spans: Raw trace/span events for performance, AI/LLM calls, requests, and operations\n- metrics: Metric rows and aggregates: counters, gauges, distributions, values\n- profiles: Transaction/continuous profile results, profile IDs, profiled transactions\n- replays: Session replay results: rage clicks, dead clicks, visited pages, replay users\nIf the user says logs, log messages, error logs, or warning logs, choose logs instead of errors.\n\nReplay searches return replay lists only; replay count()/avg()/sum() are not supported.\n\nNOT for grouped issue lists (use search_issues) or app screenshots/images (use get_latest_base_snapshot).\n\n\u003cexamples\u003e\nsearch_events(organizationSlug='my-org', query='how many errors today')\nsearch_events(organizationSlug='my-org', dataset='errors', fields=['issue', 'count()'], sort='-count()')\nsearch_events(organizationSlug='my-org', query='errors per hour last 24h')\nsearch_events(organizationSlug='my-org', dataset='spans', query='span.op:db', sort='-span.duration')\nsearch_events(organizationSlug='my-org', dataset='replays', query='count_errors:\u003e0', sort='-count_errors')\n\u003c/examples\u003e\n\n\u003chints\u003e\n- name/otherName notation means \u003corganizationSlug\u003e/\u003cprojectSlug\u003e; parse it directly, don't call find_organizations/find_projects.\n- Use fields with aggregate functions like count(), avg(), sum() for statistics\n- Sort by -count() for most common, -timestamp for newest\n\u003c/hints\u003e",
               "inputSchema": {
                 "properties": {
                   "dataset": {
@@ -251,26 +251,19 @@
                   "environment": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "minLength": 1,
-                            "type": "string"
-                          },
-                          {
-                            "items": {
-                              "minLength": 1,
-                              "type": "string"
-                            },
-                            "minItems": 1,
-                            "type": "array"
-                          }
-                        ]
+                        "minLength": 1,
+                        "type": "string"
                       },
                       {
-                        "type": "null"
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array"
                       }
                     ],
-                    "description": "Optional environment filter for dataset='replays'. Use a string for one environment or an array for multiple. For other datasets, filter environment in the query string instead."
+                    "description": "Optional environment filter for dataset='replays'. Use a string for one environment or an array for multiple. Omit when unused. For other datasets, filter environment in the query string instead."
                   },
                   "fields": {
                     "anyOf": [
@@ -317,8 +310,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The project's slug. You can find a list of existing projects in an organization using the `find_projects()` tool."
+                    "default": null
                   },
                   "query": {
                     "description": "Natural language or Sentry event search query syntax.",
@@ -334,19 +326,14 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The region URL for the organization you're querying, if known. For Sentry's Cloud Service (sentry.io), this is typically the region-specific URL like 'https://us.sentry.io'. For self-hosted Sentry installations, this parameter is usually not needed and should be omitted. You can find the correct regionUrl from the organization details using the `find_organizations()` tool."
+                    "default": null
                   },
                   "sort": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
-                    "description": "Sort field (prefix with - for descending). If omitted, event datasets default to -timestamp and replays default to -started_at. Use -count() for event aggregations. For dataset='replays', use replay sorts like -started_at or -count_errors."
+                    "description": "Sort field (prefix with - for descending). If omitted, event datasets default to -timestamp and replays default to -started_at. Use -count() for event aggregations. For dataset='replays', use replay sorts like -started_at or -count_errors.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   }
                 },
                 "required": [
@@ -358,6 +345,7 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true
               },
@@ -393,16 +381,12 @@
                     "type": "string"
                   },
                   "projectSlugOrId": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ],
                     "default": null,
-                    "description": "The project's slug or numeric ID (optional)"
+                    "description": "The project's slug or numeric ID (optional)",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "query": {
                     "default": "is:unresolved",
@@ -419,17 +403,17 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The region URL for the organization you're querying, if known. For Sentry's Cloud Service (sentry.io), this is typically the region-specific URL like 'https://us.sentry.io'. For self-hosted Sentry installations, this parameter is usually not needed and should be omitted. You can find the correct regionUrl from the organization details using the `find_organizations()` tool."
+                    "default": null
                   },
                   "sort": {
                     "default": "date",
-                    "description": "Sort order: date (last seen), freq (frequency), new (first seen), user (user count)",
+                    "description": "Sort order: date (last seen), freq (frequency), new (first seen), user (user count), recommended (Sentry's prioritized ranking)",
                     "enum": [
                       "date",
                       "freq",
                       "new",
-                      "user"
+                      "user",
+                      "recommended"
                     ],
                     "type": "string"
                   }
@@ -443,6 +427,7 @@
             },
             {
               "annotations": {
+                "destructiveHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true
               },
@@ -483,21 +468,31 @@
                 "openWorldHint": true,
                 "readOnlyHint": false
               },
-              "description": "Update a Sentry issue's status or assignment.\n\nUse this to resolve, reopen, assign, or ignore an issue.\n\n\u003cexamples\u003e\n```\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='resolved')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', assignedTo='user:123456')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', ignoreMode='forever')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', ignoreMode='untilOccurrenceCount', ignoreCount=100, ignoreWindowMinutes=60)\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', reason='Ignoring because this is expected noise from the staging deploy')\n```\n\u003c/examples\u003e\n\n\u003chints\u003e\n- Provide `issueUrl` or `organizationSlug` + `issueId`.\n- At least one of `status` or `assignedTo` is required.\n- `assignedTo` format: `user:ID` or `team:ID_OR_SLUG`.\n- Use `execute_sentry_tool(name='whoami', arguments={})` to find your user ID for self-assignment.\n- Status values: `resolved`, `resolvedInNextRelease`, `unresolved`, `ignored`.\n- `status='ignored'` defaults to `ignoreMode='untilEscalating'`.\n- Ignore modes: `untilEscalating`, `forever`, `forDuration`, `untilOccurrenceCount`, `untilUserCount`.\n- Matching ignore inputs are `ignoreDurationMinutes`, `ignoreCount` + optional `ignoreWindowMinutes`, or `ignoreUserCount` + optional `ignoreUserWindowMinutes`.\n- To switch an already ignored issue between `untilEscalating`, `forever`, and condition-based ignore modes, first set `status='unresolved'`, then ignore it again with the new rule.\n- `reason` is optional. When provided, it will be posted as a comment on the issue's activity feed explaining why the action was taken.\n\u003c/hints\u003e",
+              "description": "Update a Sentry issue's status or assignment.\n\nUse this to resolve, reopen, assign, unassign, or ignore an issue.\n\n\u003cexamples\u003e\n```\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='resolved')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', assignedTo='user:123456')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', assignedTo=null)\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', ignoreMode='forever')\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', ignoreMode='untilOccurrenceCount', ignoreCount=100, ignoreWindowMinutes=60)\nupdate_issue(organizationSlug='my-org', issueId='PROJECT-123', status='ignored', reason='Ignoring because this is expected noise from the staging deploy')\n```\n\u003c/examples\u003e\n\n\u003chints\u003e\n- Provide `issueUrl` or `organizationSlug` + `issueId`.\n- At least one of `status` or `assignedTo` is required.\n- Omit `assignedTo` to leave assignment unchanged. Pass `null` to unassign; otherwise use `user:ID` or `team:ID_OR_SLUG`.\n- Use `execute_sentry_tool(name='whoami', arguments={})` to find your user ID for self-assignment.\n- Status values: `resolved`, `resolvedInNextRelease`, `unresolved`, `ignored`.\n- `status='ignored'` defaults to `ignoreMode='untilEscalating'`.\n- Ignore modes: `untilEscalating`, `forever`, `forDuration`, `untilOccurrenceCount`, `untilUserCount`.\n- Matching ignore inputs are `ignoreDurationMinutes`, `ignoreCount` + optional `ignoreWindowMinutes`, or `ignoreUserCount` + optional `ignoreUserWindowMinutes`.\n- To switch an already ignored issue between `untilEscalating`, `forever`, and condition-based ignore modes, first set `status='unresolved'`, then ignore it again with the new rule.\n- `reason` is optional. When provided, it will be posted as a comment on the issue's activity feed explaining why the action was taken.\n\u003c/hints\u003e",
               "inputSchema": {
                 "properties": {
                   "assignedTo": {
-                    "description": "The assignee in format 'user:ID' or 'team:ID_OR_SLUG' where ID is numeric. Example: 'user:123456', 'team:789', or 'team:my-team-slug'. Use `execute_sentry_tool(name='whoami', arguments={})` to find your user ID.",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The assignee in format 'user:ID' or 'team:ID_OR_SLUG' where ID is numeric. Pass null to unassign the issue. Example: 'user:123456', 'team:789', or 'team:my-team-slug'. Use `execute_sentry_tool(name='whoami', arguments={})` to find your user ID."
                   },
                   "ignoreCount": {
                     "description": "How many times the issue must occur before it stops being ignored when ignoreMode is 'untilOccurrenceCount'.",
                     "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
                     "type": "integer"
                   },
                   "ignoreDurationMinutes": {
                     "description": "How many minutes to ignore the issue when ignoreMode is 'forDuration'.",
                     "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
                     "type": "integer"
                   },
                   "ignoreMode": {
@@ -514,6 +509,7 @@
                   "ignoreUserCount": {
                     "description": "How many users must be affected before the issue stops being ignored when ignoreMode is 'untilUserCount'.",
                     "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991,
                     "type": "integer"
                   },
                   "ignoreUserWindowMinutes": {
@@ -556,8 +552,7 @@
                         "type": "null"
                       }
                     ],
-                    "default": null,
-                    "description": "The region URL for the organization you're querying, if known. For Sentry's Cloud Service (sentry.io), this is typically the region-specific URL like 'https://us.sentry.io'. For self-hosted Sentry installations, this parameter is usually not needed and should be omitted. You can find the correct regionUrl from the organization details using the `find_organizations()` tool."
+                    "default": null
                   },
                   "status": {
                     "description": "The new status for the issue. Valid values are 'resolved', 'resolvedInNextRelease', 'unresolved', and 'ignored'.",
@@ -621,7 +616,7 @@
           "name": "OPENAI_API_KEY"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/sentry-mcp-server:0.37.0",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/sentry-mcp-server:0.42.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
@@ -630,7 +625,7 @@
   ],
   "repository": {
     "source": "github",
-    "url": "https://github.com/getsentry/sentry-mcp"
+    "url": "https://github.com/getsentry/toolkit"
   },
   "title": "Sentry",
   "version": "1.0.0"

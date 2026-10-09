@@ -226,7 +226,7 @@ jobs:
           cache: true
 
       - name: Install ToolHive
-        uses: StacklokLabs/toolhive-actions/install@87b30f145f84b3186fd20e74c133111a5da24710 # v0
+        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0
         with:
           version: 'v0.2.9'
 
@@ -315,7 +315,7 @@ jobs:
 
       - name: Upload commit info
         if: (steps.update.outputs.changed == 'true' || steps.update.outputs.warning-added == 'true') && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: commit-info-${{ steps.server-info.outputs.server-key }}
           path: /tmp/commit-info/
@@ -393,7 +393,7 @@ jobs:
           persist-credentials: true
 
       - name: Download all commit info artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           path: /tmp/artifacts/
           pattern: commit-info-*
@@ -483,7 +483,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download all commit info artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           path: /tmp/comment-artifacts/
           pattern: commit-info-*

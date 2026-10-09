@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/clickhouse-best-practices:0.1.7"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/clickhouse-best-practices:0.1.9"
     },
     {
       "registryType": "git",
       "url": "https://github.com/ClickHouse/agent-skills",
-      "ref": "5aec3114379671f33b1c502a51d420a0729c8172",
+      "ref": "356a8c1b9a7392adb389a132f5ad3fec38532a03",
       "subfolder": "skills/clickhouse-best-practices"
     }
   ]

@@ -1,0 +1,30 @@
+{
+  "namespace": "io.github.stacklok",
+  "name": "neon-postgres-branches",
+  "title": "Neon Postgres Branches",
+  "description": "Choose and create the right Neon branch type for testing and development. Use when users ask about Neon branching, migration testing with real data, isolated test environments, schema-only branch workflows for sensitive data, resetting a branch from its parent, branch expiration and CI/CD branch lifecycles, or branch creation via Neon CLI or Neon MCP. Triggers include \"Neon branch\", \"test migrations safely\", \"branch production data\", \"schema-only branch\", \"reset branch\", \"branch per PR\" and \"sensitive data testing\".",
+  "version": "0.1.0",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/neondatabase/agent-skills",
+    "type": "git"
+  },
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-postgres-branches:0.1.0"
+    },
+    {
+      "registryType": "git",
+      "url": "https://github.com/neondatabase/agent-skills",
+      "ref": "b5beae8767c18ee7b9dc1ae1eb6c93c7cb1a96c4",
+      "subfolder": "skills/neon-postgres-branches"
+    }
+  ]
+}

@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-cli:0.2.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-cli:0.2.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/pinecone-io/skills",
-      "ref": "e353489827928df56f785ccb203bc059773516de",
+      "ref": "885dc539fbc2c777dee9764a5b05656663b43c5f",
       "subfolder": "skills/pinecone-cli"
     }
   ]

@@ -20,7 +20,15 @@
         "https://vastlint.org/mcp": {
           "tier": "Community",
           "status": "Active",
-          "tags": ["remote", "vast", "vmap", "daast", "iab", "validator", "advertising"],
+          "tags": [
+            "remote",
+            "vast",
+            "vmap",
+            "daast",
+            "iab",
+            "validator",
+            "advertising"
+          ],
           "tools": [
             "validate_vast",
             "validate_vast_url",
@@ -37,5 +45,14 @@
         }
       }
     }
-  }
+  },
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-catalog/main/registries/toolhive/servers/vastlint/icon.svg"
+    }
+  ]
 }

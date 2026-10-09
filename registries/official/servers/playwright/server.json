@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "mcr.microsoft.com/playwright/mcp:v0.0.79": {
+        "mcr.microsoft.com/playwright/mcp:v0.0.82": {
           "metadata": {
-            "last_updated": "2026-08-07T00:29:40Z",
+            "last_updated": "2026-10-05T22:37:15Z",
             "stars": 28552
           },
           "overview": "## Playwright MCP Server\n\nThe playwright MCP server provides browser automation capabilities using Playwright. The server enables comprehensive browser automation supporting Chromium, Firefox, and WebKit, with full control over page interactions including clicks, typing, navigation, and screenshots. Additional capabilities include network request monitoring, console message capture for debugging, form filling, file uploads, and dialog handling for complete workflow automation.",
@@ -114,7 +114,7 @@
                     "type": "boolean"
                   },
                   "filename": {
-                    "description": "Filename to save the console messages to. If not provided, messages are returned as text.",
+                    "description": "File name to save the console messages to. Relative file names are resolved against the workspace root. If not provided, messages are returned as text.",
                     "type": "string"
                   },
                   "level": {
@@ -219,6 +219,97 @@
                 "destructiveHint": true,
                 "openWorldHint": true,
                 "readOnlyHint": false,
+                "title": "Emulate media features"
+              },
+              "description": "Emulate CSS media features for the page, for example switch between the light and dark color scheme. Omitted parameters are left unchanged; null clears an override.",
+              "inputSchema": {
+                "properties": {
+                  "colorScheme": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "light",
+                          "dark"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Emulates the prefers-color-scheme media feature"
+                  },
+                  "contrast": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "more",
+                          "no-preference"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Emulates the prefers-contrast media feature"
+                  },
+                  "forcedColors": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "active",
+                          "none"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Emulates the forced-colors media feature"
+                  },
+                  "media": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "screen",
+                          "print"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Changes the CSS media type of the page"
+                  },
+                  "reducedMotion": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "reduce",
+                          "no-preference"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Emulates the prefers-reduced-motion media feature"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "browser_emulate_media"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "openWorldHint": true,
+                "readOnlyHint": false,
                 "title": "Evaluate JavaScript"
               },
               "description": "Evaluate JavaScript expression on page or element",
@@ -229,7 +320,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "Filename to save the result to. If not provided, result is returned as text.",
+                    "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, result is returned as text.",
                     "type": "string"
                   },
                   "function": {
@@ -456,7 +547,7 @@
               "inputSchema": {
                 "properties": {
                   "filename": {
-                    "description": "Filename to save the result to. If not provided, output is returned as text.",
+                    "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, output is returned as text.",
                     "type": "string"
                   },
                   "index": {
@@ -494,7 +585,7 @@
               "inputSchema": {
                 "properties": {
                   "filename": {
-                    "description": "Filename to save the network requests to. If not provided, requests are returned as text.",
+                    "description": "File name to save the network requests to. Relative file names are resolved against the workspace root. If not provided, requests are returned as text.",
                     "type": "string"
                   },
                   "filter": {
@@ -578,7 +669,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "Load code from the specified file. If both code and filename are provided, code will be ignored.",
+                    "description": "Load code from the specified file. Relative file names are resolved against the workspace root. If both code and filename are provided, code will be ignored.",
                     "type": "string"
                   }
                 },
@@ -640,7 +731,7 @@
                     "type": "number"
                   },
                   "filename": {
-                    "description": "Save snapshot to markdown file instead of returning it in the response.",
+                    "description": "Save snapshot to a file instead of returning it in the response. Relative file names are resolved against the workspace root.",
                     "type": "string"
                   },
                   "target": {
@@ -704,7 +795,7 @@
                     "type": "string"
                   },
                   "filename": {
-                    "description": "File name to save the screenshot to. Defaults to `page-{timestamp}.{png|jpeg|webp}` if not specified. Prefer relative file names to stay within the output directory.",
+                    "description": "File name to save the screenshot to. Relative file names are resolved against the workspace root. If not specified, the screenshot is saved into the output directory as `page-{timestamp}.{png|jpeg|webp}`.",
                     "type": "string"
                   },
                   "fullPage": {
@@ -815,6 +906,7 @@
             "browser_console_messages",
             "browser_drag",
             "browser_drop",
+            "browser_emulate_media",
             "browser_evaluate",
             "browser_file_upload",
             "browser_fill_form",
@@ -858,7 +950,7 @@
           "name": "PLAYWRIGHT_MCP_ALLOWED_HOSTS"
         },
         {
-          "description": "Semicolon-separated list of trusted origins to allow the browser to request. Default is to allow all.",
+          "description": "Semicolon-separated list of origins the browser may request. Defaults to all origins; this is not a security boundary and does not affect redirects.",
           "name": "PLAYWRIGHT_MCP_ALLOWED_ORIGINS"
         },
         {
@@ -866,7 +958,7 @@
           "name": "PLAYWRIGHT_MCP_ALLOW_UNRESTRICTED_FILE_ACCESS"
         },
         {
-          "description": "Semicolon-separated list of origins to block the browser from requesting. Evaluated before the allowlist.",
+          "description": "Semicolon-separated list of origins to block before the allowlist. Unmatched requests remain allowed when no allowlist is set; this is not a security boundary and does not affect redirects.",
           "name": "PLAYWRIGHT_MCP_BLOCKED_ORIGINS"
         },
         {
@@ -887,14 +979,14 @@
         },
         {
           "description": "CDP headers to send with the connect request. Multiple can be specified.",
-          "name": "PLAYWRIGHT_MCP_CDP_HEADER"
+          "name": "PLAYWRIGHT_MCP_CDP_HEADERS"
         },
         {
           "description": "Timeout in milliseconds for connecting to the CDP endpoint. Defaults to 30000.",
           "name": "PLAYWRIGHT_MCP_CDP_TIMEOUT"
         },
         {
-          "description": "Language to use for code generation. Possible values: typescript, none. Defaults to typescript.",
+          "description": "Language to use for code generation. Possible values: typescript, python, java, csharp, none. Defaults to typescript.",
           "name": "PLAYWRIGHT_MCP_CODEGEN"
         },
         {
@@ -938,7 +1030,7 @@
           "name": "PLAYWRIGHT_MCP_IGNORE_HTTPS_ERRORS"
         },
         {
-          "description": "Whether to send image responses to the client. Possible values: allow, omit. Defaults to allow.",
+          "description": "Whether to send image responses to the client. Possible values: allow, omit, only. The only mode sends image responses without text. Defaults to allow.",
           "name": "PLAYWRIGHT_MCP_IMAGE_RESPONSES"
         },
         {
@@ -960,10 +1052,6 @@
         {
           "description": "Path to the directory for output files.",
           "name": "PLAYWRIGHT_MCP_OUTPUT_DIR"
-        },
-        {
-          "description": "Whether to save snapshots, console messages, and network logs to a file or to standard output. Possible values: file, stdout. Defaults to stdout.",
-          "name": "PLAYWRIGHT_MCP_OUTPUT_MODE"
         },
         {
           "description": "Port to listen on for SSE transport.",
@@ -1026,7 +1114,7 @@
           "name": "PLAYWRIGHT_MCP_VIEWPORT_SIZE"
         }
       ],
-      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.79",
+      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.82",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
