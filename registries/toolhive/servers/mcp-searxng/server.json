@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.8.0": {
+        "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.10.5": {
           "overview": "## SearXNG MCP Server\n\nSearXNG MCP Server connects AI assistants to an operator-controlled or trusted SearXNG instance for privacy-respecting web search. It supports searching, query suggestions, instance discovery, and reading selected public URLs as text or Markdown. Configure the SearXNG endpoint to a service you operate or trust, because that service receives search queries. URL reading intentionally reaches user-supplied public URLs, so the server requires broad outbound-network access.",
           "permissions": {
             "network": {
@@ -59,7 +59,7 @@
           "name": "SEARXNG_URL"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.8.0",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.10.5",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
