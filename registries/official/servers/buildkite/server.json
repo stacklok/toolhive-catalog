@@ -3,12 +3,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/buildkite/buildkite-mcp-server:1.25.0": {
+        "ghcr.io/buildkite/buildkite-mcp-server:1.26.0": {
           "args": [
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-10-05T22:37:06Z",
+            "last_updated": "2026-10-09T02:12:35Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -1507,6 +1507,46 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Get Repository Connection"
+              },
+              "description": "Get a repository connection's service account, host, and provider rate limit. rate_limit is the cached GitHub installation core API quota for this connection (limit, used, remaining, reset_at), not the Buildkite API rate limit; it is null when the quota is unavailable or does not apply to the connection type. If reset_at is in the past, the quota has reset since it was cached, so treat used and remaining as stale. Requires organization administrator access",
+              "inputSchema": {
+                "properties": {
+                  "connection_id": {
+                    "description": "Repository connection UUID from list_repository_connections",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "connection_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_repository_connection"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Get Step Upload"
               },
               "description": "Get a single dynamic pipeline upload including its pipeline definition rendered as YAML (definition_yaml). Definitions over the API's render limit are omitted: definition_yaml is omitted, definition_yaml_omitted is true and definition_bytes reports the size. Only available while the build is within its maximum lifetime (~30 days); older builds return 410 Gone",
@@ -2308,6 +2348,41 @@
                 "type": "object"
               },
               "name": "list_pipelines"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Repository Connections"
+              },
+              "description": "List an organization's source control repository connections, such as GitHub apps, Bitbucket Server, and GitLab Self-Managed. Returns all connections unpaginated with id, type, display_name, and url only; use get_repository_connection for host details and GitHub provider rate limits. Requires organization administrator access",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug"
+                ],
+                "type": "object"
+              },
+              "name": "list_repository_connections"
             },
             {
               "annotations": {
@@ -3877,6 +3952,7 @@
             "get_job_env",
             "get_pipeline",
             "get_pipeline_schedule",
+            "get_repository_connection",
             "get_step_upload",
             "get_test",
             "get_test_run",
@@ -3892,6 +3968,7 @@
             "list_jobs",
             "list_pipeline_schedules",
             "list_pipelines",
+            "list_repository_connections",
             "list_skills",
             "list_step_uploads",
             "list_test_runs",
@@ -3973,7 +4050,7 @@
           "name": "BUILDKITE_FAILURE_SUMMARY_MAX_JOBS"
         }
       ],
-      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.25.0",
+      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.26.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
