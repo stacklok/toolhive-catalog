@@ -287,7 +287,13 @@ jobs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
+      - name: Write build preview to workflow summary
+        env:
+          COMMENT_BODY: ${{ steps.comment.outputs.body }}
+        run: printf '%s\n' "$COMMENT_BODY" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Post or update PR comment
+        if: github.event.pull_request.head.repo.full_name == github.repository
         run: |
           # Find existing comment
           COMMENT_ID=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
