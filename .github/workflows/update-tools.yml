@@ -378,6 +378,13 @@ jobs:
           # Pull any remote changes first to avoid conflicts
           git pull origin "$BRANCH_REF" --rebase
 
+          # Artifacts were generated from the event's head SHA. Never apply
+          # them over contributor edits pushed while this run was active.
+          if [ "$(git rev-parse HEAD)" != "$EXPECTED_HEAD_SHA" ]; then
+            echo "PR branch advanced; skipping stale tool updates" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
           # Collect all the server names that were updated
           UPDATED_SERVERS=""
           WARNING_SERVERS=""
@@ -428,6 +435,7 @@ jobs:
           fi
         env:
           BRANCH_REF: ${{ github.head_ref || github.ref_name }}
+          EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           GH_ACTOR: ${{ github.actor }}
           APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
           APP_USER_ID: ${{ steps.app-user.outputs.id }}
