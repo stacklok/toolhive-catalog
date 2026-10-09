@@ -8,6 +8,10 @@
             "author": "21st.dev",
             "homepage": "https://21st.dev/mcp"
           },
+          "metadata": {
+            "last_updated": "2026-10-09T02:34:46Z",
+            "stars": 5983
+          },
           "overview": "## 21st (Remote)\n\n21st's hosted MCP server provides access to its UI component catalog and AI-assisted component generation workflows. The Streamable HTTP endpoint is shared by the 21st CLI, website, and MCP clients. Authenticate with a 21st API key from the 21st API-key settings page sent in the `x-api-key` header. The legacy Magic MCP API keys were reset and are not compatible with this service.",
           "status": "Active",
           "tags": [

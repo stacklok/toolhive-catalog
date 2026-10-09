@@ -8,6 +8,9 @@
             "author": "PagerDuty",
             "homepage": "https://docs.pagerduty.com/developer/mcp-tooling-remote-server"
           },
+          "metadata": {
+            "last_updated": "2026-10-09T02:34:46Z"
+          },
           "oauth_config": {
             "authorize_url": "https://identity.pagerduty.com/global/oauth/authorize",
             "scopes": [
@@ -17,7 +20,7 @@
             "token_url": "https://identity.pagerduty.com/global/oauth/token",
             "use_pkce": true
           },
-          "overview": "## PagerDuty (Remote)\n\nPagerDuty's hosted MCP server provides remote access to PagerDuty account information and management operations. It uses Streamable HTTP and supports the same authentication methods as the PagerDuty REST API. Authenticate with OAuth or an API token sent as `Authorization: Token token=<API_KEY>`. Tool discovery requires authenticated access; PagerDuty documents the standard `tools/list` MCP method for retrieving the current tool set.",
+          "overview": "## PagerDuty (Remote)\n\nPagerDuty's hosted MCP server provides remote access to PagerDuty account information and management operations. It uses Streamable HTTP and supports the same authentication methods as the PagerDuty REST API. Authenticate with OAuth or an API token sent as `Authorization: Token token=\u003cAPI_KEY\u003e`. Tool discovery requires authenticated access; PagerDuty documents the standard `tools/list` MCP method for retrieving the current tool set.",
           "status": "Active",
           "tags": [
             "remote",

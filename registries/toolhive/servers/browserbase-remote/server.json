@@ -8,6 +8,9 @@
             "author": "Browserbase",
             "homepage": "https://docs.browserbase.com/integrations/mcp/setup"
           },
+          "metadata": {
+            "last_updated": "2026-10-09T02:34:46Z"
+          },
           "overview": "## Browserbase (Remote)\n\nBrowserbase's hosted MCP server gives MCP clients cloud-browser automation through a Streamable HTTP endpoint. It supports starting and ending sessions, navigating pages, interacting with page elements, observing available actions, and extracting page data. Authenticate tool calls by supplying a Browserbase API key as the required `browserbaseApiKey` query parameter. Pass the session ID returned by `start` to later calls when the client does not preserve its MCP transport session.",
           "status": "Active",
           "tags": [
