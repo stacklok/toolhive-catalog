@@ -1,0 +1,58 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/var2",
+  "description": "Generate and edit images; create videos, music, voiceovers and 3D assets; build creative workflows.",
+  "title": "VAR2 (Remote)",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.var2.ai/mcp",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-catalog/main/registries/toolhive/servers/var2/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://www.var2.ai/api/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://www.var2.ai/api/mcp": {
+          "tier": "Official",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "creative",
+            "images",
+            "video",
+            "audio",
+            "3d",
+            "oauth"
+          ],
+          "tools": [
+            "set_during_runtime"
+          ],
+          "overview": "## VAR2 (Remote)\n\nVAR2 is a first-party hosted creative service for generating and editing images, creating videos, music, voiceovers and 3D assets, and assembling creative workflows. For example, an assistant can create an image, animate it into a video, and add music or narration from the same conversation.\n\nConnect to https://www.var2.ai/api/mcp over Streamable HTTP and sign in with OAuth using a VAR2 account. Generation spends account credits; listing VAR2 in this catalog does not make generation free. Tool availability is discovered at runtime.\n\n[Documentation and connection instructions](https://www.var2.ai/mcp).",
+          "custom_metadata": {
+            "author": "VAR2",
+            "homepage": "https://www.var2.ai/mcp"
+          },
+          "oauth_config": {
+            "authorize_url": "https://www.var2.ai/oauth/authorize",
+            "token_url": "https://www.var2.ai/api/oauth/token",
+            "scopes": [
+              "var2:full"
+            ],
+            "use_pkce": true
+          }
+        }
+      }
+    }
+  }
+}
