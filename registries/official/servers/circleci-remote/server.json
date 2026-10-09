@@ -8,6 +8,9 @@
             "author": "CircleCI",
             "homepage": "https://circleci.com/docs/guides/toolkit/circleci-mcp-overview/"
           },
+          "metadata": {
+            "last_updated": "2026-10-09T02:56:47Z"
+          },
           "overview": "## CircleCI MCP Server (Remote)\n\nCircleCI's official hosted MCP server lets AI assistants inspect and act on CircleCI runs without a local installation. It supports investigating failed runs and jobs, reading logs and test results, and inspecting artifacts. It can also rerun or cancel workflows, enabling day-to-day CI diagnosis directly from a remote MCP host.",
           "status": "Active",
           "tags": [
