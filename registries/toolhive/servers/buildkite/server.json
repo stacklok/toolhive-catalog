@@ -8,7 +8,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-10-09T02:12:34Z",
+            "last_updated": "2026-10-09T02:51:03Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -118,7 +118,7 @@
                 "readOnlyHint": true,
                 "title": "Compare Builds"
               },
-              "description": "Compare step outcomes, final-attempt retry counts and execution/scheduling times between builds in one pipeline. Defaults to the most recently created earlier successful build on the same branch; baseline_build_number overrides this. Matches step keys or, for unkeyed jobs, unique exact names with matching type, group, matrix and parallel coordinates. match_method identifies heuristic name_fallback matches; ambiguous or unnamed unkeyed jobs remain unmatched. Returns at most 100 comparisons, prioritizing failures, and optional bounded log evidence for three newly failing jobs. Scans at most 1000 jobs per build; refuses incomplete inventories. Historical co-occurrence does not prove a cause or that retrying is safe. Use get_build_failure_summary for deeper failure diagnosis.",
+              "description": "Compare step outcomes, final-attempt retry counts and execution/scheduling times between builds in one pipeline. Defaults to the most recently created earlier successful build on the same branch; baseline_build_number overrides this. Matches step keys or, for unkeyed jobs, unique exact names with matching type, group, matrix and parallel coordinates. match_method identifies heuristic name_fallback matches; ambiguous or unnamed unkeyed jobs remain unmatched. A change in soft_failed (a failure allowed by soft_fail, which does not block the build) is state_changed, never newly_failing or recovered. Returns at most 100 comparisons, prioritizing failures, and optional bounded log evidence for up to three newly blocking failures: newly_failing jobs, then state_changed jobs that are now hard failures (for example soft-failed before). Scans at most 1000 jobs per build; refuses incomplete inventories. Historical co-occurrence does not prove a cause or that retrying is safe. Use get_build_failure_summary for deeper failure diagnosis.",
               "inputSchema": {
                 "properties": {
                   "baseline_build_number": {
@@ -130,7 +130,7 @@
                     "type": "string"
                   },
                   "include_logs": {
-                    "description": "Include bounded target log tails for up to three newly failing jobs (default true)",
+                    "description": "Include bounded target log tails for up to three newly blocking failures (default true)",
                     "type": [
                       "null",
                       "boolean"
@@ -956,7 +956,7 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
+              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: ran and failed, but the step's soft_fail setting in the pipeline allowed that exit status, so they did not block the build; soft_failed is authoritative, so the pipeline configuration is not needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
@@ -1014,7 +1014,7 @@
                     "type": "integer"
                   },
                   "max_jobs": {
-                    "description": "Maximum problem jobs to return (default 10, server may enforce a lower maximum, absolute max 50). Failed, timed-out, and expired jobs fill the limit first, followed by canceled jobs. Unless include_never_ran_jobs is false, remaining slots are filled first by jobs stopped by a failed dependency (waiting_failed, blocked_failed, unblocked_failed), then by broken jobs excluded by pipeline configuration.",
+                    "description": "Maximum problem jobs to return (default 10, server may enforce a lower maximum, absolute max 50). Blocking failed, timed-out, and expired jobs fill the limit first, followed by canceled jobs, then soft-failed jobs. Unless include_never_ran_jobs is false, remaining slots are filled first by jobs stopped by a failed dependency (waiting_failed, blocked_failed, unblocked_failed), then by broken jobs excluded by pipeline configuration.",
                     "type": "integer"
                   },
                   "max_test_runs": {
@@ -2171,7 +2171,7 @@
                 "readOnlyHint": true,
                 "title": "List Jobs"
               },
-              "description": "List jobs for a Buildkite build, returning an actionable summary by default. For CI failure diagnosis, use state='failed,broken' to avoid returning successful jobs. Use detail_level='detailed' for execution metadata or 'full' for the existing full MCP job response. Returns 'items' and cursor pagination 'links'",
+              "description": "List jobs for a Buildkite build, returning an actionable summary by default. For CI failure diagnosis, use state='failed,timed_out,expired' to avoid returning successful jobs, and investigate jobs without soft_failed first: soft_failed true means the job ran and failed but soft_fail allowed its exit status, so it did not block the build. Broken jobs never ran because pipeline configuration excluded them; they are not failures. Use detail_level='detailed' for execution metadata or 'full' for the existing full MCP job response. Returns 'items' and cursor pagination 'links'",
               "inputSchema": {
                 "properties": {
                   "after": {
