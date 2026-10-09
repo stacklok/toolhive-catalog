@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.10.5": {
+        "ghcr.io/stacklok/dockyard/npx/mcp-searxng:2.5.1": {
           "metadata": {
             "last_updated": "2026-10-09T02:56:47Z",
             "stars": 1288
@@ -63,7 +63,7 @@
           "name": "SEARXNG_URL"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/mcp-searxng:0.10.5",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/mcp-searxng:2.5.1",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
