@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/github/github-mcp-server:v2.0.2": {
           "metadata": {
-            "last_updated": "2026-10-05T22:37:00Z",
+            "last_updated": "2026-10-09T02:13:30Z",
             "stars": 28440
           },
           "overview": "## GitHub MCP Server\n\nThe GitHub MCP server enables AI assistants to work directly with **GitHub repositories and resources** inside AI-driven workflows. It provides structured access to code, issues, pull requests, and repository metadata so assistants can reason about projects, propose changes, and manage collaboration without switching between tools.\n\nThis server is ideal for development, code review, project planning, and repository exploration workflows that benefit from tight integration with GitHub.",
@@ -2172,7 +2172,7 @@
                 "properties": {
                   "minimal_output": {
                     "default": true,
-                    "description": "Return minimal repository information (default: true). When false, returns full GitHub API repository objects.",
+                    "description": "Return minimal repository information (default: true). When false, modern clients receive additional curated repository details, not the complete GitHub API object. Legacy clients retain full GitHub API repository objects.",
                     "type": "boolean"
                   },
                   "order": {
