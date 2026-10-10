@@ -1,0 +1,70 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/unified-ai-system",
+  "title": "Unified AI System",
+  "description": "Self-hosted, credential-free AI gateway and agent control plane that exposes fifteen governed MCP tools over stdio, with a local fake provider as the default so nothing leaves the machine without explicit configuration.",
+  "repository": {
+    "url": "https://github.com/happy520ai/unified-ai-system",
+    "source": "github"
+  },
+  "version": "0.8.0",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/happy520ai/unified-ai-system/mcp-server:0.8.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "MCP_SERVICE_LOG_FILE",
+          "description": "Optional. Route the server diagnostic lines to this file instead of stderr. Not required to run.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "MCP_SUPERVISED",
+          "description": "Optional. Set to 1 when the process is supervised by the mcp-service package, which changes where diagnostics are written. Not required to run.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "ghcr.io/happy520ai/unified-ai-system/mcp-server:0.8.0": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "ai-gateway",
+            "mcp",
+            "self-hosted",
+            "prompt-enhancement",
+            "agent-governance",
+            "local-first",
+            "zero-config"
+          ],
+          "tools": [
+            "agent_governance_describe",
+            "agent_governance_list",
+            "agent_governance_status",
+            "gateway_chat",
+            "gateway_health",
+            "gateway_prompt_enhance",
+            "gateway_prompt_enhance_llm",
+            "gateway_readiness",
+            "knowledge_readiness",
+            "knowledge_retrieve",
+            "workflow_actions",
+            "workflow_health",
+            "workflow_run",
+            "workforce_agents",
+            "workforce_health"
+          ]
+        }
+      }
+    }
+  }
+}
