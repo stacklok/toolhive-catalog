@@ -1,0 +1,96 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.lunarwerx/connections",
+  "description": "Host and ticket events, import and search contacts, browse and post Deal Flow marketplace deals, keep notes and agent memory, and take payments.",
+  "title": "connections",
+  "repository": {
+    "url": "https://github.com/Lunarwerx/connections-cursor-plugin",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://studio.connections.icu/v1/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://studio.connections.icu/v1/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "connections",
+            "crm",
+            "events",
+            "payments",
+            "notes"
+          ],
+          "tools": [
+            "connections_search_catalog",
+            "connections_explore_connectors",
+            "connections_execute",
+            "connections_accounts",
+            "connections_pulse",
+            "connections_links",
+            "connections_todo_list",
+            "connections_todo_add",
+            "connections_todo_done",
+            "connections_contacts_list",
+            "connections_contacts_get",
+            "connections_events_list",
+            "connections_event_create",
+            "connections_deals_list",
+            "connections_deal_create",
+            "connections_notes_search",
+            "connections_note_save",
+            "connections_switch_workspace",
+            "connections_cross_workspace_access",
+            "connections_mcp_servers",
+            "connections_signout",
+            "connections_help",
+            "connections_whoami",
+            "connections_list_companies",
+            "connections_claim_company",
+            "connections_request_company_change",
+            "connections_ping",
+            "connections_catalog_add",
+            "connections_catalog_remove",
+            "connections_catalog_refresh",
+            "connections_script_save",
+            "connections_script_get",
+            "connections_script_delete",
+            "connections_connect_service_key",
+            "connections_connect_oauth_link",
+            "connections_lease_credential",
+            "connections_provision_signing_credential",
+            "connections_mint_org_operator",
+            "connections_mint_plane_operator",
+            "search",
+            "fetch"
+          ],
+          "permissions": {
+            "network": {
+              "outbound": {
+                "allow_host": [
+                  "studio.connections.icu",
+                  "accounts.connections.icu"
+                ],
+                "allow_port": [
+                  443
+                ]
+              }
+            }
+          },
+          "custom_metadata": {
+            "author": "Connections Global LLC",
+            "homepage": "https://studio.connections.icu/connect",
+            "license": "Proprietary",
+            "auth": "OAuth 2.1 (PKCE, dynamic client registration)"
+          }
+        }
+      }
+    }
+  }
+}
