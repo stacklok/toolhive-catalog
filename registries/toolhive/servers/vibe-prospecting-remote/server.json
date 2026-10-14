@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/vibe-prospecting-remote",
+  "description": "B2B company and contact intelligence for prospecting workflows.",
+  "title": "Vibe Prospecting (Remote)",
+  "version": "1.0.0",
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/explorium-ai/vibeprospecting-mcp"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://vibeprospecting.explorium.ai/mcp"
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/vibe-prospecting-remote/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://vibeprospecting.explorium.ai/mcp": {
+          "tier": "Official",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "b2b",
+            "prospecting",
+            "sales",
+            "leads",
+            "enrichment",
+            "companies",
+            "contacts",
+            "oauth"
+          ],
+          "tools": [],
+          "custom_metadata": {
+            "author": "Explorium",
+            "homepage": "https://vibeprospecting.ai",
+            "license": "Proprietary"
+          },
+          "overview": "## Vibe Prospecting (Remote)\n\nPower your chat with live B2B data to create lead lists, research companies, enrich contacts, personalize outreach, and inspect business signals, technology stacks, events, and website changes. Official remote MCP from Explorium / vibeprospecting.ai. Connect over HTTPS streamable-http and sign in with OAuth in the browser. Endpoint: https://vibeprospecting.explorium.ai/mcp"
+        }
+      }
+    }
+  }
+}
