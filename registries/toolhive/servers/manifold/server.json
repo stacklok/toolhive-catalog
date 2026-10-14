@@ -1,0 +1,123 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.manifoldmcp.com/mcp": {
+          "custom_metadata": {
+            "author": "Manifold",
+            "homepage": "https://www.manifoldmcp.com/docs",
+            "license": "Proprietary"
+          },
+          "overview": "## Manifold\n\nManifold gives your AI agent the data a growth team works from. It is one hosted MCP server: add it to Claude, ChatGPT, Cursor, Claude Code or any other MCP client, sign in, and your agent can answer growth questions with real numbers. It covers SEO (rankings, keyword ideas and difficulty, backlinks, competitors, traffic estimates and a technical crawl), AI answers (what ChatGPT, Claude, Gemini, Perplexity and Google's AI answers say about a brand, and which pages they cite), Google Search Console and Bing Webmaster Tools, social profiles, posts, comments and transcripts from TikTok, Instagram, YouTube, Facebook, LinkedIn and X, Reddit, live ads from the Meta, Google, TikTok and LinkedIn ad libraries, and companies, people and verified work emails. Every tool is read-only. Authentication is OAuth 2.1 with PKCE and dynamic client registration, or an API key sent as a bearer token.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "marketing",
+            "seo",
+            "aeo",
+            "social-media",
+            "reddit",
+            "ad-library",
+            "lead-generation",
+            "oauth"
+          ],
+          "tier": "Official",
+          "tools": [
+            "seo_search_keywords",
+            "seo_get_keyword_metrics",
+            "seo_get_serp",
+            "seo_get_position",
+            "seo_get_domain_overview",
+            "seo_get_ranked_keywords",
+            "seo_get_serp_competitors",
+            "seo_get_keyword_gap",
+            "seo_get_backlink_summary",
+            "seo_get_backlinks",
+            "seo_get_referring_domains",
+            "seo_get_domain_ratings",
+            "seo_get_traffic_estimates",
+            "seo_get_page",
+            "seo_run_technical_crawl",
+            "aeo_run_ai_answers",
+            "aeo_search_prompts",
+            "aeo_get_site_readiness",
+            "leads_search_companies",
+            "leads_get_company",
+            "leads_search_people",
+            "leads_get_person",
+            "leads_get_email",
+            "leads_get_email_status",
+            "leads_get_domain_emails",
+            "ads_search_ads",
+            "ads_search_advertisers",
+            "ads_get_advertiser_ads",
+            "ads_get_ad",
+            "reddit_search_posts",
+            "reddit_search_comments",
+            "reddit_get_new_posts",
+            "reddit_get_post",
+            "reddit_get_comments",
+            "reddit_search_subreddits",
+            "reddit_get_subreddit",
+            "tiktok_get_profile",
+            "tiktok_get_videos",
+            "tiktok_get_video",
+            "tiktok_get_comments",
+            "tiktok_search_videos",
+            "tiktok_get_transcript",
+            "tiktok_get_followers",
+            "tiktok_get_audience",
+            "instagram_get_profile",
+            "instagram_get_posts",
+            "instagram_get_reels",
+            "instagram_get_post",
+            "instagram_get_comments",
+            "instagram_search_posts",
+            "instagram_get_transcript",
+            "facebook_get_profile",
+            "facebook_get_posts",
+            "facebook_get_post",
+            "facebook_get_comments",
+            "facebook_get_group_posts",
+            "facebook_get_transcript",
+            "youtube_get_channel",
+            "youtube_get_videos",
+            "youtube_get_video",
+            "youtube_get_comments",
+            "youtube_search_videos",
+            "youtube_get_transcript",
+            "linkedin_get_profile",
+            "linkedin_get_company",
+            "linkedin_get_company_posts",
+            "linkedin_get_post",
+            "linkedin_search_posts",
+            "twitter_get_profile",
+            "twitter_get_tweets",
+            "twitter_get_tweet"
+          ]
+        }
+      }
+    }
+  },
+  "description": "One MCP server that gives your AI agent search, AI answer, social, ad and lead data.",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/manifold/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/manifold",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.manifoldmcp.com/mcp"
+    }
+  ],
+  "title": "Manifold",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.manifoldmcp.com"
+}
