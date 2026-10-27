@@ -39,26 +39,31 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Maintainers and automation (metadata/skill sync, Renovate) are exempt.
+          # Maintainers and the repo's own automation (metadata/skill sync,
+          # Renovate) are exempt. Other bot accounts go through the gate.
           exempt_assoc='OWNER MEMBER COLLABORATOR'
+          exempt_bots='renovate[bot] toolhive-release-app[bot]'
           new_entry_re='^registries/[^/]+/(servers|skills)/[^/]+/(server|skill)\.json$'
 
           gh api --paginate "repos/${REPO}/pulls?state=open&per_page=100" \
-            --jq '.[] | [.number, .author_association, .user.login, .user.type] | @tsv' |
-          while IFS=$'\t' read -r pr assoc login utype; do
-            if [[ " ${exempt_assoc} " == *" ${assoc} "* || "${utype}" == "Bot" ]]; then
+            --jq '.[] | [.number, .author_association, .user.login] | @tsv' |
+          while IFS=$'\t' read -r pr assoc login; do
+            if [[ " ${exempt_assoc} " == *" ${assoc} "* || " ${exempt_bots} " == *" ${login} "* ]]; then
               continue
             fi
 
-            # Only gate PRs that add a new entry; fixes to existing entries stay open.
+            # Only gate PRs that add a new entry (including one moved or copied
+            # into a new path); fixes to existing entries stay open.
             adds_entry=$(gh api --paginate "repos/${REPO}/pulls/${pr}/files?per_page=100" \
-              --jq '.[] | select(.status == "added") | .filename' |
+              --jq '.[] | select(.status == "added" or .status == "renamed" or .status == "copied") | .filename' |
               grep -Ec "${new_entry_re}" || true)
             if [[ "${adds_entry}" -eq 0 ]]; then
               continue
             fi
 
-            # The PR must close/reference an issue carrying the maintainer-only label.
+            # The PR must close an open issue that carries the maintainer-only
+            # label and was opened by, or is assigned to, the PR author. This
+            # stops a PR from borrowing someone else's approval.
             # shellcheck disable=SC2016  # GraphQL variables, not shell expansions
             approved=$(gh api graphql -F owner="${REPO%/*}" -F name="${REPO#*/}" -F number="${pr}" \
               -f query='
@@ -66,13 +71,22 @@ jobs:
                   repository(owner: $owner, name: $name) {
                     pullRequest(number: $number) {
                       closingIssuesReferences(first: 10) {
-                        nodes { labels(first: 50) { nodes { name } } }
+                        nodes {
+                          state
+                          author { login }
+                          assignees(first: 20) { nodes { login } }
+                          labels(first: 50) { nodes { name } }
+                        }
                       }
                     }
                   }
-                }' \
-              --jq "[.data.repository.pullRequest.closingIssuesReferences.nodes[].labels.nodes[].name
-                     | select(. == \"${APPROVED_LABEL}\")] | length")
+                }' |
+              jq --arg label "${APPROVED_LABEL}" --arg login "${login}" \
+                '[.data.repository.pullRequest.closingIssuesReferences.nodes[]
+                     | select(.state == "OPEN")
+                     | select(any(.labels.nodes[]; .name == $label))
+                     | select(.author.login == $login or any(.assignees.nodes[]; .login == $login))]
+                    | length')
             if [[ "${approved}" -gt 0 ]]; then
               continue
             fi
@@ -86,8 +100,8 @@ jobs:
 
           To add an entry:
           1. Open an [Add an MCP server](https://github.com/${REPO}/issues/new?template=add-an-mcp-server.md) issue and check it against the [inclusion criteria](https://github.com/${REPO}/blob/main/CONTRIBUTING.md#adding-a-new-server-or-skill).
-          2. Wait for a maintainer to approve it (they apply the \`${APPROVED_LABEL}\` label).
-          3. Reopen this PR, or open a new one, with \`Closes #<issue>\` in the description.
+          2. Wait for a maintainer to approve it (they apply the \`${APPROVED_LABEL}\` label). The issue must be opened by you or assigned to you.
+          3. Open a new PR with \`Closes #<issue>\` in the description.
 
           Entries that don't meet these requirements are dropped without review. Fixes to existing entries don't need an issue. Closing this PR is automated and doesn't judge the server itself."
           done

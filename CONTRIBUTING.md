@@ -79,7 +79,8 @@ New entries need an approved issue before we review a PR:
 2. Open an [Add an MCP server](https://github.com/stacklok/toolhive-catalog/issues/new?template=add-an-mcp-server.md)
    issue.
 3. Wait for a maintainer to approve it. Approval is the `approved-for-pr` label.
-4. Open a PR that references the issue with `Closes #<issue>`.
+4. Open a PR that references the issue with `Closes #<issue>`. The issue must
+   still be open, and opened by you or assigned to you.
 
 An hourly job closes PRs that add a new server or skill without a linked,
 approved issue. Fixes and updates to existing entries don't need an issue.
