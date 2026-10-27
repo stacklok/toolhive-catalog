@@ -1,0 +1,61 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://lifeverse.gufreelancer.com/api/mcp": {
+          "custom_metadata": {
+            "author": "LifeVerse",
+            "homepage": "https://lifeverse.gufreelancer.com/mcp",
+            "license": "MIT"
+          },
+          "metadata": {
+            "last_updated": "2026-10-27T05:20:00Z"
+          },
+          "overview": "## LifeVerse Product Discovery\n\nLifeVerse Product Discovery is the official, public, read-only MCP server for the LifeVerse catalog. Agents can list ready-to-use products, search in Chinese or English, inspect one product by slug, and recommend experiences for a natural-language need. The hosted endpoint requires no account or API key and exposes only public catalog data. It does not read account, payment, order, entitlement, review, unpublished-product, or private user data.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "lifeverse",
+            "ai",
+            "product-discovery",
+            "search",
+            "recommendations",
+            "read-only",
+            "no-auth"
+          ],
+          "tier": "Official",
+          "tools": [
+            "lifeverse_list_products",
+            "lifeverse_search_products",
+            "lifeverse_get_product",
+            "lifeverse_recommend_products"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Discover, search, inspect, and recommend public LifeVerse AI products and experiences",
+  "icons": [
+    {
+      "mimeType": "image/png",
+      "sizes": [
+        "400x400"
+      ],
+      "src": "https://raw.githubusercontent.com/lifeversegu/lifeverse-mcp/main/assets/icon.png"
+    }
+  ],
+  "name": "com.gufreelancer.lifeverse/public-catalog",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://lifeverse.gufreelancer.com/api/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/lifeversegu/lifeverse-mcp"
+  },
+  "title": "LifeVerse Product Discovery",
+  "version": "1.1.1"
+}
