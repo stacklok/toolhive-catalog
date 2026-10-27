@@ -84,6 +84,12 @@ New entries need an approved issue before we review a PR:
 An hourly job closes PRs that add a new server or skill without a linked,
 approved issue. Fixes and updates to existing entries don't need an issue.
 
+Entries that don't meet these requirements are dropped without review: PRs are
+closed, and issues that don't meet the inclusion criteria are closed without
+approval. An approved issue isn't a guarantee of inclusion. The final PR is
+still reviewed against the criteria, and an entry that doesn't meet them is
+rejected.
+
 ### Contributing to docs
 
 The ToolHive user documentation website is maintained in the

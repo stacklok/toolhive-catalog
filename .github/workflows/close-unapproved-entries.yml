@@ -89,5 +89,5 @@ jobs:
           2. Wait for a maintainer to approve it (they apply the \`${APPROVED_LABEL}\` label).
           3. Reopen this PR, or open a new one, with \`Closes #<issue>\` in the description.
 
-          Fixes to existing entries don't need an issue. Closing this PR is automated and doesn't judge the server itself."
+          Entries that don't meet these requirements are dropped without review. Fixes to existing entries don't need an issue. Closing this PR is automated and doesn't judge the server itself."
           done
