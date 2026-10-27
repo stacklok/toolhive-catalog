@@ -61,9 +61,11 @@ jobs:
               continue
             fi
 
-            # The PR must close an open issue that carries the maintainer-only
-            # label and was opened by, or is assigned to, the PR author. This
-            # stops a PR from borrowing someone else's approval.
+            # The PR must close an open issue in this repo that carries the
+            # maintainer-only label and was opened by, or is assigned to, the PR
+            # author. Linked issues can live in other repos, where anyone can
+            # apply the label, and the author check stops a PR from borrowing
+            # someone else's approval.
             # shellcheck disable=SC2016  # GraphQL variables, not shell expansions
             approved=$(gh api graphql -F owner="${REPO%/*}" -F name="${REPO#*/}" -F number="${pr}" \
               -f query='
@@ -72,6 +74,7 @@ jobs:
                     pullRequest(number: $number) {
                       closingIssuesReferences(first: 10) {
                         nodes {
+                          repository { nameWithOwner }
                           state
                           author { login }
                           assignees(first: 20) { nodes { login } }
@@ -81,8 +84,9 @@ jobs:
                     }
                   }
                 }' |
-              jq --arg label "${APPROVED_LABEL}" --arg login "${login}" \
+              jq --arg repo "${REPO}" --arg label "${APPROVED_LABEL}" --arg login "${login}" \
                 '[.data.repository.pullRequest.closingIssuesReferences.nodes[]
+                     | select((.repository.nameWithOwner | ascii_downcase) == ($repo | ascii_downcase))
                      | select(.state == "OPEN")
                      | select(any(.labels.nodes[]; .name == $label))
                      | select(.author.login == $login or any(.assignees.nodes[]; .login == $login))]
