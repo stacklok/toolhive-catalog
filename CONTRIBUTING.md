@@ -14,6 +14,7 @@ get started. You can find some hints for starting development in ToolHive's
   - [Using GitHub Issues](#using-github-issues)
   - [Not sure how to start contributing?](#not-sure-how-to-start-contributing)
   - [Pull request process](#pull-request-process)
+  - [Adding a new server or skill](#adding-a-new-server-or-skill)
   - [Contributing to docs](#contributing-to-docs)
   - [Commit message guidelines](#commit-message-guidelines)
 
@@ -68,10 +69,20 @@ are a great place to start!
 - Once approved, all of your commits will be squashed into a single commit with
   your PR title.
 
-When adding a new entry to the registry, please review the
-[Registry Inclusion Criteria](docs/registry-criteria.md) before submitting,
-including the [MCP server criteria](docs/server-criteria.md) or the
-[skill criteria](docs/skill-criteria.md) as appropriate.
+### Adding a new server or skill
+
+New entries need an approved issue before we review a PR:
+
+1. Review the [Registry Inclusion Criteria](docs/registry-criteria.md),
+   including the [MCP server criteria](docs/server-criteria.md) or the
+   [skill criteria](docs/skill-criteria.md) as appropriate.
+2. Open an [Add an MCP server](https://github.com/stacklok/toolhive-catalog/issues/new?template=add-an-mcp-server.md)
+   issue.
+3. Wait for a maintainer to approve it. Approval is the `approved-for-pr` label.
+4. Open a PR that references the issue with `Closes #<issue>`.
+
+An hourly job closes PRs that add a new server or skill without a linked,
+approved issue. Fixes and updates to existing entries don't need an issue.
 
 ### Contributing to docs
 
