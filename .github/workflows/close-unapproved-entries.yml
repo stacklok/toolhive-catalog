@@ -39,16 +39,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Maintainers and the repo's own automation (metadata/skill sync,
-          # Renovate) are exempt. Other bot accounts go through the gate.
+          # Same-repository branches require write access and are exempt even
+          # when the token cannot see the author's organization membership.
+          # Maintainers and the repo's own automation remain exempt as well.
           exempt_assoc='OWNER MEMBER COLLABORATOR'
           exempt_bots='renovate[bot] toolhive-release-app[bot]'
           new_entry_re='^registries/[^/]+/(servers|skills)/[^/]+/(server|skill)\.json$'
 
           gh api --paginate "repos/${REPO}/pulls?state=open&per_page=100" \
-            --jq '.[] | [.number, .author_association, .user.login] | @tsv' |
-          while IFS=$'\t' read -r pr assoc login; do
-            if [[ " ${exempt_assoc} " == *" ${assoc} "* || " ${exempt_bots} " == *" ${login} "* ]]; then
+            --jq '.[] | [.number, .author_association, .user.login, (.head.repo.id != null and .head.repo.id == .base.repo.id)] | @tsv' |
+          while IFS=$'\t' read -r pr assoc login same_repo; do
+            if [[ "${same_repo}" == "true" || " ${exempt_assoc} " == *" ${assoc} "* || " ${exempt_bots} " == *" ${login} "* ]]; then
               continue
             fi
 
