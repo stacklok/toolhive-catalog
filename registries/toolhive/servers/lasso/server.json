@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/lasso",
+  "title": "Lasso",
+  "description": "Find unpaid Amazon links, dry-run higher-rate hops, and report clicks for one site.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/lassoanalytics/lasso-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://lasso.link/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://lasso.link/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "affiliate",
+            "marketing",
+            "ecommerce"
+          ],
+          "tools": [
+            "set_during_runtime"
+          ],
+          "custom_metadata": {
+            "author": "Lasso Analytics",
+            "homepage": "https://getlasso.co/mcp",
+            "auth": "Bearer Hub license key or OAuth. Free account."
+          }
+        }
+      }
+    }
+  }
+}
