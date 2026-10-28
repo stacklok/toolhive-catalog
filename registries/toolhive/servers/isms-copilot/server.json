@@ -1,0 +1,62 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.tristanroth1/ismscopilot-account",
+  "description": "The compliance specialist your AI calls: ISO 27001, SOC 2, GDPR, NIS 2, DORA and more.",
+  "title": "ISMS Copilot",
+  "version": "0.3.2",
+  "websiteUrl": "https://www.ismscopilot.com/mcp",
+  "repository": {
+    "url": "https://github.com/better-isms/ismscopilot-plugin",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://account.ismscopilot.com/v1/account/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://account.ismscopilot.com/v1/account/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "compliance",
+            "grc",
+            "iso-27001",
+            "soc-2",
+            "gdpr",
+            "security"
+          ],
+          "tools": [
+            "get_account_info",
+            "list_workspaces",
+            "create_workspace",
+            "list_documents",
+            "list_memories",
+            "create_memory",
+            "update_memory",
+            "get_company_context",
+            "set_company_context",
+            "list_companies",
+            "create_company",
+            "get_company",
+            "update_company",
+            "delete_company",
+            "link_company_to_workspace",
+            "unlink_workspace_company",
+            "create_conversation",
+            "send_message",
+            "get_reply"
+          ],
+          "custom_metadata": {
+            "author": "Better ISMS",
+            "homepage": "https://www.ismscopilot.com/mcp"
+          }
+        }
+      }
+    }
+  }
+}
