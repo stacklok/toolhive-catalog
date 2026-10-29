@@ -1,0 +1,58 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.buildkite.com/mcp": {
+          "custom_metadata": {
+            "author": "Buildkite",
+            "homepage": "https://buildkite.com/docs/apis/mcp-server",
+            "license": "MIT"
+          },
+          "overview": "## Buildkite (Remote)\n\nBuildkite's hosted MCP server exposes pipelines, builds, job logs, artifacts, and test results. Use it to investigate CI failures and manage builds without running a local server.\n\n### Setup\n\nYou need a Buildkite account with access to the organization and resources you want to use. Run `thv run buildkite-remote --remote-auth` and complete the browser authorization, including your organization's SSO if required. The server supports dynamic client registration, so no pre-created OAuth application or custom headers are needed. If your organization restricts API access by IP address, an administrator must allow Buildkite's remote MCP egress IPs as described in the [connection guide](https://buildkite.com/docs/apis/mcp-server/remote/configuring-ai-tools).\n\nThe default endpoint permits reads and writes within your granted permissions. Buildkite also provides `https://mcp.buildkite.com/mcp/readonly` and toolset-specific paths. For headless API-token access, use `https://mcp.buildkite.com/direct` with `--remote-auth-bearer-token-file <TOKEN_FILE>`; API tokens belong on that endpoint, while this entry uses OAuth. The hosted service has its own rate limits and updates automatically.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "buildkite",
+            "ci",
+            "pipelines",
+            "builds"
+          ],
+          "tier": "Official",
+          "tools": [
+            "list_pipelines",
+            "get_pipeline",
+            "list_builds",
+            "get_build",
+            "list_jobs",
+            "search_logs",
+            "read_logs"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Inspect Buildkite pipelines, builds, logs, and test results through its hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/buildkite-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/buildkite-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.buildkite.com/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/buildkite/buildkite-mcp-server"
+  },
+  "title": "Buildkite (Remote)",
+  "version": "1.0.0"
+}

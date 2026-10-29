@@ -1,0 +1,48 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.launchdarkly.com/mcp/launchdarkly": {
+          "custom_metadata": {
+            "author": "LaunchDarkly",
+            "homepage": "https://launchdarkly.com/docs/home/getting-started/mcp-hosted"
+          },
+          "overview": "## LaunchDarkly (Remote)\n\nLaunchDarkly's hosted MCP server connects AI assistants to feature flags, AgentControl configs, and observability data. Use it to inspect flag configuration and make changes using your LaunchDarkly account permissions.\n\n### Setup\n\nYou need a LaunchDarkly commercial account and a member role with access to the relevant projects and environments. Run `thv run launchdarkly-remote --remote-auth` and authorize with LaunchDarkly. Dynamic client registration is supported, so no API key, pre-created OAuth application, or custom headers are required. The hosted server is unavailable for LaunchDarkly EU and Federal environments; use the existing local entry for those environments.\n\nAccess follows the role of the member who authorizes the connection. Optional `toolsets` and `writes` URL parameters filter tool discovery but do not enforce account permissions. See the [hosted setup guide](https://launchdarkly.com/docs/home/getting-started/mcp-hosted) for role requirements, connection renewal, and troubleshooting.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "launchdarkly",
+            "feature-flags",
+            "observability",
+            "development"
+          ],
+          "tier": "Official"
+        }
+      }
+    }
+  },
+  "description": "Manage LaunchDarkly feature flags and AgentControl configs through its hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/launchdarkly-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/launchdarkly-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.launchdarkly.com/mcp/launchdarkly"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/launchdarkly/ai-tooling"
+  },
+  "title": "LaunchDarkly (Remote)",
+  "version": "1.0.0"
+}

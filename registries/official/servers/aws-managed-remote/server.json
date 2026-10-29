@@ -1,0 +1,58 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://aws-mcp.us-east-1.api.aws/mcp?oauth=initialize": {
+          "custom_metadata": {
+            "author": "Amazon Web Services",
+            "homepage": "https://docs.aws.amazon.com/agent-toolkit/latest/userguide/getting-started-aws-mcp-server.html"
+          },
+          "oauth_config": {
+            "issuer": "https://us-east-1.oauth.signin.aws",
+            "use_pkce": true
+          },
+          "overview": "## AWS Managed MCP (Remote)\n\nAWS's managed MCP server combines AWS documentation and regional availability tools with authenticated AWS API operations and Python workflows. Use it to investigate resources and carry out AWS tasks under your existing IAM identity.\n\n### Setup\n\nYou need an AWS account and an IAM identity with permission for the AWS operations you want to perform. An administrator must also allow `signin:AuthorizeOAuth2Access` and `signin:CreateOAuth2Token`, for example by attaching `AWSMCPSignInOAuthAccessPolicy` to your user or role. OAuth does not expand your underlying AWS permissions.\n\nRun `thv run aws-managed-remote --remote-auth --remote-auth-issuer https://us-east-1.oauth.signin.aws` and authorize through AWS Sign-In. Dynamic client registration supports localhost callbacks, so no pre-created OAuth app or custom headers are required for this flow. This entry sets the explicit issuer without a trailing slash and uses `?oauth=initialize` to trigger OAuth; automatic discovery failed in local ToolHive testing without that issuer override. See the [OAuth setup guide](https://docs.aws.amazon.com/agent-toolkit/latest/userguide/oauth-authentication.html) and [IAM and registration requirements](https://docs.aws.amazon.com/signin/latest/userguide/aws-mcp-server.html).\n\nThis entry connects to the US East (N. Virginia) MCP endpoint. AWS provides other regional endpoints; discover and configure the advertised issuer when choosing one. OAuth access tokens last one hour and refresh tokens support sessions for up to 12 hours. Switching among multiple AWS profiles in one session requires the separate SigV4 proxy workflow. Tool calls can change resources according to your permissions and incur normal AWS resource charges; see the [connection guide](https://docs.aws.amazon.com/agent-toolkit/latest/userguide/getting-started-aws-mcp-server.html) for regional and authentication options.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "aws",
+            "cloud",
+            "infrastructure",
+            "devops"
+          ],
+          "tier": "Official",
+          "tools": [
+            "aws___retrieve_skill",
+            "aws___search_documentation",
+            "aws___read_documentation",
+            "aws___list_regions",
+            "aws___get_regional_availability",
+            "aws___run_script",
+            "aws___get_presigned_url",
+            "aws___get_tasks"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search AWS documentation and run AWS API workflows through its managed MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/aws-managed-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/aws-managed-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://aws-mcp.us-east-1.api.aws/mcp?oauth=initialize"
+    }
+  ],
+  "title": "AWS Managed MCP (Remote)",
+  "version": "1.0.0"
+}

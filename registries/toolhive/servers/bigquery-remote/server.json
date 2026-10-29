@@ -1,0 +1,82 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://bigquery.googleapis.com/mcp": {
+          "custom_metadata": {
+            "author": "Google Cloud",
+            "homepage": "https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp"
+          },
+          "oauth_config": {
+            "authorize_url": "https://accounts.google.com/o/oauth2/v2/auth",
+            "oauth_params": {
+              "access_type": "offline",
+              "prompt": "consent"
+            },
+            "scopes": [
+              "https://www.googleapis.com/auth/bigquery"
+            ],
+            "token_url": "https://oauth2.googleapis.com/token",
+            "use_pkce": true
+          },
+          "overview": "## Google Cloud BigQuery (Remote)\n\nGoogle's hosted BigQuery MCP server lists datasets and tables, inspects metadata, and executes SQL queries. It also retrieves query results and job status, including cancellation of running jobs.\n\n### Setup\n\nSelect a Google Cloud project and enable the BigQuery API. Grant your user or service account `roles/mcp.toolUser`, plus the BigQuery permissions needed for the task; querying normally requires `roles/bigquery.jobUser` on the execution project and `roles/bigquery.dataViewer` on the data. Set the `x-goog-user-project` header to the project used for quota and billing, and ensure your identity has `serviceusage.services.use` on that project, for example through `roles/serviceusage.serviceUsageConsumer`. Queries are subject to BigQuery billing or sandbox limits.\n\nGoogle supports neither dynamic client registration nor Client ID Metadata Documents. For interactive OAuth, configure Google Auth Platform in your project and create an OAuth client before connecting: use a Desktop app for local ToolHive, or a Web application with the exact callback URL allowlisted for a hosted client. Configure the consent screen and access to the `https://www.googleapis.com/auth/bigquery` scope, including test users if the app is in Testing. Then run `thv run bigquery-remote --remote-auth --remote-auth-client-id <CLIENT_ID> --remote-auth-client-secret-file <CLIENT_SECRET_FILE> --remote-forward-headers x-goog-user-project=<PROJECT_ID>`. ToolHive's default local callback is `http://localhost:8666/callback`. This entry supplies Google's authorization and token endpoints and the BigQuery scope; client credentials must be provided separately. See [Google's authentication setup](https://docs.cloud.google.com/mcp/set-up-authentication-mcp-servers).\n\nAlternatively, obtain a short-lived Google OAuth access token with the Google Cloud CLI, save the raw token in a file, and use `thv run bigquery-remote --remote-auth-bearer-token-file <TOKEN_FILE> --remote-forward-headers x-goog-user-project=<PROJECT_ID>`. Refresh that token when it expires; this supplied-token path does not require a new OAuth app. If configuring the optional Authorization header directly, include the `Bearer` prefix. Public tool discovery requires no authentication, but executing tools requires credentials and IAM permissions. Choose `execute_sql_readonly` for read-only SQL; `execute_sql` can modify data when your identity permits it. See the [BigQuery MCP guide](https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp) for permissions, query limits, and supported clients.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "google-cloud",
+            "bigquery",
+            "database",
+            "analytics",
+            "sql"
+          ],
+          "tier": "Official",
+          "tools": [
+            "list_dataset_ids",
+            "get_dataset_info",
+            "list_table_ids",
+            "get_table_info",
+            "execute_sql_readonly",
+            "execute_sql",
+            "get_query_results",
+            "cancel_job",
+            "get_job"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Inspect BigQuery datasets and tables, run SQL, and manage query jobs through Google Cloud",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/bigquery-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/bigquery-remote",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "Google Cloud project ID for quota and billing; requires serviceusage.services.use on this project",
+          "isRequired": true,
+          "isSecret": false,
+          "name": "x-goog-user-project"
+        },
+        {
+          "description": "Optional alternative to interactive OAuth: Bearer <GOOGLE_OAUTH_ACCESS_TOKEN>; refresh when the token expires",
+          "isRequired": false,
+          "isSecret": true,
+          "name": "Authorization"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://bigquery.googleapis.com/mcp"
+    }
+  ],
+  "title": "Google Cloud BigQuery (Remote)",
+  "version": "1.0.0"
+}

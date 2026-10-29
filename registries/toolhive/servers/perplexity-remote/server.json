@@ -1,0 +1,63 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://api.perplexity.ai/mcp": {
+          "custom_metadata": {
+            "author": "Perplexity",
+            "homepage": "https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server",
+            "license": "MIT"
+          },
+          "overview": "## Perplexity (Remote)\n\nPerplexity's hosted MCP server provides web search, source-grounded answers, reasoning, and research through the Perplexity API platform. It offers the same four tools as the official local implementation without a local runtime.\n\n### Setup\n\nCreate a Perplexity API account at the [API console](https://console.perplexity.ai), configure API billing or credits, and generate an API key. API usage is billed separately from a Perplexity consumer subscription. Run `thv run perplexity-remote --remote-auth-bearer-token-file <TOKEN_FILE>` to send `Authorization: Bearer <PERPLEXITY_API_KEY>` on requests. The token file contains only the raw API key; if setting the Authorization header directly, include the Bearer prefix in its secret value.\n\nThis API-key flow requires no OAuth application, dynamic client registration, browser sign-in, or other custom headers. Calls consume API credits, and research operations can take longer than ordinary searches. See the [official MCP setup guide](https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server) for authentication, tools, and client configuration.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "perplexity",
+            "search",
+            "research",
+            "web"
+          ],
+          "tier": "Official",
+          "tools": [
+            "perplexity_search",
+            "perplexity_ask",
+            "perplexity_research",
+            "perplexity_reason"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search the web, reason over sources, and research topics through Perplexity’s hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/perplexity-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/perplexity-remote",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "Perplexity API key including the Bearer prefix: Bearer <API_KEY>",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "Authorization"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://api.perplexity.ai/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/perplexityai/modelcontextprotocol"
+  },
+  "title": "Perplexity (Remote)",
+  "version": "1.0.0"
+}

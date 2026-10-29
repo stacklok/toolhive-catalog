@@ -1,0 +1,80 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.supabase.com/mcp": {
+          "custom_metadata": {
+            "author": "Supabase",
+            "homepage": "https://supabase.com/docs/guides/ai-tools/mcp",
+            "license": "Apache-2.0"
+          },
+          "overview": "## Supabase (Remote)\n\nSupabase's hosted MCP server provides tools for databases, migrations, logs, Edge Functions, project configuration, and documentation. Use it while developing and troubleshooting a Supabase application.\n\n### Setup\n\nYou need a Supabase account with access to the organization and project you intend to use. Run `thv run supabase-remote --remote-auth`, sign in, and authorize the organization containing that project. The server supports dynamic client registration; you do not need to pre-create an OAuth application, supply a personal access token, or configure custom headers for this flow. Clients that require manual credentials can instead create an OAuth app in Supabase account settings, using their exact callback URL, as described in the [setup guide](https://supabase.com/docs/guides/ai-tools/mcp).\n\nTo restrict the connection, generate a project-specific URL from the dashboard's Connect > MCP panel. The `project_ref` parameter scopes access to one project, `read_only=true` restricts database queries, and `features` selects tool groups. Some tools ask for confirmation through MCP elicitation, so their availability also depends on client support. Headless clients can use a Supabase personal access token in the `Authorization: Bearer` header instead of the interactive OAuth flow.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "supabase",
+            "database",
+            "postgres",
+            "development"
+          ],
+          "tier": "Official",
+          "tools": [
+            "apply_migration",
+            "confirm_cost",
+            "create_branch",
+            "create_project",
+            "delete_branch",
+            "deploy_edge_function",
+            "execute_sql",
+            "generate_typescript_types",
+            "get_advisors",
+            "get_cost",
+            "get_edge_function",
+            "get_organization",
+            "get_project",
+            "get_project_url",
+            "get_publishable_keys",
+            "list_branches",
+            "list_edge_functions",
+            "list_extensions",
+            "list_migrations",
+            "list_organizations",
+            "list_projects",
+            "list_tables",
+            "merge_branch",
+            "pause_project",
+            "query_logs",
+            "rebase_branch",
+            "reset_branch",
+            "restore_project",
+            "search_docs"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Query and manage Supabase projects through its hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/supabase-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/supabase-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.supabase.com/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/supabase/mcp"
+  },
+  "title": "Supabase (Remote)",
+  "version": "1.0.0"
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.grafana.com/mcp": {
+          "custom_metadata": {
+            "author": "Grafana Labs",
+            "homepage": "https://grafana.com/docs/grafana-cloud/ai-tools/mcp-servers/cloud-mcp/"
+          },
+          "overview": "## Grafana Cloud (Remote)\n\nGrafana's hosted MCP server connects AI assistants to Cloud dashboards, metrics, logs, traces, alerts, and incidents. It also exposes Assistant-native tools, so its tool set differs from the local open source server.\n\n### Setup\n\nYou need a hosted Grafana Cloud stack where Assistant is available and its terms have been accepted. Your user needs the Assistant Cloud MCP User role or the `grafana-assistant-app.cloud-mcp:access` permission; Editor and higher roles receive this permission by default. Run `thv run grafana-remote --remote-auth` and authorize with your Grafana identity. The service supports Client ID Metadata Documents and dynamic client registration, so ToolHive needs no pre-created OAuth application or service-account token. Keep the default ToolHive callback port when using its published client metadata.\n\nThe optional header `X-Grafana-URL` selects a stack, for example `--remote-forward-headers X-Grafana-URL=https://<YOUR_STACK>.grafana.net`; otherwise the authorization flow asks for it. For read-only access, clear both Query access and Write access during consent, because raw SQL query access can modify data. Usage counts toward Grafana Assistant billing and active users. Self-hosted Grafana instances use the existing local server. See the [Cloud MCP guide](https://grafana.com/docs/grafana-cloud/ai-tools/mcp-servers/cloud-mcp/) for roles, stack-specific URLs, and manual client registration when required by another client.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "grafana",
+            "observability",
+            "monitoring",
+            "logs"
+          ],
+          "tier": "Official",
+          "tools": [
+            "search_dashboards",
+            "search_folders",
+            "generate_deeplink",
+            "get_dashboard_by_uid",
+            "get_dashboard_summary",
+            "get_dashboard_property",
+            "get_dashboard_panel_queries",
+            "update_dashboard",
+            "create_folder",
+            "list_datasources",
+            "get_datasource",
+            "list_prometheus_metric_names",
+            "list_prometheus_metric_metadata",
+            "list_prometheus_label_names",
+            "list_prometheus_label_values",
+            "query_prometheus",
+            "query_prometheus_histogram",
+            "list_loki_label_names",
+            "list_loki_label_values",
+            "query_loki_logs",
+            "query_loki_stats",
+            "query_loki_patterns",
+            "list_pyroscope_label_names",
+            "list_pyroscope_label_values",
+            "list_pyroscope_profile_types",
+            "query_pyroscope",
+            "list_clickhouse_tables",
+            "describe_clickhouse_table",
+            "query_clickhouse",
+            "list_cloudwatch_namespaces",
+            "list_cloudwatch_metrics",
+            "list_cloudwatch_dimensions",
+            "query_cloudwatch",
+            "query_elasticsearch",
+            "alerting_manage_rules",
+            "alerting_manage_routing",
+            "get_annotations",
+            "get_annotation_tags",
+            "create_annotation",
+            "update_annotation",
+            "list_incidents",
+            "get_incident",
+            "create_incident",
+            "add_activity_to_incident",
+            "list_oncall_schedules",
+            "get_oncall_shift",
+            "get_current_oncall_users",
+            "list_oncall_teams",
+            "list_oncall_users",
+            "list_alert_groups",
+            "get_alert_group",
+            "list_investigations",
+            "list_investigation_profiles",
+            "get_investigation",
+            "list_investigation_evidence",
+            "get_investigation_thread",
+            "create_investigation",
+            "ask_assistant",
+            "get_assertions",
+            "get_panel_image",
+            "describe_infrastructure",
+            "get_query_examples"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Query Grafana Cloud dashboards, metrics, logs, and incidents through its hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/grafana-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/grafana-remote",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "Optional Grafana Cloud stack URL, such as https://your-stack.grafana.net, to skip stack entry during authorization",
+          "isRequired": false,
+          "isSecret": false,
+          "name": "X-Grafana-URL"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://mcp.grafana.com/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/grafana/mcp-grafana"
+  },
+  "title": "Grafana Cloud (Remote)",
+  "version": "1.0.0"
+}

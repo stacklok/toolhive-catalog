@@ -1,0 +1,115 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.terraform.io/mcp": {
+          "custom_metadata": {
+            "author": "HashiCorp",
+            "homepage": "https://developer.hashicorp.com/terraform/mcp-server/deploy/remote-mcp",
+            "license": "MPL-2.0"
+          },
+          "overview": "## Terraform (Remote)\n\nHashiCorp's hosted Terraform MCP server provides access to HCP Terraform organizations, workspaces, runs, private registries, and the public Terraform registry. The remote service is in beta and connects to HCP Terraform; it does not accept an alternate Terraform Enterprise address.\n\n### Setup\n\nYou need an HCP Terraform account and a user or team API token with permission to access the required resources. Send the token on every request as `Authorization: Bearer <TOKEN>`, for example with `thv run terraform-remote --remote-auth-bearer-token-file <TOKEN_FILE>`. This authentication path requires no OAuth application, dynamic client registration, or interactive sign-in. If configuring the Authorization header directly, its secret value must include the Bearer prefix; the token-file option takes only the raw token.\n\nThe server also accepts a `TFE_TOKEN` header, but Authorization takes precedence. Tokens in URL query parameters and custom Terraform addresses in headers or query parameters are rejected. An organization token cannot perform some operations, including starting runs, so use the documented user or team token type. The hosted integration is not currently available for HCP Europe organizations. See the [connection guide](https://developer.hashicorp.com/terraform/mcp-server/deploy/remote-mcp) and [integration requirements](https://developer.hashicorp.com/terraform/cloud-docs/integrations/mcp-server) for beta availability and token permissions.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "terraform",
+            "infrastructure",
+            "hcp",
+            "devops"
+          ],
+          "tier": "Official",
+          "tools": [
+            "add_team_member",
+            "attach_policy_set_to_workspaces",
+            "attach_variable_set_to_workspaces",
+            "create_no_code_workspace",
+            "create_project",
+            "create_run",
+            "create_team",
+            "create_variable_in_variable_set",
+            "create_variable_set",
+            "create_workspace",
+            "create_workspace_tags",
+            "create_workspace_variable",
+            "delete_variable_in_variable_set",
+            "detach_variable_set_from_workspaces",
+            "get_apply_details",
+            "get_apply_logs",
+            "get_latest_module_version",
+            "get_latest_provider_version",
+            "get_module_details",
+            "get_plan_details",
+            "get_plan_json_output",
+            "get_plan_logs",
+            "get_policy_details",
+            "get_private_module_details",
+            "get_private_provider_details",
+            "get_project",
+            "get_provider_capabilities",
+            "get_provider_details",
+            "get_run_comments",
+            "get_run_details",
+            "get_sentinel_mock",
+            "get_stack_details",
+            "get_state_version",
+            "get_team",
+            "get_token_permissions",
+            "get_workspace_details",
+            "grant_team_access",
+            "list_runs",
+            "list_stacks",
+            "list_state_versions",
+            "list_teams",
+            "list_terraform_orgs",
+            "list_terraform_projects",
+            "list_variable_sets",
+            "list_workspace_policy_sets",
+            "list_workspace_variables",
+            "list_workspaces",
+            "read_workspace_tags",
+            "search_modules",
+            "search_policies",
+            "search_private_modules",
+            "search_private_providers",
+            "search_providers",
+            "update_workspace",
+            "update_workspace_variable",
+            "whoami"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Access HCP Terraform workspaces, runs, organizations, and registry documentation",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/terraform-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/terraform-remote",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "HCP Terraform user or team API token, including the Bearer prefix: Bearer <TOKEN>",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "Authorization"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://mcp.terraform.io/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/hashicorp/terraform-mcp-server"
+  },
+  "title": "Terraform (Remote)",
+  "version": "1.0.0"
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.firecrawl.dev/v2/mcp": {
+          "custom_metadata": {
+            "author": "Firecrawl",
+            "homepage": "https://docs.firecrawl.dev/mcp-server",
+            "license": "MIT"
+          },
+          "overview": "## Firecrawl (Remote)\n\nFirecrawl's hosted MCP server turns web pages into structured content for an AI assistant. The default keyless free tier exposes scraping, search, and parsing with rate limits and requires no account or credentials.\n\n### Setup\n\nRun `thv run firecrawl-remote` for the keyless tier. To access account-backed usage and additional tools such as crawling, mapping, and agent workflows, create a Firecrawl account and API key, then use `--remote-auth-bearer-token-file <TOKEN_FILE>` to send `Authorization: Bearer <FIRECRAWL_API_KEY>`. API-key authentication requires no pre-created OAuth application. Configure the key as a header or token secret rather than putting it in the URL; the token-file option takes only the raw key.\n\nFor browser-based account authorization, Firecrawl provides the separate endpoint `https://mcp.firecrawl.dev/v2/mcp-oauth`; follow the [hosted setup guide](https://docs.firecrawl.dev/mcp-server) to connect it. The optional `X-Firecrawl-Origin` header names an integration for request attribution and is not required for tool results. Available tools and limits depend on authentication and your Firecrawl plan.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "firecrawl",
+            "web",
+            "scraping",
+            "search"
+          ],
+          "tier": "Official",
+          "tools": [
+            "firecrawl_scrape",
+            "firecrawl_search",
+            "firecrawl_parse"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Scrape, search, and parse web content through Firecrawl’s hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/firecrawl-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/firecrawl-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.firecrawl.dev/v2/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/firecrawl/firecrawl-mcp-server"
+  },
+  "title": "Firecrawl (Remote)",
+  "version": "1.0.0"
+}

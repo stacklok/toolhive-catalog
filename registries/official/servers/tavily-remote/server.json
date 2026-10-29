@@ -1,0 +1,56 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.tavily.com/mcp": {
+          "custom_metadata": {
+            "author": "Tavily",
+            "homepage": "https://docs.tavily.com/documentation/mcp",
+            "license": "MIT"
+          },
+          "overview": "## Tavily (Remote)\n\nTavily's hosted MCP server searches the web, extracts page content, maps and crawls websites, and performs research. Use it to gather source material without installing the local Tavily server.\n\n### Setup\n\nCreate a Tavily account, then run `thv run tavily-remote --remote-auth` and complete the OAuth sign-in. The server advertises Client ID Metadata Documents and dynamic client registration, so ToolHive can identify itself without a pre-created OAuth application. Keep ToolHive's default callback port, 8666, when using its published client metadata; other callback ports can be rejected because they do not match the registered redirect URIs.\n\nFor API-key authentication, create a key in your Tavily account and run with `--remote-auth-bearer-token-file <TOKEN_FILE>` instead of OAuth; this sends `Authorization: Bearer <TAVILY_API_KEY>`. No additional headers are required. An optional `DEFAULT_PARAMETERS` header accepts a JSON object of defaults for tool requests. Usage consumes your Tavily account's credits and limits. See the [remote MCP guide](https://docs.tavily.com/documentation/mcp) for authentication and supported tools.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "tavily",
+            "search",
+            "research",
+            "web"
+          ],
+          "tier": "Official",
+          "tools": [
+            "tavily_search",
+            "tavily_extract",
+            "tavily_map",
+            "tavily_crawl",
+            "tavily_research"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search, extract, map, crawl, and research web content with Tavily’s hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/tavily-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/tavily-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.tavily.com/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/tavily-ai/tavily-mcp"
+  },
+  "title": "Tavily (Remote)",
+  "version": "1.0.0"
+}
