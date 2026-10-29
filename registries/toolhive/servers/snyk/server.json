@@ -1,0 +1,105 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "docker.io/snyk/snyk@sha256:eca54a955cee8d1bbb20bf80c03f58d4f47db10f8532cda80e3455ebda41281d": {
+          "args": [
+            "snyk",
+            "mcp",
+            "-t",
+            "stdio"
+          ],
+          "custom_metadata": {
+            "author": "Snyk",
+            "homepage": "https://docs.snyk.io/agent-security/agentic-security-with-snyk-studio",
+            "license": "Apache-2.0"
+          },
+          "overview": "## Snyk\n\nSnyk's official CLI MCP server scans application dependencies, source code, infrastructure definitions, SBOMs, and secrets. Use it to investigate vulnerabilities while changing a project and retrieve findings in your assistant.\n\n### Setup\n\nCreate a Snyk account, ensure the required scanning products are enabled for your organization, and supply a [Snyk API token](https://docs.snyk.io/snyk-api/authentication-for-api) as `SNYK_TOKEN`. Token authentication requires no OAuth application or custom HTTP headers. Set `SNYK_CFG_ORG` to select an organization and `SNYK_API` when your account uses a regional API endpoint. Mount the project with ToolHive's `--volume <HOST_PROJECT>:/project` option and pass `/project` to the scan tools; complete the server's folder-trust step for directories you intend to scan.\n\nThe pinned official Alpine image is Linux amd64 only; ARM hosts need working amd64 container emulation. It supplies a minimal scanner environment, so projects that require additional ecosystem build tools need an appropriate Snyk language image or a separately prepared environment. Dependency scans may invoke project build tools and contact package registries, so this entry allows outbound HTTP and HTTPS. Container scanning can require additional container-runtime access, which this entry does not configure. Follow the [Snyk MCP setup guide](https://docs.snyk.io/agent-security/agentic-security-with-snyk-studio/getting-started-with-snyk-studio) for product access, regional endpoints, and scan requirements.",
+          "permissions": {
+            "network": {
+              "outbound": {
+                "allow_port": [
+                  80,
+                  443
+                ],
+                "insecure_allow_all": true
+              }
+            }
+          },
+          "status": "Active",
+          "tags": [
+            "security",
+            "snyk",
+            "dependencies",
+            "code",
+            "devops"
+          ],
+          "tier": "Official",
+          "tools": [
+            "snyk_aibom",
+            "snyk_auth",
+            "snyk_breakability_check",
+            "snyk_code_scan",
+            "snyk_container_scan",
+            "snyk_iac_scan",
+            "snyk_logout",
+            "snyk_package_health_check",
+            "snyk_sbom_scan",
+            "snyk_sca_scan",
+            "snyk_secret_scan",
+            "snyk_send_feedback",
+            "snyk_trust",
+            "snyk_version"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Scan source code, dependencies, and infrastructure with Snyk's official CLI MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/snyk/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/snyk",
+  "packages": [
+    {
+      "environmentVariables": [
+        {
+          "description": "Snyk API token for an account with the required product entitlements",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "SNYK_TOKEN"
+        },
+        {
+          "description": "Snyk organization ID when an account belongs to multiple organizations",
+          "isRequired": false,
+          "isSecret": false,
+          "name": "SNYK_CFG_ORG"
+        },
+        {
+          "description": "Regional Snyk API endpoint when using a region other than the default US endpoint",
+          "isRequired": false,
+          "isSecret": false,
+          "name": "SNYK_API"
+        }
+      ],
+      "identifier": "docker.io/snyk/snyk@sha256:eca54a955cee8d1bbb20bf80c03f58d4f47db10f8532cda80e3455ebda41281d",
+      "registryType": "oci",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/snyk/studio-mcp"
+  },
+  "title": "Snyk",
+  "version": "1.0.0"
+}

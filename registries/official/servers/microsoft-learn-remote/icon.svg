@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100%" height="100%" viewBox="0 0 996 996" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-336.65,-336.65)">
+        <g id="art" transform="matrix(4.16667,0,0,4.16667,0,0)">
+            <g transform="matrix(-1,0,0,1,275.138,-124.862)">
+                <rect x="80.796" y="205.658" width="113.546" height="113.546" style="fill:rgb(242,80,34);"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,525.862,-124.862)">
+                <rect x="206.158" y="205.658" width="113.546" height="113.546" style="fill:rgb(127,186,0);"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,275.138,125.862)">
+                <rect x="80.796" y="80.296" width="113.546" height="113.546" style="fill:rgb(0,164,239);"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,525.862,125.862)">
+                <rect x="206.158" y="80.296" width="113.546" height="113.546" style="fill:rgb(255,185,0);"/>
+            </g>
+        </g>
+    </g>
+</svg>

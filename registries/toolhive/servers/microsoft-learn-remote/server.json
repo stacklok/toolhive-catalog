@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://learn.microsoft.com/api/mcp": {
+          "custom_metadata": {
+            "author": "Microsoft",
+            "homepage": "https://learn.microsoft.com/en-us/training/support/mcp",
+            "license": "Proprietary"
+          },
+          "overview": "## Microsoft Learn (Remote)\n\nMicrosoft's hosted MCP server searches official technical documentation, retrieves complete articles, and finds code samples for Microsoft products, including Azure and .NET. Use it to check current API behavior and implementation examples while writing or troubleshooting code. The service is free and requires no account, API key, OAuth application, or custom headers. Connect with `thv run microsoft-learn-remote`; a direct browser visit to the MCP URL can return HTTP 405 because the endpoint expects MCP requests. See the [Microsoft Learn MCP documentation](https://learn.microsoft.com/en-us/training/support/mcp) for service terms and limitations.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "microsoft",
+            "documentation",
+            "azure",
+            "dotnet"
+          ],
+          "tier": "Official",
+          "tools": [
+            "microsoft_docs_search",
+            "microsoft_code_sample_search",
+            "microsoft_docs_fetch"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search Microsoft documentation, retrieve articles, and find code samples",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/microsoft-learn-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/microsoft-learn-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/MicrosoftDocs/mcp"
+  },
+  "title": "Microsoft Learn (Remote)",
+  "version": "1.0.0"
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.dev.azure.com/": {
+          "custom_metadata": {
+            "author": "Microsoft",
+            "homepage": "https://learn.microsoft.com/en-us/azure/devops/mcp-server/remote-mcp-server",
+            "license": "Proprietary"
+          },
+          "oauth_config": {
+            "authorize_url": "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize",
+            "scopes": [
+              "https://mcp.dev.azure.com/.default",
+              "offline_access"
+            ],
+            "token_url": "https://login.microsoftonline.com/organizations/oauth2/v2.0/token",
+            "use_pkce": true
+          },
+          "overview": "## Azure DevOps (Remote)\n\nMicrosoft's hosted Azure DevOps MCP server exposes repositories, pull requests, work items, pipelines, and wikis. Use it to investigate a failed build, review work assigned to you, or find project documentation. The endpoint can discover your organizations; provide the organization in tool calls, or use an organization-specific URL such as `https://mcp.dev.azure.com/<ORGANIZATION>`.\n\n### Setup\n\nYour account and Azure DevOps organization must belong to Microsoft Entra ID, and you need access to the projects you use. Entra ID does not provide dynamic client registration for this server: provision the Azure DevOps MCP enterprise application in your tenant, create an app registration for ToolHive, add the mobile/desktop redirect URI `http://localhost:8666/callback` (or match `--remote-auth-callback-port`), enable public client flows, and grant the required delegated Azure DevOps MCP API permissions and administrator consent. The Azure DevOps MCP resource application ID is `2a72489c-aab2-4b65-b93a-a91edccf33b8`.\n\nRun with `--remote-auth --remote-auth-client-id <CLIENT_ID>` and the registered callback port. The entry uses the Entra organizations authorization and token endpoints with PKCE; for tenant-specific authentication, set `--remote-auth-authorize-url https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/authorize` and `--remote-auth-token-url https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token`. A confidential web client additionally needs a client secret and a matching web redirect registration. You can restrict tools with `--remote-forward-headers X-MCP-Toolsets=repos,wiki,wit` or request read-only tools with `--remote-forward-headers X-MCP-Readonly=true`; these headers do not grant project permissions. Follow Microsoft's [remote server setup](https://learn.microsoft.com/en-us/azure/devops/mcp-server/remote-mcp-server) for tenant provisioning and permission selection.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "azure-devops",
+            "repositories",
+            "ci",
+            "issues",
+            "devops"
+          ],
+          "tier": "Official",
+          "tools": [
+            "core_list_orgs",
+            "core_list_projects",
+            "repo_repository",
+            "repo_pull_request",
+            "wit_work_item",
+            "pipelines_build",
+            "search_wiki"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Work with Azure DevOps repositories, work items, pipelines, and wikis",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/azure-devops-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/azure-devops-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.dev.azure.com/"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/microsoft/azure-devops-mcp"
+  },
+  "title": "Azure DevOps (Remote)",
+  "version": "1.0.0"
+}

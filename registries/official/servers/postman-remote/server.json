@@ -1,0 +1,93 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.postman.com/minimal": {
+          "custom_metadata": {
+            "author": "Postman",
+            "homepage": "https://learning.postman.com/docs/reference/postman-api/postman-mcp-server/overview",
+            "license": "Apache-2.0"
+          },
+          "overview": "## Postman (Remote)\n\nPostman's hosted MCP server lets you inspect and update API collections, environments, and workspaces from an AI assistant. This entry uses the Minimal toolset to keep discovery focused; Postman also offers Code (`/code`) and Full (`/mcp`) endpoints for broader workflows.\n\n### Setup\n\nCreate a Postman account and ensure you have access to the workspaces you want to use. Run `thv run postman-remote --remote-auth` to sign in through Postman's OAuth flow; the service supports dynamic client registration, so you do not need to pre-create an OAuth application. For API-key authentication, create a [Postman API key](https://postman.postman.co/settings/me/api-keys) and pass it with `--remote-auth-bearer-token <POSTMAN_API_KEY>` or the corresponding token-file option; the server expects `Authorization: Bearer <POSTMAN_API_KEY>`. EU accounts use `https://mcp.eu.postman.com/minimal` and require API-key authentication because the EU endpoint does not support OAuth. The hosted server cannot reach APIs on your workstation or private network. See the [remote setup guide](https://learning.postman.com/docs/reference/postman-api/postman-mcp-server/postman-mcp-remote-server).",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "postman",
+            "api",
+            "testing",
+            "development"
+          ],
+          "tier": "Official",
+          "tools": [
+            "createCollection",
+            "createEnvironment",
+            "createMock",
+            "createSpec",
+            "createSpecFile",
+            "createWorkspace",
+            "generateCollection",
+            "generateSpecFromCollection",
+            "getAllSpecs",
+            "getAuthenticatedUser",
+            "getCollection",
+            "getCollections",
+            "getEnvironment",
+            "getEnvironments",
+            "getGeneratedCollectionSpecs",
+            "getMock",
+            "getMocks",
+            "getSpec",
+            "getSpecCollections",
+            "getSpecDefinition",
+            "getSpecFile",
+            "getSpecFiles",
+            "getTaggedEntities",
+            "getWorkspace",
+            "getWorkspaces",
+            "publishMock",
+            "putCollection",
+            "putEnvironment",
+            "syncCollectionWithSpec",
+            "syncSpecWithCollection",
+            "updateMock",
+            "updateSpecFile",
+            "updateSpecProperties",
+            "updateWorkspace",
+            "createCollectionRequest",
+            "createCollectionResponse",
+            "duplicateCollection",
+            "getDuplicateCollectionTaskStatus",
+            "runCollection",
+            "getEnabledTools",
+            "updateCollectionRequest",
+            "searchPostmanElements"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Manage Postman workspaces, collections, and environments through its hosted MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/postman-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/postman-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.postman.com/minimal"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/postmanlabs/postman-mcp-server"
+  },
+  "title": "Postman (Remote)",
+  "version": "1.0.0"
+}

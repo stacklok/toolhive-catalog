@@ -1,0 +1,63 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://developerknowledge.googleapis.com/mcp": {
+          "custom_metadata": {
+            "author": "Google",
+            "homepage": "https://developers.google.com/knowledge/mcp",
+            "license": "Proprietary"
+          },
+          "overview": "## Google Developer Knowledge (Remote)\n\nGoogle's hosted MCP server searches official developer documentation, retrieves full Markdown documents, and answers questions grounded in that documentation, including Android, Firebase, and Google Cloud content. Use it to check current APIs and service configuration before implementing an integration.\n\n### Setup\n\nCreate or select a Google Cloud project, enable the Developer Knowledge API (`developerknowledge.googleapis.com`), and create an API key restricted to that API. Supply the key on every request in the `X-Goog-Api-Key` header, for example with `thv run google-developer-knowledge-remote --remote-forward-headers-secret X-Goog-Api-Key=<SECRET_NAME>` after storing it in ToolHive's secrets manager. API-key authentication requires no OAuth application; if you choose OAuth instead, follow Google's [OAuth and ADC setup](https://developers.google.com/knowledge/mcp#oauth-and-adc), configure your own OAuth client and credentials, and obtain the required consent because automatic dynamic client registration is unavailable. Documentation queries require a valid API key; successful initialization or tool discovery alone does not verify API access. See the [connection guide](https://developers.google.com/knowledge/mcp) for prerequisites, authentication alternatives, and quotas.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "google",
+            "documentation",
+            "android",
+            "firebase",
+            "google-cloud"
+          ],
+          "tier": "Official",
+          "tools": [
+            "search_documents",
+            "get_documents",
+            "answer_query"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search and retrieve official Google developer documentation",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/google-developer-knowledge-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/google-developer-knowledge-remote",
+  "remotes": [
+    {
+      "headers": [
+        {
+          "description": "Google Cloud API key for a project with the Developer Knowledge API enabled",
+          "isRequired": true,
+          "isSecret": true,
+          "name": "X-Goog-Api-Key"
+        }
+      ],
+      "type": "streamable-http",
+      "url": "https://developerknowledge.googleapis.com/mcp"
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/google/mcp"
+  },
+  "title": "Google Developer Knowledge (Remote)",
+  "version": "1.0.0"
+}

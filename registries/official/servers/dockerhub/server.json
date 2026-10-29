@@ -1,0 +1,97 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248": {
+          "args": [
+            "--transport=stdio"
+          ],
+          "custom_metadata": {
+            "author": "Docker",
+            "homepage": "https://docs.docker.com/docker-hub/mcp-server/",
+            "license": "Apache-2.0"
+          },
+          "overview": "## Docker Hub\n\nDocker's official Docker Hub MCP server searches images, inspects tags and repository information, and manages repositories when authenticated. Use it to find an appropriate container image or inspect available image versions before updating a workload. Public content can be queried without credentials.\n\n### Setup\n\nFor private repositories or repository management, create a [Docker Hub personal access token](https://docs.docker.com/security/access-tokens/) with the required permissions, supply it as `HUB_PAT_TOKEN`, and pass your Docker Hub username as `-- --transport=stdio --username=<DOCKER_HUB_USERNAME>`. The entry uses stdio inside ToolHive's container, so no OAuth application or upstream HTTP bearer-token configuration is needed. Docker's published image is pinned by digest; see the [upstream setup guide](https://github.com/docker/hub-mcp) for supported tools and authentication. The default `NODE_USE_ENV_PROXY=1` setting enables Node to use ToolHive's isolated-network proxy.",
+          "permissions": {
+            "network": {
+              "outbound": {
+                "allow_host": [
+                  "hub.docker.com",
+                  "auth.docker.io",
+                  "registry-1.docker.io"
+                ],
+                "allow_port": [
+                  443
+                ]
+              }
+            }
+          },
+          "status": "Active",
+          "tags": [
+            "docker",
+            "containers",
+            "images",
+            "repositories",
+            "devops"
+          ],
+          "tier": "Official",
+          "tools": [
+            "listRepositoriesByNamespace",
+            "createRepository",
+            "getRepositoryInfo",
+            "updateRepositoryInfo",
+            "checkRepository",
+            "listRepositoryTags",
+            "getRepositoryTag",
+            "checkRepositoryTag",
+            "listNamespaces",
+            "getPersonalNamespace",
+            "listAllNamespacesMemberOf",
+            "search",
+            "dockerHardenedImages"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Search Docker Hub images and manage repositories with Docker's official MCP server",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/dockerhub/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/dockerhub",
+  "packages": [
+    {
+      "environmentVariables": [
+        {
+          "description": "Docker Hub personal access token for private repositories or management; also pass --username as a server argument",
+          "isRequired": false,
+          "isSecret": true,
+          "name": "HUB_PAT_TOKEN"
+        },
+        {
+          "name": "NODE_USE_ENV_PROXY",
+          "description": "Use ToolHive egress proxy for Node fetch requests",
+          "default": "1"
+        }
+      ],
+      "identifier": "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248",
+      "registryType": "oci",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/docker/hub-mcp"
+  },
+  "title": "Docker Hub",
+  "version": "1.0.0"
+}
