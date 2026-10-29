@@ -1,0 +1,80 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.0.1": {
+          "args": [
+            "/projects"
+          ],
+          "metadata": {
+            "last_updated": "2026-08-28T04:52:41Z",
+            "stars": 89916
+          },
+          "overview": "## Filesystem MCP Server\n\nThe filesystem-mcp-server is a Model Context Protocol (MCP) server that gives AI assistants direct, structured access to the local filesystem. It allows AI-driven workflows to read, write, and organize files and directories as part of a larger reasoning process, making persistent storage and file-based context a first-class capability inside MCP-compatible assistants. The server enables use cases including developer workflows, data preparation, note-taking, and artifact generation where AI systems need controlled access to local files.",
+          "permissions": {
+            "network": {
+              "outbound": {}
+            }
+          },
+          "status": "Active",
+          "tags": [
+            "create_directory",
+            "edit_file",
+            "filesystem",
+            "get_file_info",
+            "implementing",
+            "list_allowed_directories",
+            "list_directory",
+            "move_file",
+            "node",
+            "operations"
+          ],
+          "tier": "Community",
+          "tools": [
+            "create_directory",
+            "directory_tree",
+            "edit_file",
+            "get_file_info",
+            "list_allowed_directories",
+            "list_directory",
+            "list_directory_with_sizes",
+            "move_file",
+            "read_file",
+            "read_media_file",
+            "read_multiple_files",
+            "read_text_file",
+            "search_files",
+            "write_file"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Allows you to do filesystem operations. Mount paths under /projects using --volume.",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/filesystem/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/filesystem",
+  "packages": [
+    {
+      "identifier": "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.0.1",
+      "registryType": "oci",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/modelcontextprotocol/servers"
+  },
+  "title": "Filesystem",
+  "version": "1.0.0"
+}
