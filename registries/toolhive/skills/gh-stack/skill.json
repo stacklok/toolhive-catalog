@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/gh-stack:0.1.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/gh-stack:0.1.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/github/gh-stack",
-      "ref": "29a36d314be664583705f18e41cebdf2b61ad514",
+      "ref": "f63271237b45fb121affa4ae69e4dd0b2785a37b",
       "subfolder": "skills/gh-stack"
     }
   ]

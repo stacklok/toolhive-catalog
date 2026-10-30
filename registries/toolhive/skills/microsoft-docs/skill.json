@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/microsoft-docs:0.1.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/microsoft-docs:0.1.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/microsoft/skills",
-      "ref": "8850874f66fb4d905bfcfcb923a18883bb70d1cd",
+      "ref": "2130750147dee0311215099ddf36647ba1e0f006",
       "subfolder": ".github/skills/microsoft-docs"
     }
   ]

@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/next-dev-loop:0.4.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/next-dev-loop:0.4.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/vercel/next.js",
-      "ref": "bb63c72077ad7b81b2319f74a7ef3b00c1751483",
+      "ref": "cbf49db30a655ac17c92c2951885c4256db14b9e",
       "subfolder": "skills/next-dev-loop"
     }
   ]

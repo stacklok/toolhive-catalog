@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/expo-data-fetching:0.1.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/expo-data-fetching:0.1.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/expo/skills",
-      "ref": "7ddc1f5796996e5c7efe2fc3fa9168eb24e8dac1",
+      "ref": "d5caf7fdf8b4854351f05841a7e315ac87ad7d24",
       "subfolder": "plugins/expo/skills/expo-data-fetching"
     }
   ]

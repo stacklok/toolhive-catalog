@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/forge-app-review:0.3.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/forge-app-review:0.4.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/atlassian/forge-skills",
-      "ref": "1b89cbd61844471264a7d4dce8eed44402f7f77f",
+      "ref": "ccef03b209ae0c4235ba80c22546010ed81a04dd",
       "subfolder": "skills/forge-app-review"
     }
   ]
