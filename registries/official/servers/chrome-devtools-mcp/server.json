@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.11.0": {
+        "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.12.0": {
           "metadata": {
             "last_updated": "2026-10-23T02:29:29Z",
             "stars": 34184
@@ -1244,7 +1244,7 @@
   "name": "io.github.stacklok/chrome-devtools-mcp",
   "packages": [
     {
-      "identifier": "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.11.0",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.12.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
