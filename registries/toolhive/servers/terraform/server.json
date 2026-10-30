@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "docker.io/hashicorp/terraform-mcp-server:1.4.1": {
           "metadata": {
-            "last_updated": "2026-08-31T21:12:39Z",
+            "last_updated": "2026-10-30T00:59:58Z",
             "stars": 1267
           },
           "overview": "## Terraform MCP Server\n\nThe terraform MCP server provides Terraform registry and Cloud/Enterprise integration for providers, modules, policies, and workspaces. The server provides MCP-based access to Terraform resources through the Terraform Registry API for searching providers and modules, HCP Terraform/TFE API for workspace and policy operations, and environment variable-based authentication. It supports both public registry and private enterprise instances and includes tools for managing workspaces, variables, policies, and accessing Terraform documentation and registry resources.",
@@ -174,7 +174,7 @@
               "inputSchema": {
                 "properties": {
                   "default_execution_mode": {
-                    "description": "Optional default execution mode for workspaces in the project: local, agent, remote. If not set, workspaces inherit the organization's default execution mode.",
+                    "description": "Optional default execution mode for workspaces in the project: local, remote. If not set, workspaces inherit the organization's default execution mode.",
                     "type": "string"
                   },
                   "description": {
@@ -679,7 +679,7 @@
                     "type": "string"
                   },
                   "namespace": {
-                    "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'",
+                    "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'. If you are not certain of the namespace, do not guess, ask the user. Most HashiCorp-maintained providers are in the 'hashicorp' namespace",
                     "type": "string"
                   }
                 },
@@ -814,11 +814,11 @@
                 "readOnlyHint": true,
                 "title": "Get detailed information about a private module"
               },
-              "description": "This tool retrieves detailed information about a specific private module in your Terraform Cloud/Enterprise organization.\nIt provides comprehensive details including inputs, outputs, dependencies, versions, and usage examples. The private_module_id format is 'module-namespace/module-name/module-provider-name'.\nThis can be obtained by calling 'search_private_modules' first to obtain the exact private_module_id required to use this tool. This tool requires a valid Terraform token to be configured.",
+              "description": "This tool retrieves detailed information about a specific private module in your Terraform Cloud/Enterprise organization. It provides comprehensive details including inputs, outputs, dependencies, versions, and usage examples. It also reports every submodule (nested module) published with the module, each with its own inputs, outputs, provider dependencies, resources, and README. The private_module_id format is 'module-namespace/module-name/module-provider-name'. This can be obtained by calling 'search_private_modules' first to obtain the exact private_module_id required to use this tool. This tool requires a valid Terraform token to be configured.",
               "inputSchema": {
                 "properties": {
                   "private_module_id": {
-                    "description": "The private module ID should be in the format 'module-namespace/module-name/module-provider-name' (for example, 'my-tfc-org/vpc/aws' or 'my-module-namespace/vm/azurerm').\nThe module-namespace is usually the name of the Terraform organization. Obtain this ID by calling 'search_private_modules'.",
+                    "description": "The private module ID should be in the format 'module-namespace/module-name/module-provider-name' (for example, 'my-tfc-org/vpc/aws' or 'my-module-namespace/vm/azurerm'). The module-namespace is usually the name of the Terraform organization. Obtain this ID by calling 'search_private_modules'.",
                     "type": "string"
                   },
                   "private_module_version": {
@@ -933,7 +933,7 @@
                     "type": "string"
                   },
                   "namespace": {
-                    "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'",
+                    "description": "The namespace of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider e.g., 'hashicorp'. If you are not certain of the namespace, do not guess, ask the user. Most HashiCorp-maintained providers are in the 'hashicorp' namespace",
                     "type": "string"
                   },
                   "version": {
@@ -957,11 +957,11 @@
                 "readOnlyHint": true,
                 "title": "Fetch detailed Terraform provider documentation using a document ID"
               },
-              "description": "Fetches up-to-date documentation for a specific service from a Terraform provider. \nYou must call 'search_providers' tool first to obtain the exact tfprovider-compatible provider_doc_id required to use this tool.",
+              "description": "Fetches up-to-date documentation for a specific service from a Terraform provider. \nYou must call 'search_provider_docs' tool first to obtain the exact tfprovider-compatible provider_doc_id required to use this tool.",
               "inputSchema": {
                 "properties": {
                   "provider_doc_id": {
-                    "description": "Exact tfprovider-compatible provider_doc_id, (e.g., '8894603', '8906901') retrieved from 'search_providers'",
+                    "description": "Exact tfprovider-compatible provider_doc_id, (e.g., '8894603', '8906901') retrieved from 'search_provider_docs'",
                     "type": "string"
                   }
                 },
@@ -1811,7 +1811,7 @@
                     "type": "string"
                   },
                   "provider_namespace": {
-                    "description": "The publisher of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider",
+                    "description": "The publisher of the Terraform provider, typically the name of the company, or their GitHub organization name that created the provider. If you are not certain of the namespace, do not guess, ask the user. Most HashiCorp-maintained providers are in the 'hashicorp' namespace",
                     "type": "string"
                   },
                   "provider_version": {
@@ -1831,7 +1831,7 @@
                 ],
                 "type": "object"
               },
-              "name": "search_providers"
+              "name": "search_provider_docs"
             },
             {
               "annotations": {
@@ -2031,7 +2031,7 @@
             "search_policies",
             "search_private_modules",
             "search_private_providers",
-            "search_providers",
+            "search_provider_docs",
             "update_workspace",
             "update_workspace_variable",
             "whoami"
