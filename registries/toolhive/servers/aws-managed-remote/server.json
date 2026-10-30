@@ -8,6 +8,9 @@
             "author": "Amazon Web Services",
             "homepage": "https://docs.aws.amazon.com/agent-toolkit/latest/userguide/getting-started-aws-mcp-server.html"
           },
+          "metadata": {
+            "last_updated": "2026-10-30T02:19:18Z"
+          },
           "oauth_config": {
             "issuer": "https://us-east-1.oauth.signin.aws",
             "use_pkce": true
