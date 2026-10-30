@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.12.0": {
           "metadata": {
-            "last_updated": "2026-10-23T02:29:29Z",
+            "last_updated": "2026-10-30T01:00:38Z",
             "stars": 34184
           },
           "overview": "## Chrome DevTools MCP Server\n\nThe chrome-devtools-mcp server is a Model Context Protocol (MCP) server that lets AI assistants interact directly with Chrome DevTools via the Chrome DevTools Protocol (CDP). It enables AI-driven workflows to inspect pages, observe network activity, debug JavaScript, analyze performance, and audit rendering behavior — all from within an MCP-compatible assistant, without manually opening DevTools. This server is ideal for frontend debugging, performance analysis, web automation diagnostics, and assisted web development.",
@@ -564,7 +564,7 @@
                     "type": "number"
                   },
                   "pageIdx": {
-                    "description": "Page number to return (0-based). When omitted, returns the first page.",
+                    "description": "Page number to return (0-based). When omitted, returns the first page. Ignored unless pageSize is set.",
                     "maximum": 9007199254740991,
                     "minimum": 0,
                     "type": "integer"
@@ -576,7 +576,7 @@
                     "type": "integer"
                   },
                   "serviceWorkerId": {
-                    "description": "Filter messages to only return messages of the specified service worker.",
+                    "description": "Filter messages by the service worker ID shown by list_pages (sw-N).",
                     "type": "string"
                   },
                   "types": {
@@ -633,7 +633,7 @@
                     "type": "number"
                   },
                   "pageIdx": {
-                    "description": "Page number to return (0-based). When omitted, returns the first page.",
+                    "description": "Page number to return (0-based). When omitted, returns the first page. Ignored unless pageSize is set.",
                     "maximum": 9007199254740991,
                     "minimum": 0,
                     "type": "integer"
@@ -659,7 +659,6 @@
                         "fetch",
                         "prefetch",
                         "eventsource",
-                        "websocket",
                         "manifest",
                         "signedexchange",
                         "ping",
@@ -1162,7 +1161,7 @@
               "annotations": {
                 "readOnlyHint": true
               },
-              "description": "Wait for the specified text to appear on the selected page.",
+              "description": "Wait for the specified text to appear on the selected page. By default, hidden text is also matched. Set visible to true to wait until the matched text is visible.",
               "inputSchema": {
                 "properties": {
                   "pageId": {
@@ -1182,6 +1181,11 @@
                     "maximum": 9007199254740991,
                     "minimum": -9007199254740991,
                     "type": "integer"
+                  },
+                  "visible": {
+                    "default": false,
+                    "description": "If true, wait until the matching text is visible. By default, hidden text also counts.",
+                    "type": "boolean"
                   }
                 },
                 "required": [
