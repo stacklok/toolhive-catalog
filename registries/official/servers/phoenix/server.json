@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.16": {
+        "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.17": {
           "metadata": {
             "last_updated": "2026-10-16T03:16:48Z",
             "stars": 9311
@@ -766,7 +766,7 @@
           "name": "PHOENIX_ENDPOINT"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.16",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/phoenix-mcp:4.3.17",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
