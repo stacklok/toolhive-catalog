@@ -3,13 +3,13 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/semgrep/semgrep:1.182.1": {
+        "docker.io/semgrep/semgrep:1.183.0": {
           "args": [
             "semgrep",
             "mcp"
           ],
           "metadata": {
-            "last_updated": "2026-10-23T02:29:42Z",
+            "last_updated": "2026-10-30T01:00:51Z",
             "stars": 15042
           },
           "overview": "## Semgrep MCP Server\n\nThe semgrep MCP server scans code for security vulnerabilities using Semgrep with 5,000+ semantic analysis rules. This tool provides static security analysis across multiple programming languages, leveraging thousands of semantic rules for identifying vulnerabilities. It enables abstract syntax tree generation, supply chain security scanning, and supports custom rule creation for organization-specific security requirements.",
@@ -204,7 +204,7 @@
             },
             {
               "annotations": {},
-              "description": "\n    Runs a Semgrep scan locally on provided code files returns the findings in JSON format.\n\n    Files are expected to be absolute paths to the code files.\n\n    Use this tool when you need to:\n      - scan code files for security vulnerabilities\n      - scan code files for other issues\n    ",
+              "description": "\n    Runs a Semgrep scan locally on provided code files returns the findings in JSON format.\n\n    Files are expected to be absolute paths to the code files, inside the\n    workspace. Files outside the workspace are rejected.\n\n    Use this tool when you need to:\n      - scan code files for security vulnerabilities\n      - scan code files for other issues\n    ",
               "inputSchema": {
                 "$defs": {
                   "CodePath": {
@@ -224,7 +224,7 @@
                 },
                 "properties": {
                   "code_files": {
-                    "description": "List of dictionaries with 'path' pointing to the absolute path of the code file",
+                    "description": "List of dictionaries with 'path' pointing to the absolute path of the code file. Every path must be inside the workspace.",
                     "items": {
                       "$ref": "#/$defs/CodePath"
                     },
@@ -332,7 +332,7 @@
           "name": "SEMGREP_APP_TOKEN"
         }
       ],
-      "identifier": "docker.io/semgrep/semgrep:1.182.1",
+      "identifier": "docker.io/semgrep/semgrep:1.183.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
