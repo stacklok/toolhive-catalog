@@ -5,7 +5,7 @@ go 1.27
 require (
 	github.com/google/go-cmp v0.7.0
 	github.com/google/go-containerregistry v0.22.1
-	github.com/modelcontextprotocol/registry v1.8.1
+	github.com/modelcontextprotocol/registry v1.8.7
 	github.com/spf13/cobra v1.10.2
 	github.com/stacklok/toolhive-core v0.0.57
 	github.com/stretchr/testify v1.12.1
