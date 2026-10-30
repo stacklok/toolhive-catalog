@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.10": {
+        "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.19": {
           "metadata": {
-            "last_updated": "2026-07-08T07:51:27Z",
+            "last_updated": "2026-10-30T00:59:30Z",
             "stars": 84011
           },
           "overview": "## Time MCP Server\n\nThe time MCP server provides time information and IANA timezone conversions with auto system timezone detection. The server leverages Python's timezone libraries to deliver current time queries across any IANA timezone with automatic detection of the system's local timezone when none is specified, time conversion capabilities between different timezones, timezone-aware datetime strings formatted in ISO 8601 standard, and Daylight Saving Time indicators. The server exposes two primary tools: get_current_time and convert_time.",
@@ -41,14 +41,17 @@
                 "properties": {
                   "source_timezone": {
                     "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no source timezone provided by the user.",
+                    "title": "Source Timezone",
                     "type": "string"
                   },
                   "target_timezone": {
                     "description": "Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use 'Etc/UTC' as local timezone if no target timezone provided by the user.",
+                    "title": "Target Timezone",
                     "type": "string"
                   },
                   "time": {
                     "description": "Time to convert in 24-hour format (HH:MM)",
+                    "title": "Time",
                     "type": "string"
                   }
                 },
@@ -73,6 +76,7 @@
                 "properties": {
                   "timezone": {
                     "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no timezone provided by the user.",
+                    "title": "Timezone",
                     "type": "string"
                   }
                 },
@@ -105,7 +109,7 @@
   "name": "io.github.stacklok/time",
   "packages": [
     {
-      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.10",
+      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.19",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
