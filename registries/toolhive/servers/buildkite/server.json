@@ -8,7 +8,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-10-30T01:00:28Z",
+            "last_updated": "2026-11-01T02:41:32Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -1235,7 +1235,7 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: ran and failed, but the step's soft_fail setting in the pipeline allowed that exit status, so they did not block the build; soft_failed is authoritative, so the pipeline configuration is not needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Each failed test also carries its Test Engine labels, such as 'flaky', and executions_count_by_result for its attempts within that job (failed: 2 means the first run and a retry both failed, which is why the job log can report more failures than failed_tests lists), so there is no need to call a test tool or get_failed_executions for them. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Annotation content is in the body_html field; there is no body field. Start with this tool before calling individual job, log, annotation, or test tools.",
+              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: ran and failed, but the step's soft_fail setting in the pipeline allowed that exit status, so they did not block the build; soft_failed is authoritative, so the pipeline configuration is not needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Each failed test also carries its Test Engine labels, such as 'flaky', and executions_count_by_result for its attempts within that job (failed: 2 means the first run and a retry both failed, which is why the job log can report more failures than failed_tests lists), so there is no need to call a test tool or get_failed_executions for them. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Unrendered annotation content is in body (Markdown or HTML; safety filtering still applies); artifact:// references in it name artifacts of this build, which you can fetch with list_artifacts_for_build and get_artifact. Start with this tool before calling individual job, log, annotation, or test tools.",
               "inputSchema": {
                 "properties": {
                   "build_number": {
@@ -2118,9 +2118,13 @@
                 "readOnlyHint": true,
                 "title": "List Annotations"
               },
-              "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id. Annotation content is in the body_html field; there is no body field",
+              "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id. By default each annotation's unrendered content is in body (Markdown or HTML; safety filtering still applies); artifact:// references in it name artifacts of this build, which you can fetch with list_artifacts_for_build and get_artifact. Set body_format='html' to get the rendered HTML in body_html instead",
               "inputSchema": {
                 "properties": {
+                  "body_format": {
+                    "description": "'raw' (default) returns unrendered content in body; 'html' returns rendered HTML in body_html instead",
+                    "type": "string"
+                  },
                   "build_number": {
                     "type": "string"
                   },
@@ -2797,6 +2801,198 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "List Span Aggregate Names"
+              },
+              "description": "List top span-name statistics for an OpenTelemetry instrumentation scope in a Test Engine suite. Returns counts, summed durations, averages, approximate p50/p95 percentiles, maximum durations, and a truncation indicator. All durations are in nanoseconds. Durations are inclusive; nested spans overlap, so do not add their durations together. Aggregates have hourly precision and one-month retention. Requires OTel trace ingestion to be enabled. An unknown scope returns an empty list; results are not paginated.",
+              "inputSchema": {
+                "properties": {
+                  "limit": {
+                    "description": "Maximum span names to return (1-100); defaults to 20. span_names_truncated indicates more names exist.",
+                    "type": "integer"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "period": {
+                    "description": "One of '1hour', '4hours', '1day', '7days', '14days', or '28days'; defaults to the API-selected period. Cannot exceed the organization's API history allowance.",
+                    "type": "string"
+                  },
+                  "scope_name": {
+                    "description": "Exact instrumentation scope name; an empty string selects the unnamed scope",
+                    "type": "string"
+                  },
+                  "sort": {
+                    "description": "One of 'count', 'total', 'avg', 'p50', 'p95', or 'max'; prefix with '-' for descending order. Defaults to '-total'; ties sort by name ascending.",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "test_suite_slug": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "test_suite_slug",
+                  "scope_name"
+                ],
+                "type": "object"
+              },
+              "name": "list_span_aggregate_names"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Span Aggregate Names for Build"
+              },
+              "description": "List top span-name statistics for an OpenTelemetry instrumentation scope across a build's visible Test Engine suites. Returns counts, summed durations, averages, approximate p50/p95 percentiles, maximum durations, and a truncation indicator. All durations are in nanoseconds. Durations are inclusive; nested spans overlap, so do not add their durations together. Requires access to the build's pipeline. An unknown scope returns an empty list; results are not paginated.",
+              "inputSchema": {
+                "properties": {
+                  "build_uuid": {
+                    "description": "Buildkite build UUID, not the pipeline build number",
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "Maximum span names to return (1-100); defaults to 20. span_names_truncated indicates more names exist.",
+                    "type": "integer"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "scope_name": {
+                    "description": "Exact instrumentation scope name; an empty string selects the unnamed scope",
+                    "type": "string"
+                  },
+                  "sort": {
+                    "description": "One of 'count', 'total', 'avg', 'p50', 'p95', or 'max'; prefix with '-' for descending order. Defaults to '-total'; ties sort by name ascending.",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "build_uuid",
+                  "scope_name"
+                ],
+                "type": "object"
+              },
+              "name": "list_span_aggregate_names_for_build"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Span Aggregate Scopes"
+              },
+              "description": "List OpenTelemetry instrumentation scopes for a Test Engine suite, ordered by total span duration descending. Start here for suite-wide bottlenecks; drill down with list_span_aggregate_names. Returns span counts and summed durations in nanoseconds, not wall-clock time. Durations are inclusive; nested spans overlap, so do not add their durations together. Aggregates have hourly precision and one-month retention. Requires OTel trace ingestion to be enabled. Results are not paginated.",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "period": {
+                    "description": "One of '1hour', '4hours', '1day', '7days', '14days', or '28days'; defaults to the API-selected period. Cannot exceed the organization's API history allowance.",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "test_suite_slug": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "test_suite_slug"
+                ],
+                "type": "object"
+              },
+              "name": "list_span_aggregate_scopes"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Span Aggregate Scopes for Build"
+              },
+              "description": "List OpenTelemetry instrumentation scopes across a build's visible Test Engine suites, ordered by total span duration descending. Start here for build-wide bottlenecks; drill down with list_span_aggregate_names_for_build. Returns span counts and summed durations in nanoseconds, not wall-clock time. Durations are inclusive; nested spans overlap, so do not add their durations together. Requires OTel trace ingestion to be enabled and access to the build's pipeline. Results are not paginated.",
+              "inputSchema": {
+                "properties": {
+                  "build_uuid": {
+                    "description": "Buildkite build UUID, not the pipeline build number",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "build_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "list_span_aggregate_scopes_for_build"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "List Step Uploads"
               },
               "description": "List the dynamic pipeline uploads (`buildkite-agent pipeline upload`) a build received, newest first, without their definitions. Each item includes state, the uploading job (source_job_id), created_jobs_count (omitted until applied, 0 when applied but no jobs were created), and rejection details. Use get_step_upload to read an upload's pipeline definition. Only available while the build is within its maximum lifetime (~30 days); older builds return 410 Gone",
@@ -3251,7 +3447,7 @@
                 "readOnlyHint": true,
                 "title": "Read Execution Trace"
               },
-              "description": "Read an OpenTelemetry trace summary for a Buildkite Test Engine execution, including category rollups and slowest spans",
+              "description": "Read an OpenTelemetry trace summary for a Buildkite Test Engine execution, including category rollups and slowest spans. For build- or suite-wide bottlenecks, use span aggregates first.",
               "inputSchema": {
                 "properties": {
                   "execution_id": {
@@ -4553,6 +4749,10 @@
             "list_pipelines",
             "list_repository_connections",
             "list_skills",
+            "list_span_aggregate_names",
+            "list_span_aggregate_names_for_build",
+            "list_span_aggregate_scopes",
+            "list_span_aggregate_scopes_for_build",
             "list_step_uploads",
             "list_test_runs",
             "list_test_suites_for_pipeline",
