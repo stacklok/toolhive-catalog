@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/uvx/mcp-server-git:2026.10.10": {
+        "ghcr.io/stacklok/dockyard/uvx/mcp-server-git:2026.10.19": {
           "metadata": {
             "last_updated": "2026-10-16T03:19:36Z",
             "stars": 84011
@@ -449,7 +449,7 @@
   "name": "io.github.stacklok/git",
   "packages": [
     {
-      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-git:2026.10.10",
+      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-git:2026.10.19",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
