@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/weaviate-cookbooks:0.1.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/weaviate-cookbooks:0.1.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/weaviate/agent-skills",
-      "ref": "af939ece26a10511c7af2b188b038cb81d31e5a0",
+      "ref": "b19751cb6aab9365fcd643974cfc1ae895fe92a8",
       "subfolder": "skills/weaviate-cookbooks"
     }
   ]

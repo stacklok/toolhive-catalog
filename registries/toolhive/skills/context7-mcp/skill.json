@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/context7-mcp:0.3.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/context7-mcp:0.3.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/upstash/context7",
-      "ref": "6b636d3c35e051a1a653a236afb7f612c02a1ad3",
+      "ref": "b5e81de845092694ba1bfc5af15400f319c89b6d",
       "subfolder": "skills/context7-mcp"
     }
   ]

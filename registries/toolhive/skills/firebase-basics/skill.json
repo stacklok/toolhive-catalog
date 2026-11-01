@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-basics:0.5.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-basics:0.5.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/firebase/agent-skills",
-      "ref": "306cc1844c47839bd4f2c7dba7cc3c394e4f3e0b",
+      "ref": "92eed24c0976a79a66d5b8038e9eda8b441ef92d",
       "subfolder": "skills/firebase-basics"
     }
   ]
