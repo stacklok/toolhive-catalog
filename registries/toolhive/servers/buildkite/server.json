@@ -3,12 +3,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/buildkite/buildkite-mcp-server:1.29.0": {
+        "ghcr.io/buildkite/buildkite-mcp-server:1.30.0": {
           "args": [
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-10-23T02:29:04Z",
+            "last_updated": "2026-10-30T01:00:28Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -629,9 +629,16 @@
                 "readOnlyHint": false,
                 "title": "Create Pipeline"
               },
-              "description": "Set up a new CI/CD pipeline in Buildkite with YAML configuration, repository connection, and cluster assignment",
+              "description": "Set up a new CI/CD pipeline in Buildkite with YAML configuration or an approved pipeline template, repository connection, and cluster assignment",
               "inputSchema": {
                 "properties": {
+                  "branch_configuration": {
+                    "description": "Branch filter; omission or null uses the API's null default",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
                   "cancel_running_branch_builds": {
                     "description": "Cancel running builds when new builds are created on the same branch",
                     "type": "boolean"
@@ -641,11 +648,11 @@
                     "type": "string"
                   },
                   "configuration": {
-                    "description": "The pipeline configuration in YAML format",
+                    "description": "Nonblank YAML configuration; supply this or pipeline_template_uuid, not both",
                     "type": "string"
                   },
                   "create_webhook": {
-                    "description": "Create a GitHub webhook after creating a pipeline. Set true when GitHub push or pull-request events should trigger this pipeline; if the repository is not connected through a compatible Buildkite GitHub App, the pipeline is created and setup instructions are returned. Set false for non-GitHub repositories, centralized or manually managed webhooks, or pipelines that must not receive events yet.",
+                    "description": "Create a traditional GitHub webhook after creating a pipeline. Set true when GitHub push or pull-request events should trigger this pipeline; if the repository is not connected through a compatible Buildkite GitHub App, the pipeline is created and setup instructions are returned. Set false for GitHub Actions pipeline triggers, non-GitHub repositories, centralized or manually managed webhooks, or pipelines that must not receive events yet.",
                     "type": "boolean"
                   },
                   "default_branch": {
@@ -660,6 +667,151 @@
                   },
                   "org_slug": {
                     "type": "string"
+                  },
+                  "pipeline_template_uuid": {
+                    "description": "Approved template UUID providing the pipeline's steps; supply this or configuration, not both",
+                    "type": "string"
+                  },
+                  "provider_settings": {
+                    "additionalProperties": false,
+                    "description": "GitHub provider settings; omitted keys use API defaults. Does not create a GitHub Actions trigger or webhook",
+                    "properties": {
+                      "build_branches": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_pull_request_forks": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_tags": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "filter_condition": {
+                        "description": "Build condition; null clears it, omission leaves the API default on create or the existing value on update",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "filter_enabled": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "github_actions_mode": {
+                        "description": "Enables GitHub Actions workflow selection; requires server-side availability. Leave branch-wide cancel/skip disabled for sibling workflow builds",
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "github_workflow_access_tokens_enabled": {
+                        "description": "Requires GitHub.com, server-side availability and workflow token permissions",
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "ignore_default_branch_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "prefix_pull_request_fork_branch_names": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_blocked_as_pending": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_commit_status": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_commit_status_per_step": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "pull_request_branch_filter_configuration": {
+                        "description": "null clears it; omission leaves the API default on create or the existing value on update",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "pull_request_branch_filter_enabled": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "separate_pull_request_statuses": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_builds_for_closed_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_builds_for_existing_commits": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_pull_request_builds_for_existing_commits": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "trigger_mode": {
+                        "description": "code, deployment, fork or none; none disables traditional triggering, not GitHub Actions pipeline triggers",
+                        "enum": [
+                          "code",
+                          "deployment",
+                          "fork",
+                          "none"
+                        ],
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "null",
+                      "object"
+                    ]
                   },
                   "repository_url": {
                     "description": "The Git repository URL",
@@ -707,7 +859,6 @@
                   "name",
                   "repository_url",
                   "cluster_id",
-                  "configuration",
                   "create_webhook"
                 ],
                 "type": "object"
@@ -858,6 +1009,86 @@
                 "type": "object"
               },
               "name": "current_user"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": true,
+                "readOnlyHint": false,
+                "title": "Disable Pipeline GitHub Webhook Processing"
+              },
+              "description": "Disable traditional GitHub webhook processing and return its state to avoid duplicate builds during cutover. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not delete repository webhooks or disable dedicated GitHub Actions triggers",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug"
+                ],
+                "type": "object"
+              },
+              "name": "disable_pipeline_github_webhook_processing"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": true,
+                "readOnlyHint": false,
+                "title": "Enable Pipeline GitHub Webhook Processing"
+              },
+              "description": "Enable traditional GitHub webhook processing and return its state. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not create repository webhooks or change dedicated GitHub Actions triggers",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug"
+                ],
+                "type": "object"
+              },
+              "name": "enable_pipeline_github_webhook_processing"
             },
             {
               "annotations": {
@@ -1512,6 +1743,45 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Get Pipeline GitHub Webhook Processing"
+              },
+              "description": "Get traditional GitHub webhook processing state. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not describe dedicated GitHub Actions triggers",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pipeline_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_slug"
+                ],
+                "type": "object"
+              },
+              "name": "get_pipeline_github_webhook_processing"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Get Pipeline Schedule"
               },
               "description": "Get detailed information about a single pipeline schedule including its cron expression, target branch, environment variables, enabled state, last failure, and next build time",
@@ -1736,6 +2006,51 @@
                 "type": "object"
               },
               "name": "get_test_run"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Test Workflow"
+              },
+              "description": "Inspect a configured Buildkite Test Engine workflow by UUID, including its monitor conditions, filters, alarm/recovery actions, and links. Webhook endpoints are always redacted. Describes configured behavior, not event history or proof that an action ran.",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "test_suite_slug": {
+                    "description": "Suite slug or UUID",
+                    "type": "string"
+                  },
+                  "workflow_id": {
+                    "description": "Workflow UUID returned by list_test_workflows",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "test_suite_slug",
+                  "workflow_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_test_workflow"
             },
             {
               "annotations": {
@@ -1968,7 +2283,7 @@
                 "readOnlyHint": true,
                 "title": "List Builds"
               },
-              "description": "List builds for a pipeline or across all pipelines in an organization, returning a lightweight summary of each build. When pipeline_slug is omitted, lists builds across all pipelines in the organization. Jobs are not included — use list_jobs or get_job for job detail",
+              "description": "List builds, newest first, for a pipeline or, when pipeline_slug is omitted, across all pipelines in an organization. Returns lightweight summaries including pipeline_slug, creator and finished_at; jobs are not included — use list_jobs or get_job for job detail. Org-wide listings without created_from can time out. For questions spanning many builds, filter by state, branch, creator and date with per_page 100 instead of calling get_build per build",
               "inputSchema": {
                 "properties": {
                   "branch": {
@@ -1979,8 +2294,20 @@
                     "description": "Full commit SHA",
                     "type": "string"
                   },
+                  "created_from": {
+                    "description": "RFC 3339 timestamp or YYYY-MM-DD (UTC)",
+                    "type": "string"
+                  },
+                  "created_to": {
+                    "description": "RFC 3339 timestamp, or YYYY-MM-DD (UTC) to include that whole day",
+                    "type": "string"
+                  },
                   "creator": {
-                    "description": "Filter builds by build creator",
+                    "description": "Creator's user UUID (a build's creator.id), or me",
+                    "type": "string"
+                  },
+                  "finished_from": {
+                    "description": "RFC 3339 timestamp or YYYY-MM-DD (UTC)",
                     "type": "string"
                   },
                   "org_slug": {
@@ -2618,6 +2945,54 @@
                 "type": "object"
               },
               "name": "list_test_suites_for_pipeline"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Test Workflows"
+              },
+              "description": "List configured workflows for a Buildkite Test Engine suite, newest first. Returns monitors, filters, alarm/recovery actions, and links. Webhook endpoints are always redacted. Use this to discover automation and labels used to mark flaky tests before querying list_tests. Use get_test_workflow to inspect one. Configuration does not prove an action ran or rank tests by flakiness.",
+              "inputSchema": {
+                "properties": {
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "Page number for pagination (min 1, default 1)",
+                    "type": "integer"
+                  },
+                  "per_page": {
+                    "description": "Results per page for pagination (min 1, max 100, default 100)",
+                    "type": "integer"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "test_suite_slug": {
+                    "description": "Suite slug or UUID",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "test_suite_slug"
+                ],
+                "type": "object"
+              },
+              "name": "list_test_workflows"
             },
             {
               "annotations": {
@@ -3680,6 +4055,13 @@
               "description": "Modify an existing Buildkite pipeline's configuration, repository, settings, or metadata",
               "inputSchema": {
                 "properties": {
+                  "branch_configuration": {
+                    "description": "Branch filter; null clears it, omission leaves it unchanged",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
                   "cancel_running_branch_builds": {
                     "description": "Cancel running builds when new builds are created on the same branch",
                     "type": [
@@ -3694,7 +4076,7 @@
                     ]
                   },
                   "configuration": {
-                    "description": "The pipeline configuration in YAML format",
+                    "description": "Replaces the entire YAML configuration; omit when assigning a template. May accompany pipeline_template_uuid: null to replace template steps",
                     "type": [
                       "null",
                       "string"
@@ -3724,6 +4106,154 @@
                   },
                   "pipeline_slug": {
                     "type": "string"
+                  },
+                  "pipeline_template_uuid": {
+                    "description": "Approved template UUID; omit to retain assignment, null to remove it. Do not combine assignment with configuration; removal may require replacement configuration and remains subject to organization policy",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "provider_settings": {
+                    "additionalProperties": false,
+                    "description": "GitHub provider settings; omitted keys remain unchanged. Does not create a GitHub Actions trigger or webhook",
+                    "properties": {
+                      "build_branches": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_pull_request_forks": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "build_tags": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "filter_condition": {
+                        "description": "Build condition; null clears it, omission leaves the API default on create or the existing value on update",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "filter_enabled": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "github_actions_mode": {
+                        "description": "Enables GitHub Actions workflow selection; requires server-side availability. Leave branch-wide cancel/skip disabled for sibling workflow builds",
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "github_workflow_access_tokens_enabled": {
+                        "description": "Requires GitHub.com, server-side availability and workflow token permissions",
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "ignore_default_branch_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "prefix_pull_request_fork_branch_names": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_blocked_as_pending": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_commit_status": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "publish_commit_status_per_step": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "pull_request_branch_filter_configuration": {
+                        "description": "null clears it; omission leaves the API default on create or the existing value on update",
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "pull_request_branch_filter_enabled": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "separate_pull_request_statuses": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_builds_for_closed_pull_requests": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_builds_for_existing_commits": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "skip_pull_request_builds_for_existing_commits": {
+                        "type": [
+                          "null",
+                          "boolean"
+                        ]
+                      },
+                      "trigger_mode": {
+                        "description": "code, deployment, fork or none; none disables traditional triggering, not GitHub Actions pipeline triggers",
+                        "enum": [
+                          "code",
+                          "deployment",
+                          "fork",
+                          "none"
+                        ],
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "null",
+                      "object"
+                    ]
                   },
                   "repository_url": {
                     "description": "The Git repository URL",
@@ -3987,6 +4517,8 @@
             "create_pipeline_schedule",
             "create_pipeline_webhook",
             "current_user",
+            "disable_pipeline_github_webhook_processing",
+            "enable_pipeline_github_webhook_processing",
             "get_agent",
             "get_artifact",
             "get_build",
@@ -4000,11 +4532,13 @@
             "get_job",
             "get_job_env",
             "get_pipeline",
+            "get_pipeline_github_webhook_processing",
             "get_pipeline_schedule",
             "get_repository_connection",
             "get_step_upload",
             "get_test",
             "get_test_run",
+            "get_test_workflow",
             "list_agents",
             "list_annotations",
             "list_artifacts_for_build",
@@ -4022,6 +4556,7 @@
             "list_step_uploads",
             "list_test_runs",
             "list_test_suites_for_pipeline",
+            "list_test_workflows",
             "list_tests",
             "list_tests_for_build",
             "load_skill",
@@ -4099,7 +4634,7 @@
           "name": "BUILDKITE_FAILURE_SUMMARY_MAX_JOBS"
         }
       ],
-      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.29.0",
+      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.30.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
