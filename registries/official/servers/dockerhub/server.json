@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248": {
+        "docker.io/mcp/dockerhub:latest@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248": {
           "args": [
             "--transport=stdio"
           ],
@@ -81,7 +81,7 @@
           "default": "1"
         }
       ],
-      "identifier": "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248",
+      "identifier": "docker.io/mcp/dockerhub:latest@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248",
       "registryType": "oci",
       "transport": {
         "type": "stdio"

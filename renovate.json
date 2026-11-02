@@ -16,14 +16,14 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update OCI image versions in server.json files (identifier and _meta key)",
+      "description": "Update OCI image tags and digests in server.json files (identifier and _meta key)",
       "managerFilePatterns": [
         "/^registries/.*/servers/.*/server\\.json$/"
       ],
       "matchStringsStrategy": "any",
       "matchStrings": [
-        "\"identifier\":\\s*\"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\"",
-        "\"(?<depName>[^:\"]*\\/[^:\"]+):(?<currentValue>[^\"]+)\":\\s*\\{"
+        "\"identifier\":\\s*\"(?<depName>[^\"@\\s]+):(?<currentValue>[^\"@:\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?\"",
+        "\"(?<depName>[^\"@\\s]*\\/[^\"@\\s]+):(?<currentValue>[^\"@:\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?\":\\s*\\{"
       ],
       "datasourceTemplate": "docker"
     },
@@ -42,12 +42,13 @@
   ],
   "packageRules": [
     {
-      "description": "Automerge patch updates for registry images",
+      "description": "Automerge patch and digest updates for registry images",
       "matchFileNames": [
         "registries/**"
       ],
       "matchUpdateTypes": [
-        "patch"
+        "patch",
+        "digest"
       ],
       "automerge": true
     },
