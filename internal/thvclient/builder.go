@@ -94,6 +94,13 @@ func BuildRunCommand(
 		builder.AddFlag("--permission-profile", "network")
 	}
 
+	// The temporary server only has to answer tools/list. Newer thv versions
+	// isolate the container network by default, which delays the server
+	// reaching "running" past the fixed wait in RunServer (seen with
+	// streamable-http servers), so opt out. Passed as a single token because
+	// cobra bool flags don't accept a space-separated value.
+	builder.AddBoolFlag("--isolate-network=false", true)
+
 	// Image as positional argument
 	builder.AddPositional(image)
 

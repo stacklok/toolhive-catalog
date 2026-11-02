@@ -51,6 +51,7 @@ func TestBuildRunCommand_Basic(t *testing.T) {
 	expected := []string{
 		"run", "--name", "temp-test-123",
 		"--transport", "stdio",
+		"--isolate-network=false",
 		"ghcr.io/test/server:v1",
 	}
 
