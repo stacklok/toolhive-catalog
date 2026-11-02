@@ -26,6 +26,18 @@
         "\"(?<depName>[^:\"]*\\/[^:\"]+):(?<currentValue>[^\"]+)\":\\s*\\{"
       ],
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Update the ToolHive CLI version installed by the update-tools workflow",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/update-tools\\.yml$/"
+      ],
+      "matchStrings": [
+        "toolhive-actions/install@[^\\n]+\\n\\s*with:\\n\\s*version:\\s*'(?<currentValue>v[^']+)'"
+      ],
+      "depNameTemplate": "stacklok/toolhive",
+      "datasourceTemplate": "github-releases"
     }
   ],
   "packageRules": [
