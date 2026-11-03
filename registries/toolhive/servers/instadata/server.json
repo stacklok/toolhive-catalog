@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.instadata.dev": {
+          "custom_metadata": {
+            "author": "Instadata",
+            "homepage": "https://instadata.dev",
+            "docs": "https://instadata.dev/docs/mcp-server/",
+            "server_card": "https://instadata.dev/.well-known/mcp/server-card.json"
+          },
+          "overview": "## Instadata Remote MCP Server\n\nInstadata is an agent-first Instagram Data API with a hosted MCP server. Read public Instagram profiles, posts, reels, comments, hashtags, places, Meta Ad Library ads, brand collaborations and reel transcripts as JSON from Claude, Cursor, ChatGPT or any MCP client. No Meta developer app or App Review. 10 MCP tools reach all 28 endpoints. Authenticate with `Authorization: Bearer <INSTADATA_API_KEY>` (keys at https://instadata.dev/app/keys). $5 per 1,000 credits, 25 free credits at signup (no card); failed calls are never charged.",
+          "status": "Active",
+          "tags": ["remote", "instagram", "social-media", "data", "api", "transcripts", "mcp"],
+          "tier": "Community",
+          "tools": ["get_transcript", "get_summary", "get_post_stats", "get_comments", "get_profile", "get_channel_posts", "search_hashtag", "download_media", "list_endpoints", "call_endpoint"]
+        }
+      }
+    }
+  },
+  "description": "Public Instagram data via MCP: profiles, posts, reels, ads, transcripts. $5/1k credits; 25 free.",
+  "icons": [
+    {"mimeType": "image/png", "sizes": ["512x512"], "src": "https://instadata.dev/icon-512.png"},
+    {"mimeType": "image/png", "sizes": ["128x128"], "src": "https://instadata.dev/icon-128.png"}
+  ],
+  "name": "dev.instadata/instagram",
+  "remotes": [
+    {"type": "streamable-http", "url": "https://mcp.instadata.dev", "headers": [{"name": "Authorization", "description": "Bearer <INSTADATA_API_KEY> (keys at https://instadata.dev/app/keys)", "isRequired": true, "isSecret": true}]}
+  ],
+  "repository": {"url": "https://github.com/nikhonit/instagram-api-skills", "source": "github"},
+  "title": "Instadata — Instagram Data API",
+  "version": "1.0.0",
+  "websiteUrl": "https://instadata.dev"
+}
