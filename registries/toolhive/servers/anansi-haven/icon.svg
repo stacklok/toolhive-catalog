@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Anansi Haven">
+  <rect width="64" height="64" rx="14" fill="#0a0a1f"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#f2b632" stroke-width="2"/>
+  <circle cx="32" cy="32" r="10" fill="none" stroke="#7ea6ff" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="3" fill="#f2b632"/>
+  <path d="M32 14 L32 50 M14 32 L50 32 M20 20 L44 44 M44 20 L20 44" stroke="#7ea6ff" stroke-width="1.2" opacity="0.85"/>
+</svg>
