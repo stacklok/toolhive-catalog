@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248": {
+        "docker.io/mcp/dockerhub:latest@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248": {
           "args": [
             "--transport=stdio"
           ],
@@ -12,7 +12,10 @@
             "homepage": "https://docs.docker.com/docker-hub/mcp-server/",
             "license": "Apache-2.0"
           },
-          "overview": "## Docker Hub\n\nDocker's official Docker Hub MCP server searches images, inspects tags and repository information, and manages repositories when authenticated. Use it to find an appropriate container image or inspect available image versions before updating a workload. Public content can be queried without credentials.\n\n### Setup\n\nFor private repositories or repository management, create a [Docker Hub personal access token](https://docs.docker.com/security/access-tokens/) with the required permissions, supply it as `HUB_PAT_TOKEN`, and pass your Docker Hub username as `-- --transport=stdio --username=<DOCKER_HUB_USERNAME>`. The entry uses stdio inside ToolHive's container, so no OAuth application or upstream HTTP bearer-token configuration is needed. Docker's published image is pinned by digest; see the [upstream setup guide](https://github.com/docker/hub-mcp) for supported tools and authentication. The default `NODE_USE_ENV_PROXY=1` setting enables Node to use ToolHive's isolated-network proxy.",
+          "metadata": {
+            "last_updated": "2026-11-02T15:19:46Z"
+          },
+          "overview": "## Docker Hub\n\nDocker's official Docker Hub MCP server searches images, inspects tags and repository information, and manages repositories when authenticated. Use it to find an appropriate container image or inspect available image versions before updating a workload. Public content can be queried without credentials.\n\n### Setup\n\nFor private repositories or repository management, create a [Docker Hub personal access token](https://docs.docker.com/security/access-tokens/) with the required permissions, supply it as `HUB_PAT_TOKEN`, and pass your Docker Hub username as `-- --transport=stdio --username=\u003cDOCKER_HUB_USERNAME\u003e`. The entry uses stdio inside ToolHive's container, so no OAuth application or upstream HTTP bearer-token configuration is needed. Docker's published image is pinned by digest; see the [upstream setup guide](https://github.com/docker/hub-mcp) for supported tools and authentication. The default `NODE_USE_ENV_PROXY=1` setting enables Node to use ToolHive's isolated-network proxy.",
           "permissions": {
             "network": {
               "outbound": {
@@ -36,20 +39,535 @@
             "devops"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Check Repository Exists"
+              },
+              "description": "Check if a repository exists in the given namespace.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "repository": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "repository"
+                ],
+                "type": "object"
+              },
+              "name": "checkRepository"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Check Repository Tag"
+              },
+              "description": "Check if a tag exists in a repository",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "repository": {
+                    "type": "string"
+                  },
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "repository",
+                  "tag"
+                ],
+                "type": "object"
+              },
+              "name": "checkRepositoryTag"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Create Repository in namespace"
+              },
+              "description": "Create a new repository in the given namespace. You MUST ask the user for the repository name and if the repository has to be public or private. Can optionally pass a description.\nIMPORTANT: Before calling this tool, you must ensure you have:\n The repository name (name).",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "description": "The description of the repository",
+                    "type": "string"
+                  },
+                  "full_description": {
+                    "description": "A detailed description of the repository",
+                    "maxLength": 25000,
+                    "type": "string"
+                  },
+                  "is_private": {
+                    "description": "Whether the repository is private",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "default": "",
+                    "description": "The name of the repository (required). Must contain a combination of alphanumeric characters and may contain the special characters ., _, or -. Letters must be lowercase.",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "description": "The namespace of the repository. Required.",
+                    "type": "string"
+                  },
+                  "registry": {
+                    "description": "The registry to create the repository in",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "namespace"
+                ],
+                "type": "object"
+              },
+              "name": "createRepository"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "List available Docker Hardened Images"
+              },
+              "description": "This API is used to list Docker Hardened Images (DHIs) available in the user organisations. The tool takes the organisation name as input and returns the list of DHI images available in the organisation. It depends on the \"listNamespaces\" tool to be called first to get the list of organisations the user has access to.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "organisation": {
+                    "description": "The organisation for which the DHIs are listed for. If user does not explicitly ask for a specific organisation, the \"listNamespaces\" tool should be called first to get the list of organisations the user has access to.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "organisation"
+                ],
+                "type": "object"
+              },
+              "name": "dockerHardenedImages"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Get Personal Namespace"
+              },
+              "description": "Get the personal namespace name",
+              "inputSchema": {
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "getPersonalNamespace"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Get Repository Info"
+              },
+              "description": "Get the details of a repository in the given namespace.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "description": "The namespace of the repository (required). If not provided the `library` namespace will be used for official images.",
+                    "type": "string"
+                  },
+                  "repository": {
+                    "description": "The repository name (required)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "repository"
+                ],
+                "type": "object"
+              },
+              "name": "getRepositoryInfo"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Get Repository Tag"
+              },
+              "description": "Get the details of a tag in a repository. It can be use to show the latest tag details for example.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "repository": {
+                    "type": "string"
+                  },
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "repository",
+                  "tag"
+                ],
+                "type": "object"
+              },
+              "name": "getRepositoryTag"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "List All Namespaces user is a member of"
+              },
+              "description": "List all namespaces the user is a member of",
+              "inputSchema": {
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "listAllNamespacesMemberOf"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "List Namespaces"
+              },
+              "description": "List paginated namespaces",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "page": {
+                    "description": "The page number to list repositories from",
+                    "type": "number"
+                  },
+                  "page_size": {
+                    "description": "The page size to list repositories from",
+                    "type": "number"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "listNamespaces"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "List Repositories by Namespace"
+              },
+              "description": "List paginated repositories by namespace",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "content_types": {
+                    "default": "",
+                    "description": "Comma-delimited list of content types. Only repositories containing one or more artifacts with one of these content types will be returned. Default is empty to get all repositories.",
+                    "type": "string"
+                  },
+                  "media_types": {
+                    "default": "",
+                    "description": "Comma-delimited list of media types. Only repositories containing one or more artifacts with one of these media types will be returned. Default is empty to get all repositories.",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "description": "The namespace to list repositories from",
+                    "type": "string"
+                  },
+                  "ordering": {
+                    "description": "The ordering of the repositories. Use \"-\" to reverse the ordering. For example, \"last_updated\" will order the repositories by last updated in descending order while \"-last_updated\" will order the repositories by last updated in ascending order.",
+                    "enum": [
+                      "last_updated",
+                      "-last_updated",
+                      "name",
+                      "-name",
+                      "pull_count",
+                      "-pull_count"
+                    ],
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "The page number to list repositories from",
+                    "type": "number"
+                  },
+                  "page_size": {
+                    "description": "The page size to list repositories from",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "namespace"
+                ],
+                "type": "object"
+              },
+              "name": "listRepositoriesByNamespace"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "List Repository Tags"
+              },
+              "description": "List paginated tags by repository",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "architecture": {
+                    "description": "The architecture to list tags from. If not provided, all architectures will be listed.",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "description": "The namespace of the repository. If not provided the 'library' namespace will be used for official images.",
+                    "type": "string"
+                  },
+                  "os": {
+                    "description": "The operating system to list tags from. If not provided, all operating systems will be listed.",
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "The page number to list tags from",
+                    "type": "number"
+                  },
+                  "page_size": {
+                    "description": "The page size to list tags from",
+                    "type": "number"
+                  },
+                  "repository": {
+                    "description": "The repository to list tags from",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "repository"
+                ],
+                "type": "object"
+              },
+              "name": "listRepositoryTags"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Search Repositories"
+              },
+              "description": "Search for repositories in Docker Hub. It sorts results by best match if no sort criteria is provided. If user asks for secure, production-ready images the \"dockerHardenedImages\" tool should be called first to get the list of DHI images available in the user organisations (if any) and fallback to search tool if no DHI images are available or user is not authenticated.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "architectures": {
+                    "description": "The architectures to filter search results",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "badges": {
+                    "description": "The trusted content to search for",
+                    "items": {
+                      "enum": [
+                        "official",
+                        "verified_publisher",
+                        "open_source"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "categories": {
+                    "description": "The categories names to filter search results",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "extension_reviewed": {
+                    "description": "Whether to filter search results to only include reviewed extensions",
+                    "type": "boolean"
+                  },
+                  "from": {
+                    "description": "The number of repositories to skip",
+                    "type": "number"
+                  },
+                  "images": {
+                    "description": "The images to filter search results",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "operating_systems": {
+                    "description": "The operating systems to filter search results",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "order": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "not": {}
+                          },
+                          {
+                            "enum": [
+                              "asc",
+                              "desc"
+                            ],
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The order to sort the search results by"
+                  },
+                  "query": {
+                    "description": "The query to search for",
+                    "type": "string"
+                  },
+                  "size": {
+                    "description": "The number of repositories to return",
+                    "type": "number"
+                  },
+                  "sort": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "not": {}
+                          },
+                          {
+                            "enum": [
+                              "pull_count",
+                              "updated_at"
+                            ],
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The criteria to sort the search results by. If the `sort` field is not set, the best match is used by default. When search extensions, documents are sort alphabetically if none is provided. Do not use it unless user explicitly asks for it."
+                  },
+                  "type": {
+                    "description": "The type of the repository to search for",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "search"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Get Repository Info"
+              },
+              "description": "Update the details of a repository in the given namespace. Description, overview and status are the only fields that can be updated. While description and overview changes are fine, a status change is a dangerous operation so the user must explicitly ask for it.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "description": "The description of the repository. If user asks for updating the description of the repository, this is the field that should be updated.",
+                    "type": "string"
+                  },
+                  "full_description": {
+                    "description": "The full description (overview)of the repository. If user asks for updating the full description or the overview of the repository, this is the field that should be updated. ",
+                    "maxLength": 25000,
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "description": "The namespace of the repository (required)",
+                    "type": "string"
+                  },
+                  "repository": {
+                    "description": "The repository name (required)",
+                    "type": "string"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "not": {}
+                          },
+                          {
+                            "enum": [
+                              "active",
+                              "inactive"
+                            ],
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The status of the repository. If user asks for updating the status of the repository, this is the field that should be updated. This is a dangerous operation and should be done with caution so user must be prompted to confirm the operation. Valid status are `active` (1) and `inactive` (0). Normally do not update the status if it is not strictly required by the user. It is not possible to change an `inactive` repository to `active` if it has no images."
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "repository"
+                ],
+                "type": "object"
+              },
+              "name": "updateRepositoryInfo"
+            }
+          ],
           "tools": [
-            "listRepositoriesByNamespace",
-            "createRepository",
-            "getRepositoryInfo",
-            "updateRepositoryInfo",
             "checkRepository",
-            "listRepositoryTags",
-            "getRepositoryTag",
             "checkRepositoryTag",
-            "listNamespaces",
+            "createRepository",
+            "dockerHardenedImages",
             "getPersonalNamespace",
+            "getRepositoryInfo",
+            "getRepositoryTag",
             "listAllNamespacesMemberOf",
+            "listNamespaces",
+            "listRepositoriesByNamespace",
+            "listRepositoryTags",
             "search",
-            "dockerHardenedImages"
+            "updateRepositoryInfo"
           ]
         }
       }
@@ -76,12 +594,12 @@
           "name": "HUB_PAT_TOKEN"
         },
         {
-          "name": "NODE_USE_ENV_PROXY",
+          "default": "1",
           "description": "Use ToolHive egress proxy for Node fetch requests",
-          "default": "1"
+          "name": "NODE_USE_ENV_PROXY"
         }
       ],
-      "identifier": "docker.io/mcp/dockerhub@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248",
+      "identifier": "docker.io/mcp/dockerhub:latest@sha256:76454af4edfd21571d9740113104d0d9f707220453d1c8f7c9971b21848d4248",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
