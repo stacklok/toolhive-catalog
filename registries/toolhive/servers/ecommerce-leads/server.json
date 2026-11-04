@@ -1,0 +1,71 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "description": "Official Ecommerce Leads remote MCP server: ecommerce store metrics by domain, with OAuth 2.1 for catalog search and contacts",
+  "icons": [
+    {
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ],
+      "src": "https://getecommerceleads.com/assets/el_logo_big.png"
+    }
+  ],
+  "name": "io.github.stacklok/ecommerce-leads",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://getecommerceleads.com/api/mcp"
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/matosdfm/ecommerce-leads-mcp",
+    "source": "github"
+  },
+  "title": "Ecommerce Leads (Remote)",
+  "version": "1.1.0",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://getecommerceleads.com/api/mcp": {
+          "tier": "Official",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "ecommerce",
+            "sales",
+            "marketing",
+            "oauth"
+          ],
+          "tools": [
+            "lookupStore",
+            "searchStores",
+            "getStoreChart",
+            "listSignalSets",
+            "getSignalSet",
+            "previewSignalSet",
+            "listWatchlists",
+            "getWatchlist",
+            "getRevealCost",
+            "getRevealStatus",
+            "revealStores",
+            "saveSignalSet",
+            "deleteSignalSet",
+            "createWatchlist",
+            "renameWatchlist",
+            "deleteWatchlist",
+            "removeFromWatchlist",
+            "addToWatchlist",
+            "updateOutreachStatus",
+            "sendFeedback",
+            "exportStores"
+          ],
+          "custom_metadata": {
+            "author": "Ecommerce Leads",
+            "homepage": "https://getecommerceleads.com/docs/"
+          },
+          "overview": "## Ecommerce Leads Remote MCP Server\n\nThe ecommerce-leads MCP server is the official hosted MCP endpoint of Ecommerce Leads. It lets AI assistants look up any ecommerce store by domain and get estimated monthly revenue, marketing budget, organic and paid traffic, Google and Meta ad spend, active ad counts, a Conversion Rate Score, buying signals, and social and ad-library links. The lookupStore tool works without login. After an OAuth 2.1 login (PKCE, dynamic client registration), the other tools search 600,000+ stores, reveal decision-maker contacts (this spends account credits), and manage signal sets, watchlists and outreach status."
+        }
+      }
+    }
+  }
+}
