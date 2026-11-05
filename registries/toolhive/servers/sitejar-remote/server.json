@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/sitejar-remote",
+  "title": "Sitejar (Remote)",
+  "description": "Scan a web page for accessibility, security, privacy, SEO, quality and deceptive design issues, with fix guidance",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.sitejar.app/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.sitejar.app/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "overview": "## Sitejar Remote MCP Server\n\nSitejar's remote MCP server lets an AI assistant scan a single web page across six areas: accessibility, security, privacy, deceptive design, quality and SEO. It returns an overall picture, per-area scores and the issues found, and it can give source-level fix guidance that your own model applies to the code. It uses streamable HTTP with OAuth 2.1 and PKCE, so you approve access once on sitejar.app with your normal Sitejar account. Scans are single-page and rate-limited per plan, and the Free plan works with it.",
+          "tags": [
+            "remote",
+            "accessibility",
+            "wcag",
+            "security",
+            "privacy",
+            "seo",
+            "web-scanner",
+            "oauth"
+          ],
+          "tools": [
+            "scan_website",
+            "get_scan_result",
+            "get_issues",
+            "get_category_result",
+            "get_fix_guidance"
+          ],
+          "custom_metadata": {
+            "author": "Sitejar",
+            "homepage": "https://sitejar.app/mcp"
+          }
+        }
+      }
+    }
+  }
+}
