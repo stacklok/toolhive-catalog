@@ -1,0 +1,110 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/harbor-mcp",
+  "title": "Harbor",
+  "description": "Read-only access to a Harbor container registry: projects, artifacts, vulnerabilities, robot accounts, replication and garbage collection",
+  "repository": {
+    "url": "https://github.com/oreondev/harbor-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/oreondev/harbor-mcp:0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "HARBOR_URL",
+          "description": "Harbor base URL, for example https://harbor.example.com",
+          "isRequired": true
+        },
+        {
+          "name": "HARBOR_USERNAME",
+          "description": "Harbor user or robot account name; a read-only system robot is recommended",
+          "isRequired": true
+        },
+        {
+          "name": "HARBOR_PASSWORD",
+          "description": "Password or robot secret",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "HARBOR_INSECURE_SKIP_VERIFY",
+          "description": "Set to true to skip TLS verification of Harbor"
+        },
+        {
+          "name": "HARBOR_MCP_RATE",
+          "description": "Requests per second to Harbor",
+          "default": "10"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "ghcr.io/oreondev/harbor-mcp:0.1.1": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "harbor",
+            "container-registry",
+            "oci",
+            "kubernetes",
+            "devops",
+            "vulnerabilities",
+            "security",
+            "read-only"
+          ],
+          "tools": [
+            "harbor_get_gc",
+            "harbor_get_project",
+            "harbor_get_vulnerabilities",
+            "harbor_list_artifacts",
+            "harbor_list_members",
+            "harbor_list_projects",
+            "harbor_list_registries",
+            "harbor_list_replications",
+            "harbor_list_repositories",
+            "harbor_list_robots",
+            "harbor_list_webhooks",
+            "harbor_system_info"
+          ],
+          "overview": "## Harbor MCP Server\n\nA read-only MCP server for Harbor, the open-source container registry. It lets AI assistants answer questions about a running Harbor: projects and quotas, repositories and artifacts, vulnerability scan results, robot accounts and members, replication health, webhooks and garbage collection. None of the tools changes anything in Harbor, and credentials, robot secrets and webhook authorization headers never appear in tool results.\n\nRun it as a read-only Harbor robot account; the permissions are documented in the repository (`docs/read-only-robot.json`).",
+          "permissions": {
+            "network": {
+              "outbound": {
+                "insecure_allow_all": true
+              }
+            }
+          },
+          "provenance": {
+            "cert_issuer": "https://token.actions.githubusercontent.com",
+            "repository_uri": "https://github.com/oreondev/harbor-mcp",
+            "runner_environment": "github-hosted",
+            "signer_identity": "/.github/workflows/release.yml",
+            "sigstore_url": "tuf-repo-cdn.sigstore.dev"
+          },
+          "custom_metadata": {
+            "author": "Oreon IT",
+            "homepage": "https://www.oreonit.com/harbor-mcp/",
+            "license": "Apache-2.0"
+          }
+        }
+      }
+    }
+  },
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/harbor-mcp/icon.svg"
+    }
+  ]
+}
