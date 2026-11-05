@@ -1,0 +1,66 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://crakseo.com/mcp/seo": {
+          "custom_metadata": {
+            "author": "CrakSEO",
+            "homepage": "https://crakseo.com/mcp"
+          },
+          "overview": "## CrakSEO SEO Tools Remote MCP Server\n\nCrakSEO SEO Tools is a hosted remote MCP server that gives AI assistants live SEO data: keyword research with search volume, difficulty and CPC; live Google and Bing results with AI Overview sources; Google rankings, ranked keywords and competitor keyword gaps; backlinks, referring domains and anchor text; on-page and Lighthouse audits with Core Web Vitals; Google Maps rankings and Business Profile details; and brand mentions in ChatGPT and Perplexity. It uses Streamable HTTP with OAuth 2.1 (protected resource metadata, dynamic client registration and PKCE) or an API key. Paid tools draw on prepaid credits with the price shown before each call; checking the balance is free.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "seo",
+            "keyword-research",
+            "serp",
+            "backlinks",
+            "rank-tracking",
+            "site-audit",
+            "ai-visibility",
+            "oauth",
+            "marketing"
+          ],
+          "tier": "Community",
+          "tools": [
+            "check_google_rankings",
+            "get_google_serp",
+            "get_bing_serp",
+            "get_ai_overview_sources",
+            "check_google_maps_rankings",
+            "get_keyword_search_volume",
+            "find_keyword_ideas",
+            "get_keyword_difficulty",
+            "check_backlinks",
+            "get_referring_domains",
+            "get_backlink_anchors",
+            "get_ranked_keywords",
+            "find_competitor_keywords",
+            "find_competitor_domains",
+            "run_seo_site_audit",
+            "get_page_speed_scores",
+            "get_google_business_profile",
+            "check_chatgpt_brand_mentions",
+            "check_perplexity_brand_mentions",
+            "get_api_credit_balance"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Live keyword, SERP, rank, backlink, site audit and AI visibility data for AI agents, over OAuth 2.1",
+  "name": "io.github.stacklok/crakseo-seo-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://crakseo.com/mcp/seo"
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/CrakSEO/crakseo-mcp-plugins",
+    "source": "github"
+  },
+  "title": "CrakSEO SEO Tools (Remote)",
+  "version": "1.0.0"
+}
