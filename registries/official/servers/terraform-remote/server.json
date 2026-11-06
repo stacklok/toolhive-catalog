@@ -9,7 +9,11 @@
             "homepage": "https://developer.hashicorp.com/terraform/mcp-server/deploy/remote-mcp",
             "license": "MPL-2.0"
           },
-          "overview": "## Terraform (Remote)\n\nHashiCorp's hosted Terraform MCP server provides access to HCP Terraform organizations, workspaces, runs, private registries, and the public Terraform registry. The remote service is in beta and connects to HCP Terraform; it does not accept an alternate Terraform Enterprise address.\n\n### Setup\n\nYou need an HCP Terraform account and a user or team API token with permission to access the required resources. Send the token on every request as `Authorization: Bearer <TOKEN>`, for example with `thv run terraform-remote --remote-auth-bearer-token-file <TOKEN_FILE>`. This authentication path requires no OAuth application, dynamic client registration, or interactive sign-in. If configuring the Authorization header directly, its secret value must include the Bearer prefix; the token-file option takes only the raw token.\n\nThe server also accepts a `TFE_TOKEN` header, but Authorization takes precedence. Tokens in URL query parameters and custom Terraform addresses in headers or query parameters are rejected. An organization token cannot perform some operations, including starting runs, so use the documented user or team token type. The hosted integration is not currently available for HCP Europe organizations. See the [connection guide](https://developer.hashicorp.com/terraform/mcp-server/deploy/remote-mcp) and [integration requirements](https://developer.hashicorp.com/terraform/cloud-docs/integrations/mcp-server) for beta availability and token permissions.",
+          "metadata": {
+            "last_updated": "2026-11-06T02:16:48Z",
+            "stars": 1556
+          },
+          "overview": "## Terraform (Remote)\n\nHashiCorp's hosted Terraform MCP server provides access to HCP Terraform organizations, workspaces, runs, private registries, and the public Terraform registry. The remote service is in beta and connects to HCP Terraform; it does not accept an alternate Terraform Enterprise address.\n\n### Setup\n\nYou need an HCP Terraform account and a user or team API token with permission to access the required resources. Send the token on every request as `Authorization: Bearer \u003cTOKEN\u003e`, for example with `thv run terraform-remote --remote-auth-bearer-token-file \u003cTOKEN_FILE\u003e`. This authentication path requires no OAuth application, dynamic client registration, or interactive sign-in. If configuring the Authorization header directly, its secret value must include the Bearer prefix; the token-file option takes only the raw token.\n\nThe server also accepts a `TFE_TOKEN` header, but Authorization takes precedence. Tokens in URL query parameters and custom Terraform addresses in headers or query parameters are rejected. An organization token cannot perform some operations, including starting runs, so use the documented user or team token type. The hosted integration is not currently available for HCP Europe organizations. See the [connection guide](https://developer.hashicorp.com/terraform/mcp-server/deploy/remote-mcp) and [integration requirements](https://developer.hashicorp.com/terraform/cloud-docs/integrations/mcp-server) for beta availability and token permissions.",
           "status": "Active",
           "tags": [
             "remote",
@@ -96,7 +100,7 @@
     {
       "headers": [
         {
-          "description": "HCP Terraform user or team API token, including the Bearer prefix: Bearer <TOKEN>",
+          "description": "HCP Terraform user or team API token, including the Bearer prefix: Bearer \u003cTOKEN\u003e",
           "isRequired": true,
           "isSecret": true,
           "name": "Authorization"
