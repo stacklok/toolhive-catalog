@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "dev.jobspipe/mcp",
+  "title": "JobsPipe",
+  "description": "Live job postings from 30+ ATS feeds and job boards, one schema. Sign in with OAuth, or use a key.",
+  "version": "1.0.2",
+  "websiteUrl": "https://jobspipe.dev",
+  "repository": {
+    "url": "https://github.com/jobspipe/mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-catalog/main/registries/toolhive/servers/jobspipe/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.jobspipe.dev/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.jobspipe.dev/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": ["jobs", "ats", "hiring", "career", "remote", "search", "oauth"],
+          "tools": ["search_jobs", "list_pricing_plans", "give_feedback", "create_signal"],
+          "custom_metadata": {
+            "author": "JobsPipe",
+            "homepage": "https://jobspipe.dev"
+          },
+          "overview": "## JobsPipe\n\nHosted Model Context Protocol server for live, normalized job search across 30+ ATS feeds and job boards. Connect at `https://mcp.jobspipe.dev/mcp` over streamable HTTP, sign in with a free JobsPipe account when prompted, and let agents search postings by title, skill, country, remote, and seniority. Docs: https://docs.jobspipe.dev"
+        }
+      }
+    }
+  }
+}
