@@ -183,7 +183,7 @@ jobs:
       - name: Install ToolHive
         uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0
         with:
-          version: 'v0.59.0'
+          version: 'v0.62.0'
 
       - name: Build catalog
         run: |
