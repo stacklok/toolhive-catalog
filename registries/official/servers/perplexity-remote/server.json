@@ -9,7 +9,11 @@
             "homepage": "https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server",
             "license": "MIT"
           },
-          "overview": "## Perplexity (Remote)\n\nPerplexity's hosted MCP server provides web search, source-grounded answers, reasoning, and research through the Perplexity API platform. It offers the same four tools as the official local implementation without a local runtime.\n\n### Setup\n\nCreate a Perplexity API account at the [API console](https://console.perplexity.ai), configure API billing or credits, and generate an API key. API usage is billed separately from a Perplexity consumer subscription. Run `thv run perplexity-remote --remote-auth-bearer-token-file <TOKEN_FILE>` to send `Authorization: Bearer <PERPLEXITY_API_KEY>` on requests. The token file contains only the raw API key; if setting the Authorization header directly, include the Bearer prefix in its secret value.\n\nThis API-key flow requires no OAuth application, dynamic client registration, browser sign-in, or other custom headers. Calls consume API credits, and research operations can take longer than ordinary searches. See the [official MCP setup guide](https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server) for authentication, tools, and client configuration.",
+          "metadata": {
+            "last_updated": "2026-11-06T02:16:47Z",
+            "stars": 2611
+          },
+          "overview": "## Perplexity (Remote)\n\nPerplexity's hosted MCP server provides web search, source-grounded answers, reasoning, and research through the Perplexity API platform. It offers the same four tools as the official local implementation without a local runtime.\n\n### Setup\n\nCreate a Perplexity API account at the [API console](https://console.perplexity.ai), configure API billing or credits, and generate an API key. API usage is billed separately from a Perplexity consumer subscription. Run `thv run perplexity-remote --remote-auth-bearer-token-file \u003cTOKEN_FILE\u003e` to send `Authorization: Bearer \u003cPERPLEXITY_API_KEY\u003e` on requests. The token file contains only the raw API key; if setting the Authorization header directly, include the Bearer prefix in its secret value.\n\nThis API-key flow requires no OAuth application, dynamic client registration, browser sign-in, or other custom headers. Calls consume API credits, and research operations can take longer than ordinary searches. See the [official MCP setup guide](https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server) for authentication, tools, and client configuration.",
           "status": "Active",
           "tags": [
             "remote",
@@ -44,7 +48,7 @@
     {
       "headers": [
         {
-          "description": "Perplexity API key including the Bearer prefix: Bearer <API_KEY>",
+          "description": "Perplexity API key including the Bearer prefix: Bearer \u003cAPI_KEY\u003e",
           "isRequired": true,
           "isSecret": true,
           "name": "Authorization"
