@@ -1,0 +1,84 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.istfin.com/mcp": {
+          "custom_metadata": {
+            "author": "istfin",
+            "homepage": "https://api.istfin.com/mcp"
+          },
+          "oauth_config": {
+            "authorize_url": "https://api.istfin.com/oauth/authorize",
+            "token_url": "https://api.istfin.com/oauth/token",
+            "scopes": [
+              "market:read",
+              "fundamentals:read",
+              "news:read",
+              "account:read",
+              "portfolio:read",
+              "portfolio:write"
+            ],
+            "use_pkce": true
+          },
+          "overview": "## istfin (Remote)\n\nistfin's official hosted MCP server for licensed Borsa Istanbul (BIST) market data. It gives AI assistants live or 15-minute delayed prices, OHLCV bars from 1 minute to monthly, financial statements, valuation ratios, KAP disclosures, indices and sectors for 600+ Turkish stocks. Assistants can also run indicator-based strategy backtests and track the user's portfolio. Users sign in with their istfin account over OAuth; the server never places orders.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "finance",
+            "market-data",
+            "stocks",
+            "borsa-istanbul",
+            "bist",
+            "turkey",
+            "oauth"
+          ],
+          "tier": "Official",
+          "tools": [
+            "search_symbols",
+            "get_symbol",
+            "get_quotes",
+            "get_movers",
+            "get_bars",
+            "get_fundamentals",
+            "get_financial_statement",
+            "get_ratio_series",
+            "search_news",
+            "get_news",
+            "list_indexes",
+            "get_index",
+            "list_sectors",
+            "list_indicators",
+            "describe_indicator",
+            "run_strategy",
+            "list_portfolios",
+            "get_portfolio",
+            "get_portfolio_performance",
+            "analyze_holdings",
+            "create_portfolio",
+            "add_portfolio_transactions"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Licensed Borsa Istanbul (BIST) market data, financials, KAP filings, backtests and portfolios",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/istfin-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/istfin-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.istfin.com/mcp"
+    }
+  ],
+  "title": "istfin (Remote)",
+  "version": "1.0.0"
+}

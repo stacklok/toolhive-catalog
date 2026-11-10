@@ -1,0 +1,37 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<path id="squircle" d="M674.0 0.0L716.9 0.1L739.7 0.5L758.2 1.0L774.3 1.8L789.0 2.9L802.4 4.1L814.9 5.6L826.7 7.4L837.9 9.3L848.4 11.5L858.5 13.9L868.1 16.6L877.4 19.5L886.2 22.6L894.6 26.0L902.8 29.6L910.6 33.4L918.0 37.5L925.2 41.8L932.1 46.3L938.7 51.1L945.1 56.2L951.1 61.5L957.0 67.0L962.5 72.9L967.8 78.9L972.9 85.3L977.7 91.9L982.2 98.8L986.5 106.0L990.6 113.4L994.4 121.2L998.0 129.4L1001.4 137.8L1004.5 146.6L1007.4 155.9L1010.1 165.5L1012.5 175.6L1014.7 186.1L1016.6 197.3L1018.4 209.1L1019.9 221.6L1021.1 235.0L1022.2 249.7L1023.0 265.8L1023.5 284.3L1023.9 307.1L1024.0 350.0L1024.0 674.0L1023.9 716.9L1023.5 739.7L1023.0 758.2L1022.2 774.3L1021.1 789.0L1019.9 802.4L1018.4 814.9L1016.6 826.7L1014.7 837.9L1012.5 848.4L1010.1 858.5L1007.4 868.1L1004.5 877.4L1001.4 886.2L998.0 894.6L994.4 902.8L990.6 910.6L986.5 918.0L982.2 925.2L977.7 932.1L972.9 938.7L967.8 945.1L962.5 951.1L957.0 957.0L951.1 962.5L945.1 967.8L938.7 972.9L932.1 977.7L925.2 982.2L918.0 986.5L910.6 990.6L902.8 994.4L894.6 998.0L886.2 1001.4L877.4 1004.5L868.1 1007.4L858.5 1010.1L848.4 1012.5L837.9 1014.7L826.7 1016.6L814.9 1018.4L802.4 1019.9L789.0 1021.1L774.3 1022.2L758.2 1023.0L739.7 1023.5L716.9 1023.9L674.0 1024.0L350.0 1024.0L307.1 1023.9L284.3 1023.5L265.8 1023.0L249.7 1022.2L235.0 1021.1L221.6 1019.9L209.1 1018.4L197.3 1016.6L186.1 1014.7L175.6 1012.5L165.5 1010.1L155.9 1007.4L146.6 1004.5L137.8 1001.4L129.4 998.0L121.2 994.4L113.4 990.6L106.0 986.5L98.8 982.2L91.9 977.7L85.3 972.9L78.9 967.8L72.9 962.5L67.0 957.0L61.5 951.1L56.2 945.1L51.1 938.7L46.3 932.1L41.8 925.2L37.5 918.0L33.4 910.6L29.6 902.8L26.0 894.6L22.6 886.2L19.5 877.4L16.6 868.1L13.9 858.5L11.5 848.4L9.3 837.9L7.4 826.7L5.6 814.9L4.1 802.4L2.9 789.0L1.8 774.3L1.0 758.2L0.5 739.7L0.1 716.9L0.0 674.0L0.0 350.0L0.1 307.1L0.5 284.3L1.0 265.8L1.8 249.7L2.9 235.0L4.1 221.6L5.6 209.1L7.4 197.3L9.3 186.1L11.5 175.6L13.9 165.5L16.6 155.9L19.5 146.6L22.6 137.8L26.0 129.4L29.6 121.2L33.4 113.4L37.5 106.0L41.8 98.8L46.3 91.9L51.1 85.3L56.2 78.9L61.5 72.9L67.0 67.0L72.9 61.5L78.9 56.2L85.3 51.1L91.9 46.3L98.8 41.8L106.0 37.5L113.4 33.4L121.2 29.6L129.4 26.0L137.8 22.6L146.6 19.5L155.9 16.6L165.5 13.9L175.6 11.5L186.1 9.3L197.3 7.4L209.1 5.6L221.6 4.1L235.0 2.9L249.7 1.8L265.8 1.0L284.3 0.5L307.1 0.1L350.0 0.0Z"/>
+<clipPath id="shape"><use href="#squircle"/></clipPath>
+<linearGradient id="background" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#202024" stop-opacity="1"/><stop offset="0.5" stop-color="#0d0d0f" stop-opacity="1"/><stop offset="1" stop-color="#060607" stop-opacity="1"/></linearGradient>
+<radialGradient id="sheen" cx="512" cy="-120" r="820" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="white" stop-opacity="0.16"/><stop offset="1" stop-color="white" stop-opacity="0"/></radialGradient>
+<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="white" stop-opacity="0.34"/><stop offset="0.45" stop-color="white" stop-opacity="0.06"/><stop offset="1" stop-color="white" stop-opacity="0.12"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="620" x2="0" y2="1024" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="black" stop-opacity="0"/><stop offset="1" stop-color="black" stop-opacity="0.35"/></linearGradient>
+<filter id="mark-shadow-0" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="22"/><feOffset dy="18"/><feFlood flood-color="black" flood-opacity="0.55" result="tint"/><feComposite in="tint" in2="SourceAlpha" operator="in"/></filter><filter id="mark-shadow-1" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="4"/><feOffset dy="3"/><feFlood flood-color="black" flood-opacity="0.5" result="tint"/><feComposite in="tint" in2="SourceAlpha" operator="in"/></filter>
+
+<mask id="notch" maskUnits="userSpaceOnUse" x="198" y="198" width="628" height="628">
+<rect x="198" y="198" width="628" height="628" fill="white"/>
+<rect x="593" y="593" width="71" height="72" rx="16" fill="black"/>
+</mask>
+<g id="mark">
+<circle cx="288" cy="288" r="90" fill="#00C853"/>
+<g fill="white" mask="url(#notch)">
+<rect x="215.65" y="449.18" width="144" height="376.6" rx="36"/>
+<rect x="449" y="449.4" width="144" height="376.6" rx="36"/>
+<rect x="449" y="449" width="376.6" height="144" rx="36"/>
+<rect x="449" y="216" width="376.6" height="144" rx="36"/>
+<rect x="538" y="553" width="91" height="76"/>
+</g>
+</g>
+</defs>
+
+<g clip-path="url(#shape)">
+<rect width="1024" height="1024" fill="url(#background)"/>
+<rect width="1024" height="1024" fill="url(#sheen)"/>
+<rect width="1024" height="1024" fill="url(#floor)"/>
+<use href="#mark" filter="url(#mark-shadow-0)"/>
+<use href="#mark" filter="url(#mark-shadow-1)"/>
+<use href="#mark"/>
+
+<use href="#squircle" stroke="url(#rim)" stroke-width="10"/>
+</g>
+</svg>
