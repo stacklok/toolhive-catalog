@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/datacircle",
+  "description": "Find the best GTM APIs. Our MCP server is open to anyone, with no key.",
+  "title": "datacircle",
+  "websiteUrl": "https://datacircle.dev",
+  "version": "2.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.datacircle.dev/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://api.datacircle.dev/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": ["remote", "api", "gtm"],
+          "tools": ["list_apis", "search_plans"],
+          "custom_metadata": {
+            "author": "Datacircle",
+            "homepage": "https://datacircle.dev"
+          }
+        }
+      }
+    }
+  }
+}
