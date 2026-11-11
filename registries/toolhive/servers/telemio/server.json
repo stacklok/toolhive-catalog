@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "sh.telemio/observability",
+  "title": "Telemio Observability",
+  "description": "Hosted, authenticated observability MCP for querying workspace telemetry, inspecting runtimes and dashboards, and retrieving integration setup guidance.",
+  "repository": {
+    "url": "https://github.com/wundercorp/telemio-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.telemio.sh/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.telemio.sh/mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": [
+            "monitoring",
+            "observability",
+            "remote"
+          ],
+          "tools": [
+            "workspace_summary",
+            "query_telemetry",
+            "list_runtimes",
+            "get_runtime",
+            "list_dashboards",
+            "create_dashboard",
+            "list_integrations",
+            "integration_setup",
+            "console_link"
+          ]
+        }
+      }
+    }
+  }
+}
