@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jmoret/linkevio",
+  "title": "Linkevio",
+  "description": "Shared team knowledge: search, read and update project documents with per-user permissions.",
+  "version": "1.0.2",
+  "websiteUrl": "https://linkevio.com",
+  "remotes": [
+    {
+      "url": "https://app.linkevio.com/api/mcp",
+      "type": "streamable-http"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://app.linkevio.com/api/mcp": {
+          "tags": [
+            "remote",
+            "knowledge-management",
+            "productivity",
+            "documentation"
+          ],
+          "status": "Active",
+          "tier": "Community",
+          "custom_metadata": {
+            "homepage": "https://linkevio.com",
+            "author": "MFF LABS",
+            "authentication": "OAuth with dynamic client registration and per-user project permissions"
+          },
+          "tools": [
+            "set_during_runtime"
+          ]
+        }
+      }
+    }
+  }
+}
