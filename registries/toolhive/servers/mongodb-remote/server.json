@@ -9,6 +9,10 @@
             "homepage": "https://www.mongodb.com/docs/mcp-server/get-started/",
             "license": "Apache-2.0"
           },
+          "metadata": {
+            "last_updated": "2026-11-13T02:15:34Z",
+            "stars": 1161
+          },
           "overview": "## MongoDB Atlas (Remote)\n\nMongoDB's managed MCP server connects AI assistants to Atlas resources and database tools. Use it to inspect schemas, query documents, and work with Atlas under your own identity.\n\n### Setup\n\nYou need an Atlas account and roles that grant access to the relevant organization, projects, and clusters. An Organization Owner must enable Allow users to connect AI clients in Atlas and choose the permitted access mode before members can connect. Follow the [AI client access setup](https://www.mongodb.com/docs/mcp-server/remote-mcp/manage-ai-client-access/) for organization controls and supported deployments; Atlas Infinite clusters are not currently supported during public preview.\n\nRun `thv run mongodb-remote --remote-auth` and authorize with Atlas. MongoDB advertises Client ID Metadata Documents, so ToolHive can use its published client identity without a pre-created OAuth application. Use ToolHive's default callback port for that identity. This user-delegated flow needs no database connection string, static API key, or custom HTTP headers. Programmatic service-account access uses separately provisioned Atlas MCP configuration credentials and a different OAuth grant; ordinary Atlas API keys do not authenticate directly to this remote endpoint. See the [remote security guide](https://www.mongodb.com/docs/mcp-server/remote-mcp/security/) for identity, access modes, and audit behavior.",
           "status": "Active",
           "tags": [
