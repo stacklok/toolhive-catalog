@@ -1,0 +1,61 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/geoboom",
+  "title": "GEOboom",
+  "description": "Link building and mention outreach from your AI agent, with the permissions the owner approves.",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.geoboom.io/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://api.geoboom.io/mcp": {
+          "custom_metadata": {
+            "author": "GEOboom",
+            "homepage": "https://www.geoboom.io/docs/mcp"
+          },
+          "status": "Active",
+          "tier": "Community",
+          "tags": [
+            "remote",
+            "link-building",
+            "outreach",
+            "seo",
+            "marketing"
+          ],
+          "tools": [
+            "campaigns_resume",
+            "drafts_send",
+            "prospecting_run",
+            "jobs_get",
+            "prospecting_latestRun",
+            "prospects_list",
+            "org_get",
+            "projects_create",
+            "campaigns_create",
+            "prospecting_saveKeywords",
+            "prospecting_savePrompts",
+            "prospecting_setMode",
+            "prospects_import",
+            "prospects_setVerdict",
+            "prospects_planAutoFilter",
+            "prospects_autoFilter",
+            "threads_list",
+            "threads_get",
+            "threads_reply",
+            "deals_create",
+            "deals_update",
+            "deals_addPlacement",
+            "deals_updatePlacement",
+            "deals_list"
+          ],
+          "overview": "GEOboom is a platform for link building and mention outreach. This remote server lets an agent set up a project and a campaign, run prospecting, review found pages, read and answer replies, and record deals. Authentication is required: OAuth 2.1 with PKCE (dynamic client registration and client ID metadata documents), or an owner-created API key sent as a Bearer token. Scopes: read, campaigns:write, prospecting:spend, mail:send, deals:write. Sending email and spending credits need the matching scope, which the account owner approves. MCP is included in every GEOboom plan. Documentation: https://www.geoboom.io/docs/mcp"
+        }
+      }
+    }
+  }
+}
