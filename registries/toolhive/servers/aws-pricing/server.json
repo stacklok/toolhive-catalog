@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.1": {
+        "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.2": {
           "metadata": {
             "last_updated": "2026-10-05T22:37:47Z",
             "stars": 8594
@@ -605,7 +605,7 @@
           "name": "FASTMCP_LOG_LEVEL"
         }
       ],
-      "identifier": "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.1",
+      "identifier": "public.ecr.aws/f3y8w4n0/awslabs/aws-pricing-mcp-server:1.1.2",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
