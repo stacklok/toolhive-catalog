@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "mcr.microsoft.com/playwright/mcp:v0.0.83": {
+        "mcr.microsoft.com/playwright/mcp:v0.0.85": {
           "metadata": {
-            "last_updated": "2026-10-16T03:17:51Z",
+            "last_updated": "2026-11-13T04:15:07Z",
             "stars": 28552
           },
           "overview": "## Playwright MCP Server\n\nThe playwright MCP server provides browser automation capabilities using Playwright. The server enables comprehensive browser automation supporting Chromium, Firefox, and WebKit, with full control over page interactions including clicks, typing, navigation, and screenshots. Additional capabilities include network request monitoring, console message capture for debugging, form filling, file uploads, and dialog handling for complete workflow automation.",
@@ -34,12 +34,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Click"
               },
               "description": "Perform click on a web page",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "button": {
                     "description": "Button to click, defaults to left",
@@ -87,12 +90,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Close browser"
               },
               "description": "Close the page",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -102,12 +108,15 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Get console messages"
               },
               "description": "Returns all console messages",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "all": {
                     "description": "Return all console messages since the beginning of the session, not just since the last navigation. Defaults to false.",
@@ -139,12 +148,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Drag mouse"
               },
               "description": "Perform drag and drop between two elements",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "endElement": {
                     "description": "Human-readable target element description used to obtain the permission to interact with the element",
@@ -174,12 +186,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Drop files or data onto an element"
               },
               "description": "Drop files or MIME-typed data onto an element, as if dragged from outside the page. At least one of \"paths\" or \"data\" must be provided.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "data": {
                     "additionalProperties": {
@@ -217,12 +232,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Emulate media features"
               },
               "description": "Emulate CSS media features for the page, for example switch between the light and dark color scheme. Omitted parameters are left unchanged; null clears an override.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "colorScheme": {
                     "anyOf": [
@@ -308,12 +326,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Evaluate JavaScript"
               },
               "description": "Evaluate JavaScript expression on page or element",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "element": {
                     "description": "Human-readable element description used to obtain permission to interact with the element",
@@ -342,12 +363,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Upload files"
               },
               "description": "Upload one or multiple files",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "paths": {
                     "description": "The absolute paths to the files to upload. Can be single file or multiple files. If omitted, file chooser is cancelled.",
@@ -365,12 +389,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Fill form"
               },
               "description": "Fill multiple form fields",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "fields": {
                     "description": "Fields to fill in",
@@ -426,16 +453,23 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Find in page snapshot"
               },
               "description": "Search the accessibility snapshot of the current page for text or a regular expression. Returns matching snapshot nodes with a few lines of surrounding context (like search snippets), each shown under its path from the root of the tree, which is cheaper than capturing the whole snapshot when you only need to locate an element and its ref.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filename": {
                     "description": "Save results to a file instead of returning them in the response. Relative file names are resolved against the workspace root.",
                     "type": "string"
+                  },
+                  "maxResults": {
+                    "description": "Maximum number of matching items to return. Defaults to returning all matches.",
+                    "type": "number"
                   },
                   "regex": {
                     "description": "Regular expression to search for in the page snapshot. Matching is case-sensitive by default; wrap the pattern in slashes to add flags, e.g. \"/error/i\" for case-insensitive. Provide either text or regex, not both.",
@@ -454,12 +488,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Handle a dialog"
               },
               "description": "Handle a dialog",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "accept": {
                     "description": "Whether to accept the dialog.",
@@ -480,12 +517,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Hover mouse"
               },
               "description": "Hover over element on page",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "element": {
                     "description": "Human-readable element description used to obtain permission to interact with the element",
@@ -506,12 +546,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Navigate to a URL"
               },
               "description": "Navigate to a URL",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "url": {
                     "description": "The URL to navigate to",
@@ -528,12 +571,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Go back"
               },
               "description": "Go back to the previous page in the history",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -543,12 +589,15 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Show network request details"
               },
               "description": "Returns full details (headers and body) of a single network request, or a single part if `part` is set. Use the number from browser_network_requests.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filename": {
                     "description": "File name to save the result to. Relative file names are resolved against the workspace root. If not provided, output is returned as text.",
@@ -581,13 +630,20 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "List network requests"
               },
               "description": "Returns a numbered list of network requests since loading the page. Use browser_network_request with the number to get full details.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
+                  "all": {
+                    "description": "Return all network requests since the beginning of the session, not just since the last navigation. Defaults to false.",
+                    "type": "boolean"
+                  },
                   "filename": {
                     "description": "File name to save the network requests to. Relative file names are resolved against the workspace root. If not provided, requests are returned as text.",
                     "type": "string"
@@ -612,12 +668,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Press a key"
               },
               "description": "Press a key on the keyboard",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "key": {
                     "description": "Name of the key to press or a character to generate, such as `ArrowLeft` or `a`",
@@ -634,12 +693,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Resize browser window"
               },
               "description": "Resize the browser window",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "height": {
                     "description": "Height of the browser window",
@@ -661,12 +723,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Run Playwright code (unsafe)"
               },
               "description": "Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "code": {
                     "description": "A JavaScript function containing Playwright code to execute. It will be invoked with a single argument, page, which you can use for any page interaction. For example: `async (page) =\u003e { await page.getByRole('button', { name: 'Submit' }).click(); return await page.title(); }`",
@@ -685,12 +750,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Select option"
               },
               "description": "Select an option in a dropdown",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "element": {
                     "description": "Human-readable element description used to obtain permission to interact with the element",
@@ -719,12 +787,15 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Page snapshot"
               },
               "description": "Capture accessibility snapshot of the current page, this is better than screenshot",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "boxes": {
                     "description": "Include each element's bounding box as [box=x,y,width,height] in the snapshot. Coordinates are viewport-relative, in CSS pixels (Element.getBoundingClientRect)",
@@ -751,12 +822,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Manage tabs"
               },
               "description": "List, create, close, or select a browser tab.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "action": {
                     "description": "Operation to perform",
@@ -771,6 +845,10 @@
                   "index": {
                     "description": "Tab index, used for close/select. If omitted for close, current tab is closed.",
                     "type": "number"
+                  },
+                  "isolatedContext": {
+                    "description": "Name of an isolated browser context to create the new tab in, used for new. Tabs in the same isolated context share cookies and storage, tabs in different contexts are fully isolated. If omitted or \"default\", the tab is created in the default context.",
+                    "type": "string"
                   },
                   "url": {
                     "description": "URL to navigate to in the new tab, used for new.",
@@ -787,12 +865,15 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Take a screenshot"
               },
-              "description": "Take a screenshot of the current page. You can't perform actions based on the screenshot, use browser_snapshot for actions.",
+              "description": "Take a screenshot of the current page. Use browser_snapshot for actions by default. With the vision capability enabled, use screenshot coordinates with the coordinate-based mouse tools for elements not exposed in the accessibility snapshot.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "element": {
                     "description": "Human-readable element description used to obtain permission to interact with the element",
@@ -839,12 +920,15 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Type text"
               },
               "description": "Type text into editable element",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "element": {
                     "description": "Human-readable element description used to obtain permission to interact with the element",
@@ -878,12 +962,15 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Wait for"
               },
-              "description": "Wait for text to appear or disappear or a specified time to pass",
+              "description": "Wait for text to appear or disappear or a specified time to pass. When both text and textGone are provided, waits for the first one to happen",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "text": {
                     "description": "The text to wait for",
@@ -894,7 +981,7 @@
                     "type": "string"
                   },
                   "time": {
-                    "description": "The time to wait in seconds, at most 30",
+                    "description": "The time to wait in seconds, at most 30. When combined with text or textGone, serves as a timeout for them instead of the default action timeout",
                     "type": "number"
                   }
                 },
@@ -1118,7 +1205,7 @@
           "name": "PLAYWRIGHT_MCP_VIEWPORT_SIZE"
         }
       ],
-      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.83",
+      "identifier": "mcr.microsoft.com/playwright/mcp:v0.0.85",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
