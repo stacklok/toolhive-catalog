@@ -3,12 +3,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/buildkite/buildkite-mcp-server:1.31.0": {
+        "ghcr.io/buildkite/buildkite-mcp-server:1.32.1": {
           "args": [
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-11-01T02:41:34Z",
+            "last_updated": "2026-11-19T22:32:12Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -46,6 +46,7 @@
               },
               "description": "Get information about the current API access token including its scopes and UUID",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "telemetry": {
                     "additionalProperties": false,
@@ -77,6 +78,7 @@
               },
               "description": "Cancel a running build on a Buildkite pipeline",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -121,6 +123,7 @@
               },
               "description": "Cancel a single command job without canceling the rest of its build; use cancel_build to cancel a whole build. Only command jobs that are scheduled, reserved, assigned, accepted, or running can be canceled. A job that has not started becomes 'canceled'; a running job becomes 'canceling' until its agent stops it. Returns the updated job",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "description": "Build number. Provide together with 'pipeline_slug' to cancel through the build-scoped endpoint. Omit both to cancel by organization and job ID alone",
@@ -168,6 +171,7 @@
               },
               "description": "Compare step outcomes, final-attempt retry counts and execution/scheduling times between builds in one pipeline. Defaults to the most recently created earlier successful build on the same branch; baseline_build_number overrides this. Matches step keys or, for unkeyed jobs, unique exact names with matching type, group, matrix and parallel coordinates. match_method identifies heuristic name_fallback matches; ambiguous or unnamed unkeyed jobs remain unmatched. A change in soft_failed (a failure allowed by soft_fail, which does not block the build) is state_changed, never newly_failing or recovered. Returns at most 100 comparisons, prioritizing failures, and optional bounded log evidence for up to three newly blocking failures: newly_failing jobs, then state_changed jobs that are now hard failures (for example soft-failed before). Scans at most 1000 jobs per build; refuses incomplete inventories. Historical co-occurrence does not prove a cause or that retrying is safe. Use get_build_failure_summary for deeper failure diagnosis.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "baseline_build_number": {
                     "description": "Baseline in the same pipeline. Omit to select the most recently created earlier successful build on the target branch (at most 500 candidates searched).",
@@ -224,6 +228,7 @@
               },
               "description": "Create an annotation on a build or specific job. Use scope='build' (default) or scope='job' with job_id",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "append": {
                     "description": "Append the body to an existing annotation with the same context",
@@ -297,6 +302,7 @@
               },
               "description": "Trigger a new build on a Buildkite pipeline for a specific commit and branch, with optional environment variables, metadata, and author information",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "type": "string"
@@ -400,6 +406,7 @@
               },
               "description": "Create a cache registry in a cluster. Optional metadata and policy may be omitted, set, or explicitly cleared",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -473,6 +480,7 @@
               },
               "description": "Create a new cluster in an organization",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "color": {
                     "description": "Hex color code for the cluster (e.g. #A9CCE3)",
@@ -525,6 +533,7 @@
               },
               "description": "Create a new queue in a cluster",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -573,6 +582,7 @@
               },
               "description": "Create cluster secret",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -631,6 +641,7 @@
               },
               "description": "Set up a new CI/CD pipeline in Buildkite with YAML configuration or an approved pipeline template, repository connection, and cluster assignment",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch_configuration": {
                     "description": "Branch filter; omission or null uses the API's null default",
@@ -874,6 +885,7 @@
               },
               "description": "Create a new pipeline schedule that triggers builds on a cron-driven interval",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "description": "Target branch (defaults to the pipeline default branch)",
@@ -949,6 +961,7 @@
               },
               "description": "Create a GitHub webhook for an existing pipeline configured with a compatible Buildkite GitHub App",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -988,6 +1001,7 @@
               },
               "description": "Get details about the user account that owns the API token, including name, email, avatar, and account creation date",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "telemetry": {
                     "additionalProperties": false,
@@ -1019,6 +1033,7 @@
               },
               "description": "Disable traditional GitHub webhook processing and return its state to avoid duplicate builds during cutover. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not delete repository webhooks or disable dedicated GitHub Actions triggers",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -1059,6 +1074,7 @@
               },
               "description": "Enable traditional GitHub webhook processing and return its state. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not create repository webhooks or change dedicated GitHub Actions triggers",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -1098,6 +1114,7 @@
               },
               "description": "Get detailed information about a specific agent including its connection state, host details, current job, metadata, and pause status",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "agent_id": {
                     "type": "string"
@@ -1141,6 +1158,7 @@
               },
               "description": "Get a specific artifact by organization, pipeline, build, job, and artifact identifiers. Text artifacts under 64 KiB are returned inline in `content`; larger or binary artifacts return metadata plus a short-lived `download_url`. When `download_url_auth` is \"none\" the URL is presigned (a buildkiteartifacts.com S3 link) — fetch it with a plain GET and NO Authorization header. It expires after `download_url_expires_in_seconds`; if it has expired, call this tool again for a fresh URL.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "artifact_id": {
                     "description": "The UUID of the artifact to download",
@@ -1194,6 +1212,7 @@
               },
               "description": "Get a single build with lightweight annotation summaries. Annotation bodies and jobs are not included — use list_annotations to read annotations, list_jobs or get_job for job detail, and list_step_uploads to see the dynamic pipeline configuration the build received via `buildkite-agent pipeline upload`",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -1237,6 +1256,7 @@
               },
               "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: ran and failed, but the step's soft_fail setting in the pipeline allowed that exit status, so they did not block the build; soft_failed is authoritative, so the pipeline configuration is not needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Each failed test also carries its Test Engine labels, such as 'flaky', and executions_count_by_result for its attempts within that job (failed: 2 means the first run and a retry both failed, which is why the job log can report more failures than failed_tests lists), so there is no need to call a test tool or get_failed_executions for them. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Unrendered annotation content is in body (Markdown or HTML; safety filtering still applies); artifact:// references in it name artifacts of this build, which you can fetch with list_artifacts_for_build and get_artifact. Start with this tool before calling individual job, log, annotation, or test tools.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -1339,6 +1359,7 @@
               },
               "description": "Get test engine runs data for a specific build in Buildkite. This can be used to look up Test Runs.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -1382,6 +1403,7 @@
               },
               "description": "Get a cache registry by UUID, including its structured access policy",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -1426,6 +1448,7 @@
               },
               "description": "Get detailed information about a specific cluster including its name, description, default queue, and configuration",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -1465,6 +1488,7 @@
               },
               "description": "Get detailed information about a specific queue including its key, description, dispatch status, and hosted agent configuration",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -1508,6 +1532,7 @@
               },
               "description": "Get cluster secret information",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -1551,6 +1576,7 @@
               },
               "description": "Get failed test executions for a specific test run in Buildkite Test Engine. Optionally get the expanded failure details such as full error messages and stack traces.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "include_failure_expanded": {
                     "description": "Include expanded failure details such as full error messages and stack traces",
@@ -1606,6 +1632,7 @@
               },
               "description": "Get a single job by its UUID. Provide 'pipeline_slug' and 'build_number' for a build-scoped lookup, or omit both to look the job up by organization and job ID alone",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "description": "Build number. Provide together with 'pipeline_slug' for a build-scoped lookup. Omit both to look up the job by organization and job ID alone",
@@ -1653,10 +1680,51 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Get Job Concurrency"
+              },
+              "description": "Get concurrency configuration and stored state for a job UUID, plus visible jobs from a bounded set of active predecessors of a limited target in submission order. Not a complete blocker list or an execution-order guarantee; empty items do not establish that there are no blockers",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "job_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "job_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_job_concurrency"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Get Job Environment Variables"
               },
               "description": "Get the environment variables for a specific job in a Buildkite build",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -1704,6 +1772,7 @@
               },
               "description": "Get detailed information about a specific pipeline including its configuration, steps, environment variables, and build statistics",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "detail_level": {
                     "description": "Response detail level: 'summary', 'detailed', or 'full' (default)",
@@ -1747,6 +1816,7 @@
               },
               "description": "Get traditional GitHub webhook processing state. Requires Full Access to a GitHub or GitHub Enterprise pipeline and expanded-webhook enrollment; unavailable controls return 404. Does not describe dedicated GitHub Actions triggers",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -1786,6 +1856,7 @@
               },
               "description": "Get detailed information about a single pipeline schedule including its cron expression, target branch, environment variables, enabled state, last failure, and next build time",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -1829,6 +1900,7 @@
               },
               "description": "Get a repository connection's service account, host, and provider rate limit. rate_limit is the cached GitHub installation core API quota for this connection (limit, used, remaining, reset_at), not the Buildkite API rate limit; it is null when the quota is unavailable or does not apply to the connection type. If reset_at is in the past, the quota has reset since it was cached, so treat used and remaining as stale. Requires organization administrator access",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "connection_id": {
                     "description": "Repository connection UUID from list_repository_connections",
@@ -1869,6 +1941,7 @@
               },
               "description": "Get a single dynamic pipeline upload including its pipeline definition rendered as YAML (definition_yaml). Definitions over the API's render limit are omitted: definition_yaml is omitted, definition_yaml_omitted is true and definition_bytes reports the size. Only available while the build is within its maximum lifetime (~30 days); older builds return 410 Gone",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -1917,6 +1990,7 @@
               },
               "description": "Get a specific test in Buildkite Test Engine, including execution metrics aggregated over a selected time window. This provides additional metadata for failed test executions. The response also includes transition_count_score and probabilistic_flakiness_score, which help judge whether a failure is flaky. Each score is absent unless the suite has a monitor of that type and the monitor has scored the test. The time window does not apply to them.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "max_timestamp": {
                     "description": "End of the aggregation window in RFC3339 format. Defaults to the current time when omitted.",
@@ -1972,6 +2046,7 @@
               },
               "description": "Get a specific test run in Buildkite Test Engine",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2015,6 +2090,7 @@
               },
               "description": "Inspect a configured Buildkite Test Engine workflow by UUID, including its monitor conditions, filters, alarm/recovery actions, and links. Webhook endpoints are always redacted. Describes configured behavior, not event history or proof that an action ran.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2060,6 +2136,7 @@
               },
               "description": "List agents in an organization with their connection state, host details, version, current job, and pause status",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_queue_id": {
                     "description": "Filter agents by cluster queue ID (UUID)",
@@ -2120,6 +2197,7 @@
               },
               "description": "List annotations for a build or a specific job. Use scope='build' (default) or scope='job' with job_id. By default each annotation's unrendered content is in body (Markdown or HTML; safety filtering still applies); artifact:// references in it name artifacts of this build, which you can fetch with list_artifacts_for_build and get_artifact. Set body_format='html' to get the rendered HTML in body_html instead",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "body_format": {
                     "description": "'raw' (default) returns unrendered content in body; 'html' returns rendered HTML in body_html instead",
@@ -2183,6 +2261,7 @@
               },
               "description": "List all artifacts for a build across all jobs, including filenames, paths, sizes, and MIME types. Output can be large for big builds — use per_page and paginate. To fetch an artifact's contents or a download URL, call get_artifact with that artifact's id and job_id.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -2234,6 +2313,7 @@
               },
               "description": "List all artifacts for an individual job, including filenames, paths, sizes, and MIME types. To fetch an artifact's contents or a download URL, call get_artifact with that artifact's id and job_id.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -2289,6 +2369,7 @@
               },
               "description": "List builds, newest first, for a pipeline or, when pipeline_slug is omitted, across all pipelines in an organization. Returns lightweight summaries including pipeline_slug, creator and finished_at; jobs are not included — use list_jobs or get_job for job detail. Org-wide listings without created_from can time out. For questions spanning many builds, filter by state, branch, creator and date with per_page 100 instead of calling get_build per build",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "description": "Filter builds by git branch name",
@@ -2364,6 +2445,7 @@
               },
               "description": "List cache registries in a cluster, ordered by slug. Returns items and cursor pagination links",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "after": {
                     "description": "Cursor from links.next in a previous response; mutually exclusive with before",
@@ -2415,6 +2497,7 @@
               },
               "description": "List all queues in a cluster with their keys, descriptions, dispatch status, and agent configuration",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -2462,6 +2545,7 @@
               },
               "description": "List cluster secrets",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -2509,6 +2593,7 @@
               },
               "description": "List all clusters in an organization with their names, descriptions, default queues, and creation details",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2552,6 +2637,7 @@
               },
               "description": "List jobs for a Buildkite build, returning an actionable summary by default. For CI failure diagnosis, use state='failed,timed_out,expired' to avoid returning successful jobs, and investigate jobs without soft_failed first: soft_failed true means the job ran and failed but soft_fail allowed its exit status, so it did not block the build. Broken jobs never ran because pipeline configuration excluded them; they are not failures. Use detail_level='detailed' for execution metadata or 'full' for the existing full MCP job response. Returns 'items' and cursor pagination 'links'",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "after": {
                     "description": "Cursor for the next page. Take this from the 'links.next' URL of a previous response. Mutually exclusive with 'before'",
@@ -2634,6 +2720,7 @@
               },
               "description": "List the pipeline schedules for a pipeline, including cron expression, target branch, environment variables, enabled state, and next scheduled build time",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2681,6 +2768,7 @@
               },
               "description": "List all pipelines in an organization with their basic details, build counts, and current status",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "detail_level": {
                     "description": "Response detail level: 'summary' (default), 'detailed', or 'full'",
@@ -2736,6 +2824,7 @@
               },
               "description": "List an organization's source control repository connections, such as GitHub apps, Bitbucket Server, and GitLab Self-Managed. Returns all connections unpaginated with id, type, display_name, and url only; use get_repository_connection for host details and GitHub provider rate limits. Requires organization administrator access",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2771,6 +2860,7 @@
               },
               "description": "List available skill guides that document usage patterns, pitfalls, and workflows for Buildkite MCP tools",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "query": {
                     "description": "Optional case-insensitive filter over skill name and description",
@@ -2805,6 +2895,7 @@
               },
               "description": "List top span-name statistics for an OpenTelemetry instrumentation scope in a Test Engine suite. Returns counts, summed durations, averages, approximate p50/p95 percentiles, maximum durations, and a truncation indicator. All durations are in nanoseconds. Durations are inclusive; nested spans overlap, so do not add their durations together. Aggregates have hourly precision and one-month retention. Requires OTel trace ingestion to be enabled. An unknown scope returns an empty list; results are not paginated.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "limit": {
                     "description": "Maximum span names to return (1-100); defaults to 20. span_names_truncated indicates more names exist.",
@@ -2861,6 +2952,7 @@
               },
               "description": "List top span-name statistics for an OpenTelemetry instrumentation scope across a build's visible Test Engine suites. Returns counts, summed durations, averages, approximate p50/p95 percentiles, maximum durations, and a truncation indicator. All durations are in nanoseconds. Durations are inclusive; nested spans overlap, so do not add their durations together. Requires access to the build's pipeline. An unknown scope returns an empty list; results are not paginated.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_uuid": {
                     "description": "Buildkite build UUID, not the pipeline build number",
@@ -2914,6 +3006,7 @@
               },
               "description": "List OpenTelemetry instrumentation scopes for a Test Engine suite, ordered by total span duration descending. Start here for suite-wide bottlenecks; drill down with list_span_aggregate_names. Returns span counts and summed durations in nanoseconds, not wall-clock time. Durations are inclusive; nested spans overlap, so do not add their durations together. Aggregates have hourly precision and one-month retention. Requires OTel trace ingestion to be enabled. Results are not paginated.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -2957,6 +3050,7 @@
               },
               "description": "List OpenTelemetry instrumentation scopes across a build's visible Test Engine suites, ordered by total span duration descending. Start here for build-wide bottlenecks; drill down with list_span_aggregate_names_for_build. Returns span counts and summed durations in nanoseconds, not wall-clock time. Durations are inclusive; nested spans overlap, so do not add their durations together. Requires OTel trace ingestion to be enabled and access to the build's pipeline. Results are not paginated.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_uuid": {
                     "description": "Buildkite build UUID, not the pipeline build number",
@@ -2997,6 +3091,7 @@
               },
               "description": "List the dynamic pipeline uploads (`buildkite-agent pipeline upload`) a build received, newest first, without their definitions. Each item includes state, the uploading job (source_job_id), created_jobs_count (omitted until applied, 0 when applied but no jobs were created), and rejection details. Use get_step_upload to read an upload's pipeline definition. Only available while the build is within its maximum lifetime (~30 days); older builds return 410 Gone",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "after": {
                     "description": "Cursor from a previous response's links.next to fetch the next page",
@@ -3056,6 +3151,7 @@
               },
               "description": "List all test runs for a test suite in Buildkite Test Engine",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -3103,6 +3199,7 @@
               },
               "description": "List the Buildkite Test Engine suites that have recorded at least one run attributed to a pipeline, ordered by creation time. Use this to find the test_suite_slug needed by the other Test Engine tools.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -3150,6 +3247,7 @@
               },
               "description": "List configured workflows for a Buildkite Test Engine suite, newest first. Returns monitors, filters, alarm/recovery actions, and links. Webhook endpoints are always redacted. Use this to discover automation and labels used to mark flaky tests before querying list_tests. Use get_test_workflow to inspect one. Configuration does not prove an action ran or rank tests by flakiness.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "org_slug": {
                     "type": "string"
@@ -3198,6 +3296,7 @@
               },
               "description": "List tests in a Buildkite Test Engine suite with execution metrics aggregated over a selected time window. Supports filtering, metric sorting, and pagination.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "description": "Filter executions included in the metrics by branch. Prefix with '!' to exclude an exact branch or suffix with '*' to match by prefix, for example '!main' or 'feature*'. Use at most one operator.",
@@ -3289,6 +3388,7 @@
               },
               "description": "List tests and their execution metrics for a Buildkite build. Requires the build UUID (the build ID, not the pipeline build number) and supports filtering, metric sorting, and pagination.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "description": "Filter executions included in the metrics by branch. Prefix with '!' to exclude an exact branch or suffix with '*' for prefix matching, for example '!main' or 'feature*'. Use at most one operator.",
@@ -3365,6 +3465,7 @@
               },
               "description": "Load the full content of a skill guide by name",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "skill_name": {
                     "description": "Name of the skill to load, as returned by list_skills",
@@ -3402,6 +3503,7 @@
               },
               "description": "Pause dispatch on a cluster queue, preventing new jobs from being dispatched to agents",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -3449,6 +3551,7 @@
               },
               "description": "Read an OpenTelemetry trace summary for a Buildkite Test Engine execution, including category rollups and slowest spans. For build- or suite-wide bottlenecks, use span aggregates first.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "execution_id": {
                     "type": "string"
@@ -3492,6 +3595,7 @@
               },
               "description": "Read log entries from the file, optionally starting from a specific row number. ALWAYS use 'limit' parameter to avoid excessive tokens. For recent failures, use 'tail_logs' instead. Recommended limits: investigation (100-500), exploration (use seek + small limits). The json format: {ts: timestamp_ms, c: content, rn: row_number}.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "description": "Sequential build number, not the build UUID",
@@ -3558,6 +3662,7 @@
               },
               "description": "Rebuild/retry an entire build on a Buildkite pipeline",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -3602,6 +3707,7 @@
               },
               "description": "Resume dispatch on a paused cluster queue, allowing jobs to be dispatched to agents again",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -3646,6 +3752,7 @@
               },
               "description": "Retry the failed jobs in a build that are safe to retry, and report every job retried or skipped with a reason. Unlike the Buildkite REST API's retry_failed_jobs endpoint, which retries every job in the chosen failure states, this classifies each job and retries it individually. Only infrastructure failures are retried: expired, agent_lost (exit status -1 with no signal reason), agent_stop, agent_refused and stack_error. Soft-failed, canceled and timed-out jobs, command failures and other signal reasons are skipped because a retry would likely fail again or undo a deliberate stop. Use retry_job to retry a skipped job after inspecting it",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -3694,6 +3801,7 @@
               },
               "description": "Retry a specific failed or timed out job in a Buildkite build",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -3741,6 +3849,7 @@
               },
               "description": "Search log entries using regex patterns with optional context lines. For recent failures, try 'tail_logs' first, then use search_logs with patterns like 'error|failed|exception' and limit: 10-20. The json format: {ts: timestamp_ms, c: content, rn: row_number}.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "after_context": {
                     "description": "Lines after each match; ignored when context is nonzero",
@@ -3834,6 +3943,7 @@
               },
               "description": "Set a cluster's default cache registry by UUID. A cluster always has a default, so this switches it to another registry in the same cluster rather than clearing it. Returns the updated cluster",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -3878,6 +3988,7 @@
               },
               "description": "List the slowest test executions for a Buildkite build across every visible Test Engine suite, slowest first. Returns the identifiers needed by read_execution_trace and whether each execution has a trace.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_uuid": {
                     "description": "Buildkite build UUID. This is the build ID, not the pipeline build number.",
@@ -3922,6 +4033,7 @@
               },
               "description": "Show the last N entries from the log file. RECOMMENDED for failure diagnosis - most build failures appear in the final log entries. More token-efficient than read_logs for recent issues. The json format: {ts: timestamp_ms, c: content, rn: row_number}.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "description": "Sequential build number, not the build UUID",
@@ -3984,6 +4096,7 @@
               },
               "description": "Unblock a blocked job in a Buildkite build to allow it to continue execution",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -4039,6 +4152,7 @@
               },
               "description": "Update a cache registry by UUID. Omitted fields remain unchanged; nullable metadata and policy may be set or explicitly cleared",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -4117,6 +4231,7 @@
               },
               "description": "Update an existing cluster's name, description, emoji, color, or default queue",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -4192,6 +4307,7 @@
               },
               "description": "Update an existing cluster queue's description or retry agent affinity",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cluster_id": {
                     "type": "string"
@@ -4250,6 +4366,7 @@
               },
               "description": "Modify an existing Buildkite pipeline's configuration, repository, settings, or metadata",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch_configuration": {
                     "description": "Branch filter; null clears it, omission leaves it unchanged",
@@ -4508,6 +4625,7 @@
               },
               "description": "Modify an existing pipeline schedule's cron expression, branch, environment variables, or enabled state",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "branch": {
                     "type": [
@@ -4596,6 +4714,7 @@
               },
               "description": "Get the organization associated with the user token used for this request",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "telemetry": {
                     "additionalProperties": false,
@@ -4626,6 +4745,7 @@
               },
               "description": "Validate Buildkite pipeline YAML against the official pipeline schema without calling the Buildkite API. Use this to check a pipeline definition (e.g. .buildkite/pipeline.yml) before creating or updating a pipeline, or before committing pipeline changes",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "telemetry": {
                     "additionalProperties": false,
@@ -4662,6 +4782,7 @@
               },
               "description": "Wait for a build to reach a terminal state (passed, failed, canceled, skipped, not_run, or blocked on a block step), polling for up to 45 seconds. Returns finished=true along with the build once it settles. If the build is still in progress when the window closes it returns finished=false and the current state only, with no build detail — call this tool again to keep waiting. Judge a long build by build_elapsed_seconds, which counts from the build's own start time and does not reset between calls; waited_seconds covers only the latest call. Do not wait indefinitely: after roughly ten consecutive calls, stop and report the build as still running with its elapsed time rather than continuing to poll. Jobs and annotation bodies are never included — use list_jobs or get_job for job detail, and list_annotations to read annotations",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "build_number": {
                     "type": "string"
@@ -4726,6 +4847,7 @@
             "get_cluster_secret",
             "get_failed_executions",
             "get_job",
+            "get_job_concurrency",
             "get_job_env",
             "get_pipeline",
             "get_pipeline_github_webhook_processing",
@@ -4834,7 +4956,7 @@
           "name": "BUILDKITE_FAILURE_SUMMARY_MAX_JOBS"
         }
       ],
-      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.31.0",
+      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.32.1",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
