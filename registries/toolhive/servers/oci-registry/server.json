@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stackloklabs/ocireg-mcp/server:0.3.1": {
+        "ghcr.io/stackloklabs/ocireg-mcp/server:0.4.0": {
           "metadata": {
-            "last_updated": "2026-09-18T02:27:37Z",
+            "last_updated": "2026-11-19T22:38:02Z",
             "stars": 13
           },
           "overview": "## OCI Registry MCP Server\n\nThe oci-registry MCP server provides secure OCI container registry querying with image introspection and manifest retrieval. The tool enables users to analyze container images through streamlined access to OCI registries, supporting image metadata inspection, tag enumeration, manifest analysis, and secure querying via HTTP transport.",
@@ -43,9 +43,10 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "idempotentHint": false,
+                "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Get Image Config"
               },
               "description": "Get the config for an OCI image",
               "inputSchema": {
@@ -65,9 +66,10 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "idempotentHint": false,
+                "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Get Image Info"
               },
               "description": "Get information about an OCI image",
               "inputSchema": {
@@ -87,9 +89,10 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "idempotentHint": false,
+                "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Get Image Manifest"
               },
               "description": "Get the manifest for an OCI image",
               "inputSchema": {
@@ -111,7 +114,8 @@
                 "destructiveHint": false,
                 "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Get Referrer Content"
               },
               "description": "Fetch the content of a specific referrer artifact. Use list_referrers first to discover artifacts and their digests. Returns content as an embedded resource with proper MIME type. For cosign attestations (DSSE envelopes), automatically decodes the base64 payload unless decode_payload is false.",
               "inputSchema": {
@@ -140,7 +144,8 @@
                   },
                   "max_bytes": {
                     "description": "Maximum payload size in bytes. Content exceeding this is truncated. Default 512KB (524288).",
-                    "type": "number"
+                    "minimum": 1,
+                    "type": "integer"
                   }
                 },
                 "required": [
@@ -156,7 +161,8 @@
                 "destructiveHint": false,
                 "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "List Referrers"
               },
               "description": "List OCI artifacts (SBOMs, signatures, provenance, VEX) attached to an image via the OCI Referrers API. Returns descriptors with artifact type, digest, size, and annotations. Use this to discover what attestations exist before fetching their content with get_referrer_content.",
               "inputSchema": {
@@ -180,9 +186,10 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "idempotentHint": false,
+                "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "List Tags"
               },
               "description": "List tags for a repository with pagination support",
               "inputSchema": {
@@ -193,7 +200,9 @@
                   },
                   "limit": {
                     "description": "Maximum number of tags to return per page (default: 100, max: 1000)",
-                    "type": "number"
+                    "maximum": 1000,
+                    "minimum": 1,
+                    "type": "integer"
                   },
                   "repository": {
                     "description": "The repository name (e.g., docker.io/library/alpine)",
@@ -259,7 +268,7 @@
           "name": "OCI_PASSWORD"
         }
       ],
-      "identifier": "ghcr.io/stackloklabs/ocireg-mcp/server:0.3.1",
+      "identifier": "ghcr.io/stackloklabs/ocireg-mcp/server:0.4.0",
       "registryType": "oci",
       "transport": {
         "type": "streamable-http",
