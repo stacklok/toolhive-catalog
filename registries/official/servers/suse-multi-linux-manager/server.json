@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "registry.suse.com/suse/agentic/mcp/multi-linux-manager:0.6.2": {
+        "registry.suse.com/suse/agentic/mcp/multi-linux-manager:0.6.3": {
           "metadata": {
-            "last_updated": "2026-10-09T02:12:23Z",
+            "last_updated": "2026-11-13T04:15:50Z",
             "stars": 12
           },
           "overview": "## SUSE Multi-Linux Manager MCP Server\n\nThe SUSE Multi-Linux Manager MCP Server bridges Large Language Models with SUSE's commercial Multi-Linux Manager infrastructure management solution. It enables AI agents and MCP-compliant clients to interact securely with managed servers, allowing natural language management of Linux infrastructure including retrieving system details, checking updates, scheduling maintenance, and managing system groups.\n\nThe server provides both read-only and write-enabled tools for comprehensive infrastructure management, with write operations gated behind an explicit opt-in flag for safety. This is the commercially supported version of the Uyuni MCP server.",
@@ -35,6 +35,7 @@
               "annotations": {},
               "description": "Check all active systems for pending updates.\n\nInputs: optional `include_updates`, `include_cves`, `system_limit`, `system_offset`, `updates_per_system`.\nBest for fleet scan; set `include_updates=true` to include per-system update items.\n`system_limit` is capped at 200 for response paging.\nReturns: `items` with systems that have pending updates (plus optional update details) and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "include_cves": {
                     "default": false,
@@ -66,6 +67,7 @@
               "annotations": {},
               "description": "Find systems by IP address.\n\nInputs: `ip_address`; optional `limit`, `offset`.\n`limit` is capped at 500.\nReturns: `items` with matching systems (`system_name`, `system_id`, `ip`) and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "ip_address": {
                     "type": "string"
@@ -90,6 +92,7 @@
               "annotations": {},
               "description": "Find systems by hostname.\n\nInputs: `name`; optional `limit`, `offset`.\nUse this first when user input is a partial hostname.\nIf multiple systems match, ask the user to choose one `system_id`.\n`limit` is capped at 500.\nReturns: `items` with matching systems (`system_name`, `system_id`) and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "limit": {
                     "default": 50,
@@ -114,6 +117,7 @@
               "annotations": {},
               "description": "Get details for one system.\n\nInputs: `system_identifier` (`system_name` or `system_id`).\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nReturns: `system_id`, `system_name`, `last_boot`, `uuid`, `cpu`, `network`, `installed_products`.\nUse system_id when possible.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "system_identifier": {
                     "type": "string"
@@ -130,6 +134,7 @@
               "annotations": {},
               "description": "Get one event detail.\n\nInputs: `system_identifier` (`system_name` or `system_id`), `event_id`.\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nReturns: event object including status, timestamps, result fields, and optional additional_info.\n`event_id` should come from `get_system_event_history`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "event_id": {
                     "type": "integer"
@@ -150,6 +155,7 @@
               "annotations": {},
               "description": "List events for one system.\n\nInputs: `system_identifier` (`system_name` or `system_id`); optional `offset`, `limit`, `earliest_date`.\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nReturns: newest-first event list with `id`, `history_type`, `status`, `summary`, `completed`.\nUse `get_system_event_details` for one event.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "earliest_date": {
                     "anyOf": [
@@ -185,6 +191,7 @@
               "annotations": {},
               "description": "Get pending updates for one system.\n\nInputs: `system_identifier` (`system_name` or `system_id`; prefer `system_id`).\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nBest for compact default update view.\nReturns: compact update list plus counts and `meta`.\nDefault behavior omits CVEs for lower token usage.\nFor pagination and CVE expansion, use `query_system_updates`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "system_identifier": {
                     "type": "string"
@@ -201,6 +208,7 @@
               "annotations": {},
               "description": "List unscheduled errata for one system.\n\nInputs: `system_id`.\nProvide `system_id` as a numeric string.\nReturns: errata list for that system.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "system_id": {
                     "type": "string"
@@ -217,6 +225,7 @@
               "annotations": {},
               "description": "List activation keys available to the current user.\n\nInputs: none.\nReturns: list of objects with `key` and `description`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -227,6 +236,7 @@
               "annotations": {},
               "description": "Query scheduled actions.\n\nInputs: optional `limit`, `offset`, `action_types`, `scheduler`.\n`action_types` and `scheduler` are optional exact-match filters; prefer values from `meta.observed_action_types` and `meta.observed_schedulers`.\n`limit` is capped at 500; use `meta.next_offset` to page.\nReturns: `items` with scheduled actions and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "action_types": {
                     "anyOf": [
@@ -271,6 +281,7 @@
               "annotations": {},
               "description": "List systems in one group.\n\nInputs: `group_name`.\nReturns: list of `system_id` and `system_name`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "group_name": {
                     "type": "string"
@@ -287,6 +298,7 @@
               "annotations": {},
               "description": "List system groups.\n\nInputs: none.\nReturns: list with `id`, `name`, `description`, and `system_count`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -297,6 +309,7 @@
               "annotations": {},
               "description": "\n    List active systems in Multi Linux Manager (MLM).\n    Inputs: optional `limit`, `offset`.\n    `limit` is capped at 500.\n    Returns: `items` with active systems (`system_name`, `system_id`) and `meta`.\n    Note: use `system_id` for other system tools.\n    ",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "limit": {
                     "default": 50,
@@ -316,6 +329,7 @@
               "annotations": {},
               "description": "List systems that require reboot.\n\nInputs: optional `limit`, `offset`.\n`limit` is capped at 500.\nReturns: `items` with systems requiring reboot (`system_id`, `system_name`, `reboot_status`) and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "limit": {
                     "default": 50,
@@ -335,6 +349,7 @@
               "annotations": {},
               "description": "List systems affected by a CVE.\n\nInputs: `cve_identifier`; optional `limit`, `offset`.\n`limit` is capped at 500.\nReturns: `items` with unique affected systems (`system_id`, `system_name`) and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "cve_identifier": {
                     "type": "string"
@@ -359,6 +374,7 @@
               "annotations": {},
               "description": "Query pending updates for one system.\n\nInputs: `system_identifier` (`system_name` or `system_id`); optional `limit`, `offset`, `include_cves`, `advisory_types`.\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nBest for pagination and optional CVE expansion.\nPagination behavior: `limit \u003c= 0` returns no items (counts still available);\npositive `limit` is capped at 200.\nReturns: `updates` with pending updates for the system and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "advisory_types": {
                     "anyOf": [
@@ -406,6 +422,7 @@
               "annotations": {},
               "description": "Summarize fleet update status.\n\nInputs: optional `system_limit`, `system_offset`.\n`system_limit` is capped at 200.\nReturns: paged list of systems with update counts in `items` and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "system_limit": {
                     "default": 25,
@@ -425,6 +442,7 @@
               "annotations": {},
               "description": "Summarize pending updates for one system.\n\nInputs: `system_identifier` (`system_name` or `system_id`); optional `advisory_types`.\nName not found: resolve with `find_systems_by_name`, then pass `system_id`.\nBest for counts only.\n`advisory_types` accepts: `Security Advisory`, `Product Enhancement Advisory`, `Bug Fix Advisory`.\nReturns: update counts and `meta`.",
               "inputSchema": {
+                "additionalProperties": false,
                 "properties": {
                   "advisory_types": {
                     "anyOf": [
@@ -532,7 +550,7 @@
           "name": "UYUNI_SSH_PRIV_KEY_PASS"
         }
       ],
-      "identifier": "registry.suse.com/suse/agentic/mcp/multi-linux-manager:0.6.2",
+      "identifier": "registry.suse.com/suse/agentic/mcp/multi-linux-manager:0.6.3",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
