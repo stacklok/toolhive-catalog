@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stackloklabs/osv-mcp/server:0.1.4": {
+        "ghcr.io/stackloklabs/osv-mcp/server:0.2.0": {
           "metadata": {
-            "last_updated": "2026-10-16T03:17:20Z",
+            "last_updated": "2026-11-19T22:24:40Z",
             "stars": 33
           },
           "overview": "## OSV MCP Server\n\nThe osv MCP server provides access to the OSV (Open Source Vulnerabilities) database for querying package and commit vulnerabilities. The server offers MCP-based access to the OSV vulnerability database through direct API queries to OSV.dev for vulnerability lookups by package name, version, or commit hash. It supports batch vulnerability queries for multiple packages simultaneously and delivers detailed vulnerability information including CVE IDs, severity scores, and affected versions across multiple programming languages and package managers.",
@@ -48,7 +48,8 @@
                 "destructiveHint": false,
                 "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Get Vulnerability"
               },
               "description": "Get details for a specific vulnerability by ID",
               "inputSchema": {
@@ -70,7 +71,8 @@
                 "destructiveHint": false,
                 "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Query Vulnerabilities (Batch)"
               },
               "description": "Query for vulnerabilities affecting multiple packages or commits at once",
               "inputSchema": {
@@ -102,6 +104,7 @@
                       },
                       "type": "object"
                     },
+                    "minItems": 1,
                     "type": "array"
                   }
                 },
@@ -117,7 +120,8 @@
                 "destructiveHint": false,
                 "idempotentHint": true,
                 "openWorldHint": true,
-                "readOnlyHint": true
+                "readOnlyHint": true,
+                "title": "Query Vulnerability"
               },
               "description": "Query for vulnerabilities affecting a specific package version or commit",
               "inputSchema": {
@@ -171,7 +175,7 @@
   "name": "io.github.stacklok/osv",
   "packages": [
     {
-      "identifier": "ghcr.io/stackloklabs/osv-mcp/server:0.1.4",
+      "identifier": "ghcr.io/stackloklabs/osv-mcp/server:0.2.0",
       "registryType": "oci",
       "transport": {
         "type": "streamable-http",
