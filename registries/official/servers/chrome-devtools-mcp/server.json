@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/chrome-devtools-mcp:1.13.0": {
           "metadata": {
-            "last_updated": "2026-10-30T01:00:38Z",
+            "last_updated": "2026-11-20T09:51:00Z",
             "stars": 34184
           },
           "overview": "## Chrome DevTools MCP Server\n\nThe chrome-devtools-mcp server is a Model Context Protocol (MCP) server that lets AI assistants interact directly with Chrome DevTools via the Chrome DevTools Protocol (CDP). It enables AI-driven workflows to inspect pages, observe network activity, debug JavaScript, analyze performance, and audit rendering behavior — all from within an MCP-compatible assistant, without manually opening DevTools. This server is ideal for frontend debugging, performance analysis, web automation diagnostics, and assisted web development.",
@@ -42,10 +42,13 @@
           "tool_definitions": [
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Clicks on the provided element",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "dblClick": {
                     "description": "Set to true for double clicks. Default is false.",
@@ -74,10 +77,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Closes the page by its index. The last open page cannot be closed.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "The ID of the page to close. Call list_pages to list pages.",
@@ -93,10 +99,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Drag an element onto another element",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "from_uid": {
                     "description": "The uid of the element to drag",
@@ -126,10 +135,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Emulates various features on the target page. Each call replaces all emulation settings (except extraHttpHeaders), so pass all desired settings in a single call.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "colorScheme": {
                     "description": "Emulate the dark or the light mode. Omit or set to \"auto\" to reset to the default.",
@@ -216,10 +228,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Evaluate JavaScript inside the target page. The source can be provided inline or loaded from a local file. Returns the response as JSON, so returned values have to be JSON-serializable.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "args": {
                     "description": "An optional list of arguments (element uids from the page content snapshot) to pass to the function.",
@@ -271,10 +286,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Type text into an input, text area or select an option from a \u003cselect\u003e element.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "includeSnapshot": {
                     "description": "Whether to include a snapshot in the response. Default is false.",
@@ -304,10 +322,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Fill out multiple form elements (inputs, selects, checkboxes, radios) at once. ALWAYS prefer this tool over multiple individual 'fill' or 'click' calls when interacting with forms. It is significantly faster, more reliable, and reduces turn count. Example: Fill username, password, and check \"Remember Me\" in one call.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "elements": {
                     "description": "Elements from snapshot to fill out.",
@@ -350,10 +371,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Gets a console message by its ID. You can get all messages by calling list_console_messages.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "msgid": {
                     "description": "The msgid of a console message on the page from the listed console messages",
@@ -374,10 +398,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Retrieve matched CSS rules, inline styles (element.style), inherited styles, custom properties, and cascade wrappers (@layer, @media, @container, @scope) for an element identified by its UID.\nRules are ordered from highest to lowest cascade precedence and include source line numbers (e.g. index:196). Active (winning) declarations have no prefix tag, while (losing) overridden declarations are prefixed with [overloaded].\nTreat the output as authoritative and complete.\nResults are paginated (10 rules per page by default); use pageIdx to page through the remaining rules. Requires a UID from take_snapshot.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "Targets a specific page by ID.",
@@ -412,10 +439,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Gets a network request by an optional reqid, if omitted returns the currently selected request in the DevTools Network panel. Useful for inspecting request headers (including 'Cookie') and response headers (including 'Set-Cookie' and directives).",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "Targets a specific page by ID.",
@@ -443,10 +473,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "If a browser dialog was opened, use this command to handle it",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "action": {
                     "description": "Whether to dismiss or accept the dialog",
@@ -475,10 +508,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Hover over the provided element",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "includeSnapshot": {
                     "description": "Whether to include a snapshot in the response. Default is false.",
@@ -503,10 +539,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Get Lighthouse scores, failing audits, and the DOM nodes they flag for accessibility, SEO, best practices, and agentic browsing. Full reports are saved to disk. This excludes performance. For performance audits, run performance_start_trace",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "device": {
                     "default": "desktop",
@@ -544,10 +583,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "List all console messages for the target page since the last navigation.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "includePreservedMessages": {
                     "default": false,
@@ -618,10 +660,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Lists the most recent requests for the target page since the last navigation.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "includePreservedRequests": {
                     "default": false,
@@ -681,10 +726,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Get a list of pages open in the browser.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -693,10 +741,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Go to a URL, or back, forward, or reload. Use project URL if not specified otherwise.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "handleBeforeUnload": {
                     "description": "Whether to auto accept or beforeunload dialogs triggered by this navigation. Default is accept.",
@@ -748,10 +799,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Open a new tab and load a URL. Use project URL if not specified otherwise.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "background": {
                     "description": "Whether to open the page in the background without bringing it to the front. Default is false (foreground).",
@@ -781,10 +835,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Provides more detailed information on a specific Performance Insight of an insight set that was highlighted in the results of a trace recording.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "insightName": {
                     "description": "The name of the Insight you want more information on. For example: \"DocumentLatency\" or \"LCPBreakdown\"",
@@ -810,10 +867,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Start a performance trace on the target webpage. Use to find frontend performance issues, Core Web Vitals (LCP, INP, CLS), and improve page load speed.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "autoStop": {
                     "default": true,
@@ -825,7 +885,7 @@
                     "type": "string"
                   },
                   "ignoreCache": {
-                    "description": "Whether to bypass the HTTP cache when reloading the page, to measure a cold page load. Only applies if reload is true.",
+                    "description": "Whether to bypass the HTTP cache when reloading the page, to measure a cold page load. Only applies if reload is true. Active network mocks always disable the page HTTP cache.",
                     "type": "boolean"
                   },
                   "pageId": {
@@ -847,10 +907,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Stop the active performance trace recording on the target webpage.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePath": {
                     "description": "The absolute file path, or a file path relative to the current working directory, to save the raw trace data. For example, trace.json.gz (compressed) or trace.json (uncompressed).",
@@ -870,10 +933,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
-              "description": "Press a key or key combination. Use this when other input methods like fill() cannot be used (e.g., keyboard shortcuts, navigation keys, or special key combinations).",
+              "description": "Press a key or key combination. Use this when other input methods like fill() cannot be used (e.g., keyboard shortcuts, navigation keys, or special key combinations). Note: On macOS, native \u003cselect\u003e elements cannot be operated with ArrowDown/Enter via press_key; use fill() on the combobox or click() on the option instead.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "includeSnapshot": {
                     "description": "Whether to include a snapshot in the response. Default is false.",
@@ -898,10 +964,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Resizes the page's window so that the page has specified dimension",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "height": {
                     "description": "Page height",
@@ -931,10 +1000,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Starts recording a screencast (video) of the target page.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePath": {
                     "description": "Output file path (.mp4). Uses mkdtemp to generate a unique path if not provided.",
@@ -954,10 +1026,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Stops the active screencast recording on the target page.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "Targets a specific page by ID.",
@@ -973,10 +1048,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Select a page as a context for future tool calls.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "bringToFront": {
                     "description": "Whether to focus the page and bring it to the top.",
@@ -996,10 +1074,43 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Set the complete set of logpoints of the selected page: logpoints not in the list are removed, new ones are added, and an empty list removes all. A logpoint logs expressions to the console every time a line executes, without pausing or changing the source, like logpoints in the DevTools Sources panel. Locations are script URLs or original source files resolved through source maps (not available with --no-source-maps; scripts in workers and out-of-process iframes are not supported). A location in a generated script moves to its original source line when a source map covers it, and locations on the same line become one logpoint with the last expression. Output appears in list_console_messages; an expression that throws produces an error message without text. Logpoints survive reloads and navigations until removed or the page is closed. The response lists the resulting logpoints and where they are bound.",
+              "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
+                "properties": {
+                  "logpoints": {
+                    "description": "Logpoints formatted as \u003curl\u003e:\u003clineNumber\u003e[:\u003ccolumnNumber\u003e] \u003cexpression\u003e. The url is a script URL or the path of an original source file from a source map, exact or as a path suffix (e.g. \"src/app.ts\"). Line and column numbers are 1-based in the coordinates of the url; a line without executable code moves to the next possible location. The expression is evaluated like console.log() arguments in the scope of the location, where local variables are accessible by their original names, and runs before the line executes, so a variable declared on that line is not set yet. list_console_messages shows objects as [object Object]: read them with get_console_message, or log JSON.stringify(value) for plain data. Example: \"src/cart.ts:42 'cart total:', cart.total, cart.items.length\". Pass an empty array to remove all logpoints.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pageId": {
+                    "description": "Targets a specific page by ID.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "pageId",
+                  "logpoints"
+                ],
+                "type": "object"
+              },
+              "name": "set_logpoints"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Capture a heap snapshot of the target page. Use to analyze the memory distribution of JavaScript objects and debug memory leaks.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePath": {
                     "description": "A path to a .heapsnapshot file to save the heapsnapshot to.",
@@ -1020,10 +1131,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Take a screenshot of the page or element.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePath": {
                     "description": "The absolute path, or a path relative to the current working directory, to save the screenshot to instead of attaching it to the response.",
@@ -1067,10 +1181,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Take a text snapshot of the target page based on the a11y tree. The snapshot lists page elements along with a unique\nidentifier (uid). Always use the latest snapshot. Prefer taking a snapshot over taking a screenshot. The snapshot indicates the element selected\nin the DevTools Elements panel (if any).",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePath": {
                     "description": "The absolute path, or a path relative to the current working directory, to save the snapshot to instead of attaching it to the response.",
@@ -1094,10 +1211,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Type text using keyboard into a previously focused input",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "Targets a specific page by ID.",
@@ -1122,10 +1242,13 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": false
               },
               "description": "Upload a file through a provided element.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "filePaths": {
                     "description": "One or more files paths to upload. File paths have to be local to the browser instance (not the MCP).",
@@ -1159,17 +1282,20 @@
             },
             {
               "annotations": {
+                "idempotentHint": false,
                 "readOnlyHint": true
               },
               "description": "Wait for the specified text to appear on the selected page. By default, hidden text is also matched. Set visible to true to wait until the matched text is visible.",
               "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
                 "properties": {
                   "pageId": {
                     "description": "Targets a specific page by ID.",
                     "type": "number"
                   },
                   "text": {
-                    "description": "Non-empty list of texts. Resolves when any value appears on the page.",
+                    "description": "Non-empty list of texts. Resolves when any value matches an accessible name exactly or is a substring of DOM text. Matching is case-sensitive. DOM text preserves spaces and newlines, unlike snapshot text which may normalize whitespace. Use the original whitespace or a shorter distinctive substring.",
                     "items": {
                       "type": "string"
                     },
@@ -1224,6 +1350,7 @@
             "screencast_start",
             "screencast_stop",
             "select_page",
+            "set_logpoints",
             "take_heapsnapshot",
             "take_screenshot",
             "take_snapshot",
