@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stackloklabs/osv-mcp/server:0.2.0": {
+        "ghcr.io/stackloklabs/osv-mcp/server:0.2.1": {
           "metadata": {
             "last_updated": "2026-11-19T22:24:40Z",
             "stars": 33
@@ -175,7 +175,7 @@
   "name": "io.github.stacklok/osv",
   "packages": [
     {
-      "identifier": "ghcr.io/stackloklabs/osv-mcp/server:0.2.0",
+      "identifier": "ghcr.io/stackloklabs/osv-mcp/server:0.2.1",
       "registryType": "oci",
       "transport": {
         "type": "streamable-http",
