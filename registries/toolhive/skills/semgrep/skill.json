@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/semgrep:0.2.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/semgrep:0.2.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/trailofbits/skills",
-      "ref": "196a9073ab10d35bacf111f945e02c00b2c6883a",
+      "ref": "e4dd0bb5b15535f7c5a0834187dffba6ac37e4ff",
       "subfolder": "plugins/static-analysis/skills/semgrep"
     }
   ]

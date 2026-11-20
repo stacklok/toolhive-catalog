@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/chdb-sql:0.1.10"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/chdb-sql:0.1.11"
     },
     {
       "registryType": "git",
       "url": "https://github.com/ClickHouse/agent-skills",
-      "ref": "69a8354b05b5942e5cea77b6c87be7788303fc18",
+      "ref": "d3b2b5ba43a8b80c2d08858b68d53edc701b5ace",
       "subfolder": "skills/chdb-sql"
     }
   ]

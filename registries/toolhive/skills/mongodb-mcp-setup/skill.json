@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/mongodb-mcp-setup:0.6.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/mongodb-mcp-setup:0.6.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/mongodb/agent-skills",
-      "ref": "155bb9c4b42a9a3e019f47be0669de0e4547d1ea",
+      "ref": "59c4a4ebed23666834c8c698a76afa91cd689365",
       "subfolder": "skills/mongodb-mcp-setup"
     }
   ]

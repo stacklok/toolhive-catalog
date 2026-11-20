@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/elasticsearch-search-relevance:0.1.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/elasticsearch-search-relevance:0.1.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/elastic/agent-skills",
-      "ref": "baa511126ba2dc37b52e273b52734f8e4e0d323c",
+      "ref": "09d879dfe23436684e11391a5e5a74a2aedd6b04",
       "subfolder": "skills/elasticsearch/elasticsearch-search-relevance"
     }
   ]

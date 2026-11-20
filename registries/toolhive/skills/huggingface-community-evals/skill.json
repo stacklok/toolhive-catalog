@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/huggingface-community-evals:0.3.3"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/huggingface-community-evals:0.3.4"
     },
     {
       "registryType": "git",
       "url": "https://github.com/huggingface/skills",
-      "ref": "fabc634a893f62ad5c2039830397efa35fa62715",
+      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
       "subfolder": "skills/huggingface-community-evals"
     }
   ]

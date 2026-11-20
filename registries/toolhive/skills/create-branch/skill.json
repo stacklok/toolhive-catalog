@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/create-branch:0.5.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/create-branch:0.6.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/getsentry/skills",
-      "ref": "d12f250460ffd961f549dbebf7eeb0cf4afd4c2e",
+      "ref": "e94f22214528d69899d09c627b3315ddc3544816",
       "subfolder": "skills/create-branch"
     }
   ]

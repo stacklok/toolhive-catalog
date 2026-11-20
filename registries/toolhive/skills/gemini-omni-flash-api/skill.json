@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/gemini-omni-flash-api:0.3.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/gemini-omni-flash-api:0.4.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/google-gemini/gemini-skills",
-      "ref": "ee9da52195752ca83c2fca701d96bcb5a9c08d2d",
+      "ref": "7cfc690ba9c8efe36a5316e6d4000e2b6aa25dbf",
       "subfolder": "skills/gemini-omni-flash-api"
     }
   ]
