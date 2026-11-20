@@ -3,9 +3,9 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.19": {
+        "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.11.18": {
           "metadata": {
-            "last_updated": "2026-10-30T00:59:30Z",
+            "last_updated": "2026-11-20T09:49:39Z",
             "stars": 84011
           },
           "overview": "## Time MCP Server\n\nThe time MCP server provides time information and IANA timezone conversions with auto system timezone detection. The server leverages Python's timezone libraries to deliver current time queries across any IANA timezone with automatic detection of the system's local timezone when none is specified, time conversion capabilities between different timezones, timezone-aware datetime strings formatted in ISO 8601 standard, and Daylight Saving Time indicators. The server exposes two primary tools: get_current_time and convert_time.",
@@ -40,12 +40,14 @@
               "inputSchema": {
                 "properties": {
                   "source_timezone": {
-                    "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no source timezone provided by the user.",
+                    "default": "Etc/UTC",
+                    "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Optional: defaults to the server's local timezone, 'Etc/UTC', when omitted.",
                     "title": "Source Timezone",
                     "type": "string"
                   },
                   "target_timezone": {
-                    "description": "Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use 'Etc/UTC' as local timezone if no target timezone provided by the user.",
+                    "default": "Etc/UTC",
+                    "description": "Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Optional: defaults to the server's local timezone, 'Etc/UTC', when omitted.",
                     "title": "Target Timezone",
                     "type": "string"
                   },
@@ -56,10 +58,9 @@
                   }
                 },
                 "required": [
-                  "source_timezone",
-                  "time",
-                  "target_timezone"
+                  "time"
                 ],
+                "title": "convert_timeArguments",
                 "type": "object"
               },
               "name": "convert_time"
@@ -75,22 +76,74 @@
               "inputSchema": {
                 "properties": {
                   "timezone": {
-                    "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no timezone provided by the user.",
+                    "default": "Etc/UTC",
+                    "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Optional: defaults to the server's local timezone, 'Etc/UTC', when omitted.",
                     "title": "Timezone",
                     "type": "string"
                   }
                 },
-                "required": [
-                  "timezone"
-                ],
+                "required": [],
+                "title": "get_current_timeArguments",
                 "type": "object"
               },
               "name": "get_current_time"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Get the time a given number of days, hours, minutes and seconds ago in a specific timezone",
+              "inputSchema": {
+                "properties": {
+                  "days_ago": {
+                    "default": 0,
+                    "description": "Whole days before now",
+                    "minimum": 0,
+                    "title": "Days Ago",
+                    "type": "integer"
+                  },
+                  "hours_ago": {
+                    "default": 0,
+                    "description": "Whole hours before now",
+                    "minimum": 0,
+                    "title": "Hours Ago",
+                    "type": "integer"
+                  },
+                  "minutes_ago": {
+                    "default": 0,
+                    "description": "Whole minutes before now",
+                    "minimum": 0,
+                    "title": "Minutes Ago",
+                    "type": "integer"
+                  },
+                  "seconds_ago": {
+                    "default": 0,
+                    "description": "Whole seconds before now",
+                    "minimum": 0,
+                    "title": "Seconds Ago",
+                    "type": "integer"
+                  },
+                  "timezone": {
+                    "default": "Etc/UTC",
+                    "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Optional: defaults to the server's local timezone, 'Etc/UTC', when omitted.",
+                    "title": "Timezone",
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "title": "get_time_agoArguments",
+                "type": "object"
+              },
+              "name": "get_time_ago"
             }
           ],
           "tools": [
             "convert_time",
-            "get_current_time"
+            "get_current_time",
+            "get_time_ago"
           ]
         }
       }
@@ -109,7 +162,7 @@
   "name": "io.github.stacklok/time",
   "packages": [
     {
-      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.10.19",
+      "identifier": "ghcr.io/stacklok/dockyard/uvx/mcp-server-time:2026.11.18",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
