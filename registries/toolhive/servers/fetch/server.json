@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stackloklabs/gofetch/server:1.0.7": {
+        "ghcr.io/stackloklabs/gofetch/server:2.0.1": {
           "metadata": {
             "last_updated": "2026-11-19T22:24:32Z",
             "stars": 25
@@ -94,7 +94,7 @@
   "name": "io.github.stacklok/fetch",
   "packages": [
     {
-      "identifier": "ghcr.io/stackloklabs/gofetch/server:1.0.7",
+      "identifier": "ghcr.io/stackloklabs/gofetch/server:2.0.1",
       "registryType": "oci",
       "transport": {
         "type": "streamable-http",
