@@ -227,8 +227,8 @@ github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyua
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modelcontextprotocol/go-sdk v1.8.0 h1:KIvahhYqwtbeniWVPs3TcXEA7b8jEtwfBpOTAI+Urx4=
 github.com/modelcontextprotocol/go-sdk v1.8.0/go.mod h1:dL7u98E/zjJTGzEq+j30jQ8K2k1mb6LeAH4inEcSGts=
-github.com/modelcontextprotocol/registry v1.8.9 h1:2pYB31q/uSezVbXu+D+Hr3HMimGFspgS1RTMljm1bVI=
-github.com/modelcontextprotocol/registry v1.8.9/go.mod h1:Wk8hJLBwmPimwsxiDVqZt/gN1vfW57jPbsGR+iOCB68=
+github.com/modelcontextprotocol/registry v1.8.10 h1:jZnRrTo0pfG/cnDIO2konaK+nmxDqrPdqal/oyMmIyU=
+github.com/modelcontextprotocol/registry v1.8.10/go.mod h1:Wk8hJLBwmPimwsxiDVqZt/gN1vfW57jPbsGR+iOCB68=
 github.com/natefinch/atomic v1.0.1 h1:ZPYKxkqQOx3KZ+RsbnP/YsgvxWQPGxjC0oBt2AhwV0A=
 github.com/natefinch/atomic v1.0.1/go.mod h1:N/D/ELrljoqDyT3rZrsUmtsuzvHkeB/wWjHV22AZRbM=
 github.com/oklog/ulid/v2 v2.1.2 h1:IEclFb9JNvzYA6MW2SCxbLzcHTVsfqm3PrqGQJH5zec=
