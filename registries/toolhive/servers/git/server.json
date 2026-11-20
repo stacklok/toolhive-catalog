@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/uvx/mcp-server-git:2026.11.18": {
           "metadata": {
-            "last_updated": "2026-10-16T03:19:36Z",
+            "last_updated": "2026-11-20T00:03:41Z",
             "stars": 84011
           },
           "overview": "## Git MCP Server\n\nThe git-mcp-server is a Model Context Protocol (MCP) server that gives AI assistants direct access to Git repositories through a structured, AI-friendly interface. It enables AI-driven workflows to read repository state, inspect history, and reason about changes without switching tools or manually invoking Git commands. It is especially useful for code understanding, change analysis, release preparation, and development workflows where repository context needs to be embedded directly into an AI assistant.",
@@ -55,6 +55,7 @@
                   "repo_path",
                   "files"
                 ],
+                "title": "addArguments",
                 "type": "object"
               },
               "name": "git_add"
@@ -110,6 +111,7 @@
                   "repo_path",
                   "branch_type"
                 ],
+                "title": "branchArguments",
                 "type": "object"
               },
               "name": "git_branch"
@@ -137,6 +139,7 @@
                   "repo_path",
                   "branch_name"
                 ],
+                "title": "checkoutArguments",
                 "type": "object"
               },
               "name": "git_checkout"
@@ -164,6 +167,7 @@
                   "repo_path",
                   "message"
                 ],
+                "title": "commitArguments",
                 "type": "object"
               },
               "name": "git_commit"
@@ -175,7 +179,7 @@
                 "openWorldHint": false,
                 "readOnlyHint": false
               },
-              "description": "Creates a new branch from an optional base branch",
+              "description": "Creates a new branch from an optional base branch or commit",
               "inputSchema": {
                 "properties": {
                   "base_branch": {
@@ -188,6 +192,7 @@
                       }
                     ],
                     "default": null,
+                    "description": "Branch, tag or commit SHA to create the branch from. Defaults to the current branch, or to the current commit when HEAD is detached",
                     "title": "Base Branch"
                   },
                   "branch_name": {
@@ -203,6 +208,7 @@
                   "repo_path",
                   "branch_name"
                 ],
+                "title": "create_branchArguments",
                 "type": "object"
               },
               "name": "git_create_branch"
@@ -214,7 +220,7 @@
                 "openWorldHint": false,
                 "readOnlyHint": true
               },
-              "description": "Shows differences between branches or commits",
+              "description": "Shows differences between branches or commits, or across a revision range (main..feature, main...feature)",
               "inputSchema": {
                 "properties": {
                   "context_lines": {
@@ -235,6 +241,7 @@
                   "repo_path",
                   "target"
                 ],
+                "title": "diffArguments",
                 "type": "object"
               },
               "name": "git_diff"
@@ -262,6 +269,7 @@
                 "required": [
                   "repo_path"
                 ],
+                "title": "diff_stagedArguments",
                 "type": "object"
               },
               "name": "git_diff_staged"
@@ -289,6 +297,7 @@
                 "required": [
                   "repo_path"
                 ],
+                "title": "diff_unstagedArguments",
                 "type": "object"
               },
               "name": "git_diff_unstaged"
@@ -318,6 +327,8 @@
                   },
                   "max_count": {
                     "default": 10,
+                    "description": "Maximum number of commits to show. Must be at least 1.",
+                    "minimum": 1,
                     "title": "Max Count",
                     "type": "integer"
                   },
@@ -342,9 +353,69 @@
                 "required": [
                   "repo_path"
                 ],
+                "title": "logArguments",
                 "type": "object"
               },
               "name": "git_log"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Merges a branch into the current branch. Fast-forward only unless fast_forward_only is false; refuses a dirty working tree, and aborts a merge that conflicts, leaving the repository unchanged",
+              "inputSchema": {
+                "properties": {
+                  "fast_forward_only": {
+                    "default": true,
+                    "description": "Only fast-forward, failing if the branches have diverged. False allows a merge commit",
+                    "title": "Fast Forward Only",
+                    "type": "boolean"
+                  },
+                  "repo_path": {
+                    "title": "Repo Path",
+                    "type": "string"
+                  },
+                  "source_branch": {
+                    "description": "Branch, tag or commit to merge into the current branch",
+                    "title": "Source Branch",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "repo_path",
+                  "source_branch"
+                ],
+                "title": "mergeArguments",
+                "type": "object"
+              },
+              "name": "git_merge"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Lists the repository's remotes with their fetch and push URLs, like `git remote -v`. Credentials embedded in a URL's userinfo, query values or fragment are shown as \u003credacted\u003e; path segments are shown as configured",
+              "inputSchema": {
+                "properties": {
+                  "repo_path": {
+                    "description": "The path to the Git repository.",
+                    "title": "Repo Path",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "repo_path"
+                ],
+                "title": "remoteArguments",
+                "type": "object"
+              },
+              "name": "git_remote"
             },
             {
               "annotations": {
@@ -364,6 +435,7 @@
                 "required": [
                   "repo_path"
                 ],
+                "title": "resetArguments",
                 "type": "object"
               },
               "name": "git_reset"
@@ -391,6 +463,7 @@
                   "repo_path",
                   "revision"
                 ],
+                "title": "showArguments",
                 "type": "object"
               },
               "name": "git_show"
@@ -413,6 +486,7 @@
                 "required": [
                   "repo_path"
                 ],
+                "title": "statusArguments",
                 "type": "object"
               },
               "name": "git_status"
@@ -428,6 +502,8 @@
             "git_diff_staged",
             "git_diff_unstaged",
             "git_log",
+            "git_merge",
+            "git_remote",
             "git_reset",
             "git_show",
             "git_status"
