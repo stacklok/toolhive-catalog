@@ -242,7 +242,9 @@ jobs:
             # Some servers can't start or list tools without credentials or
             # other configuration, so a failure here doesn't fail the job.
             # Surface it as an annotation and in the PR summary instead.
-            REASON=$(grep -m1 '^Error: ' /tmp/update-tools.log | sed 's/^Error: //' | cut -c1-300)
+            # A crash or panic may not print an "Error: " line; tolerate the
+            # grep miss (even under pipefail) so the fallback reason applies.
+            REASON=$({ grep -m1 '^Error: ' /tmp/update-tools.log || true; } | sed 's/^Error: //' | cut -c1-300)
             REASON=${REASON:-catalog update-tools exited with status $UPDATE_EXIT}
             echo "failure-reason=$REASON" >> "$GITHUB_OUTPUT"
             ANNOTATION=$(printf '%s' "$REASON" | sed 's/%/%25/g')

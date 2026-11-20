@@ -1,7 +1,11 @@
 package thvclient
 
 import (
+	"context"
 	"errors"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -9,9 +13,11 @@ import (
 
 // statusSequence returns a getStatus func that yields each result in order,
 // repeating the last one once the sequence is exhausted.
-func statusSequence(results ...func() (WorkloadStatus, error)) (func(string) (WorkloadStatus, error), *int) {
+func statusSequence(
+	results ...func() (WorkloadStatus, error),
+) (func(context.Context, string) (WorkloadStatus, error), *int) {
 	calls := 0
-	return func(string) (WorkloadStatus, error) {
+	return func(context.Context, string) (WorkloadStatus, error) {
 		i := calls
 		if i >= len(results) {
 			i = len(results) - 1
@@ -29,6 +35,15 @@ func statusErr(msg string) func() (WorkloadStatus, error) {
 	return func() (WorkloadStatus, error) { return WorkloadStatus{}, errors.New(msg) }
 }
 
+// withTimeout returns a context with the given timeout and the same
+// descriptive cause that waitForReady uses.
+func withTimeout(t *testing.T, d time.Duration) context.Context {
+	t.Helper()
+	ctx, cancel := context.WithTimeoutCause(context.Background(), d, errors.New("timed out after "+d.String()))
+	t.Cleanup(cancel)
+	return ctx
+}
+
 func TestWaitForStatus_RunningAfterStarting(t *testing.T) {
 	t.Parallel()
 	get, calls := statusSequence(
@@ -38,7 +53,7 @@ func TestWaitForStatus_RunningAfterStarting(t *testing.T) {
 		status(statusRunning, ""),
 	)
 
-	if err := waitForStatus("srv", get, time.Second, time.Millisecond); err != nil {
+	if err := waitForStatus(withTimeout(t, time.Second), "srv", get, time.Millisecond); err != nil {
 		t.Fatalf("expected success, got %v", err)
 	}
 	if *calls != 4 {
@@ -56,7 +71,7 @@ func TestWaitForStatus_FailsFastOnTerminalStatus(t *testing.T) {
 				status(s, "container exited"),
 			)
 
-			err := waitForStatus("srv", get, time.Minute, time.Millisecond)
+			err := waitForStatus(withTimeout(t, time.Minute), "srv", get, time.Millisecond)
 			if err == nil {
 				t.Fatal("expected error")
 			}
@@ -74,11 +89,11 @@ func TestWaitForStatus_TimesOutWhileStarting(t *testing.T) {
 	t.Parallel()
 	get, _ := statusSequence(status(statusStarting, ""))
 
-	err := waitForStatus("srv", get, 20*time.Millisecond, time.Millisecond)
+	err := waitForStatus(withTimeout(t, 20*time.Millisecond), "srv", get, time.Millisecond)
 	if err == nil {
 		t.Fatal("expected timeout error")
 	}
-	if !strings.Contains(err.Error(), "did not become ready") || !strings.Contains(err.Error(), "status: starting") {
+	if !strings.Contains(err.Error(), "timed out after") || !strings.Contains(err.Error(), "status: starting") {
 		t.Errorf("unexpected error: %q", err)
 	}
 }
@@ -87,12 +102,54 @@ func TestWaitForStatus_TimesOutWithStatusError(t *testing.T) {
 	t.Parallel()
 	get, _ := statusSequence(statusErr("workload not found"))
 
-	err := waitForStatus("srv", get, 20*time.Millisecond, time.Millisecond)
+	err := waitForStatus(withTimeout(t, 20*time.Millisecond), "srv", get, time.Millisecond)
 	if err == nil {
 		t.Fatal("expected timeout error")
 	}
 	if !strings.Contains(err.Error(), "workload not found") {
 		t.Errorf("error should wrap the last status error, got %q", err)
+	}
+}
+
+func TestWaitForStatus_CancelsHungStatusCheck(t *testing.T) {
+	t.Parallel()
+	// A status check that only returns when its context is cancelled, like
+	// a thv subprocess killed by exec.CommandContext.
+	get := func(ctx context.Context, _ string) (WorkloadStatus, error) {
+		<-ctx.Done()
+		return WorkloadStatus{}, ctx.Err()
+	}
+
+	start := time.Now()
+	err := waitForStatus(withTimeout(t, 50*time.Millisecond), "srv", get, time.Millisecond)
+	if err == nil {
+		t.Fatal("expected timeout error")
+	}
+	if elapsed := time.Since(start); elapsed > time.Second {
+		t.Errorf("waitForStatus took %s, want it bounded by the timeout", elapsed)
+	}
+}
+
+func TestStatus_KillsHungSubprocess(t *testing.T) {
+	t.Parallel()
+	if runtime.GOOS == "windows" {
+		t.Skip("uses a shell script as a fake thv")
+	}
+	fakeThv := filepath.Join(t.TempDir(), "thv")
+	if err := os.WriteFile(fakeThv, []byte("#!/bin/sh\nexec sleep 30\n"), 0o755); err != nil { // #nosec G306 - test executable
+		t.Fatal(err)
+	}
+	c := &Client{thvPath: fakeThv}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer cancel()
+
+	start := time.Now()
+	if _, err := c.Status(ctx, "srv"); err == nil {
+		t.Fatal("expected error from killed subprocess")
+	}
+	if elapsed := time.Since(start); elapsed > 5*time.Second {
+		t.Errorf("Status took %s, want the subprocess killed at the deadline", elapsed)
 	}
 }
 

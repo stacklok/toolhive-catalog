@@ -1,6 +1,7 @@
 package thvclient
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -117,10 +118,16 @@ func (c *Client) RunServer(sf *serverjson.ServerFile, serverName string) (string
 	return tempName, nil
 }
 
-// Status returns the current status of a workload.
-func (c *Client) Status(serverName string) (WorkloadStatus, error) {
+// statusWaitDelay bounds how long a cancelled `thv status` call may take to
+// release its output pipes before Wait returns anyway.
+const statusWaitDelay = 5 * time.Second
+
+// Status returns the current status of a workload. The thv subprocess is
+// killed if ctx is cancelled or its deadline passes.
+func (c *Client) Status(ctx context.Context, serverName string) (WorkloadStatus, error) {
 	// #nosec G204 - thvPath is validated in NewClient via exec.LookPath
-	cmd := exec.Command(c.thvPath, "status", serverName, "--format", "json")
+	cmd := exec.CommandContext(ctx, c.thvPath, "status", serverName, "--format", "json")
+	cmd.WaitDelay = statusWaitDelay
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return WorkloadStatus{}, fmt.Errorf(
@@ -136,8 +143,12 @@ func (c *Client) waitForReady(serverName string) error {
 	if c.verbose {
 		fmt.Printf("Waiting up to %s for %s to be ready\n", c.readyTimeout, serverName)
 	}
+	ctx, cancel := context.WithTimeoutCause(context.Background(), c.readyTimeout,
+		fmt.Errorf("timed out after %s", c.readyTimeout))
+	defer cancel()
+
 	start := time.Now()
-	err := waitForStatus(serverName, c.Status, c.readyTimeout, c.pollInterval)
+	err := waitForStatus(ctx, serverName, c.Status, c.pollInterval)
 	if err == nil && c.verbose {
 		fmt.Printf("Server %s ready after %s\n", serverName, time.Since(start).Round(time.Second))
 	}
@@ -145,18 +156,19 @@ func (c *Client) waitForReady(serverName string) error {
 }
 
 // waitForStatus polls getStatus until the workload is running, reaches a
-// state it won't recover from, or the timeout elapses.
+// state it won't recover from, or ctx is done. getStatus receives ctx so an
+// in-flight status check is cancelled when the deadline passes.
 func waitForStatus(
+	ctx context.Context,
 	serverName string,
-	getStatus func(string) (WorkloadStatus, error),
-	timeout, interval time.Duration,
+	getStatus func(context.Context, string) (WorkloadStatus, error),
+	interval time.Duration,
 ) error {
-	deadline := time.Now().Add(timeout)
 	var last WorkloadStatus
 	var lastErr error
 
 	for {
-		st, err := getStatus(serverName)
+		st, err := getStatus(ctx, serverName)
 		if err != nil {
 			// The workload may not be registered yet; keep polling.
 			lastErr = err
@@ -171,19 +183,24 @@ func waitForStatus(
 			}
 		}
 
-		if time.Now().After(deadline) {
-			if lastErr != nil {
-				return fmt.Errorf("server %s did not become ready within %s: %w",
-					serverName, timeout, lastErr)
+		if ctx.Err() == nil {
+			select {
+			case <-ctx.Done():
+			case <-time.After(interval):
+				continue
 			}
-			status := last.Status
-			if status == "" {
-				status = statusStarting
-			}
-			return fmt.Errorf("server %s did not become ready within %s (status: %s)%s",
-				serverName, timeout, status, healthSuffix(last.Health))
 		}
-		time.Sleep(interval)
+
+		if lastErr != nil {
+			return fmt.Errorf("server %s did not become ready: %w (last status check: %w)",
+				serverName, context.Cause(ctx), lastErr)
+		}
+		status := last.Status
+		if status == "" {
+			status = statusStarting
+		}
+		return fmt.Errorf("server %s did not become ready: %w (status: %s)%s",
+			serverName, context.Cause(ctx), status, healthSuffix(last.Health))
 	}
 }
 
