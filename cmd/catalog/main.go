@@ -4,6 +4,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -29,6 +30,10 @@ const (
 	// Registries may optionally have a "skills" subdirectory containing
 	// individual skill directories with skill.json files.
 	skillsSubdir = "skills"
+
+	// exitSkipped is the exit code for a command that deliberately did no work,
+	// such as update-tools on a remote server that requires authentication.
+	exitSkipped = 3
 )
 
 var (
@@ -115,6 +120,11 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
+		var skip *skipError
+		if errors.As(err, &skip) {
+			fmt.Fprintf(os.Stderr, "Skipped: %v\n", err)
+			os.Exit(exitSkipped)
+		}
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}

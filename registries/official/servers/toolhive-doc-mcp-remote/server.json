@@ -10,7 +10,7 @@
             "license": "Apache-2.0"
           },
           "metadata": {
-            "last_updated": "2026-07-31T20:52:32Z",
+            "last_updated": "2026-11-20T10:36:26Z",
             "stars": 3
           },
           "overview": "## ToolHive Docs Remote MCP Server\n\nThe toolhive-doc-mcp-remote server allows you to search ToolHive documentation for help with using and contributing to the project (hosted version). The server maintains a pre-built SQLite vector database containing documentation that has been fetched from configured sources, then parsed and chunked into manageable sections. Documentation is embedded using a local bge-small-en-v1.5 model and indexed for fast vector similarity search. When users query the documentation, the server performs semantic search by comparing queries against stored embeddings and returns the most relevant documentation chunks.",
@@ -26,9 +26,69 @@
             "toolhive"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {},
+              "description": "Retrieve full details of a specific documentation chunk by its ID",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "chunk_id": {
+                    "description": "UUID of the documentation chunk",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "chunk_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_chunk"
+            },
+            {
+              "annotations": {},
+              "description": "Search Stacklok documentation and return relevant snippets with relevance scores",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "limit": {
+                    "default": 5,
+                    "description": "Maximum number of results to return (1-50, default: 5)",
+                    "type": "integer"
+                  },
+                  "min_score": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Minimum relevance score (0.0-1.0)"
+                  },
+                  "query": {
+                    "description": "Search query (natural language question or keywords)",
+                    "type": "string"
+                  },
+                  "query_type": {
+                    "default": "semantic",
+                    "description": "Type of search (semantic, keyword, hybrid, default: semantic)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "query_docs"
+            }
+          ],
           "tools": [
-            "query_docs",
-            "get_chunk"
+            "get_chunk",
+            "query_docs"
           ]
         }
       }

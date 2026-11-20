@@ -235,6 +235,13 @@ jobs:
               echo "$DIFF" >> $GITHUB_OUTPUT
               echo "EOF" >> $GITHUB_OUTPUT
             fi
+          elif [ "$UPDATE_EXIT" -eq 3 ]; then
+            # Exit code 3 means the server was skipped on purpose, for
+            # example a remote server that requires authentication.
+            echo "update-status=skipped" >> $GITHUB_OUTPUT
+            echo "changed=false" >> $GITHUB_OUTPUT
+            REASON=$({ grep -m1 '^Skipped: ' /tmp/update-tools.log || true; } | sed 's/^Skipped: //' | cut -c1-300)
+            echo "failure-reason=${REASON:-skipped}" >> "$GITHUB_OUTPUT"
           else
             echo "update-status=failed" >> $GITHUB_OUTPUT
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -269,7 +276,9 @@ jobs:
         if: steps.update.outputs.update-status != ''
         run: |
           mkdir -p /tmp/tool-status
-          if [ "$UPDATE_STATUS" != "success" ]; then
+          if [ "$UPDATE_STATUS" = "skipped" ]; then
+            STATUS=skipped
+          elif [ "$UPDATE_STATUS" != "success" ]; then
             STATUS=failed
           elif [ "$UPDATE_CHANGED" = "true" ]; then
             STATUS=updated
@@ -527,6 +536,10 @@ jobs:
                 ;;
               unchanged)
                 ROW="| ${SERVER_NAME} | Up to date | No tool changes |"
+                ;;
+              skipped)
+                REASON=$(sed 's/|/\\|/g' "/tmp/tool-status/${SERVER_KEY}.reason")
+                ROW="| ${SERVER_NAME} | Skipped | ${REASON} |"
                 ;;
               *)
                 HAS_FAILURES=true

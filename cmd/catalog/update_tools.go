@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"path/filepath"
 	"slices"
@@ -12,6 +15,7 @@ import (
 	mcp "github.com/stacklok/toolhive-core/mcpcompat/mcp"
 	toolhiveRegistry "github.com/stacklok/toolhive-core/registry/types"
 
+	"github.com/stacklok/toolhive-catalog/internal/remoteclient"
 	"github.com/stacklok/toolhive-catalog/internal/serverjson"
 	"github.com/stacklok/toolhive-catalog/internal/thvclient"
 )
@@ -21,13 +25,33 @@ var (
 	thvPath     string
 )
 
+// remoteTimeout bounds how long update-tools waits on a remote MCP server.
+const remoteTimeout = 60 * time.Second
+
+// skipError reports that a server was deliberately not updated, for example
+// because it requires credentials that CI doesn't have. main exits with
+// exitSkipped instead of the usual failure code so callers can tell the
+// difference.
+type skipError struct {
+	reason error
+}
+
+func (e *skipError) Error() string { return e.reason.Error() }
+func (e *skipError) Unwrap() error { return e.reason }
+
 var updateToolsCmd = &cobra.Command{
 	Use:   "update-tools <server.json>",
 	Short: "Update tools list by querying the running MCP server",
-	Long: `Starts a temporary MCP server from the server.json package definition,
-queries it for available tools, and updates the tools list in the _meta extensions.`,
-	Args: cobra.ExactArgs(1),
-	RunE: runUpdateTools,
+	Long: `Queries an MCP server for its available tools and updates the tools list
+in the _meta extensions.
+
+For package servers, starts a temporary server with thv. For remote servers,
+connects directly to the remote URL without credentials. Remote servers that
+require authentication are skipped (exit code 3).`,
+	Args:          cobra.ExactArgs(1),
+	RunE:          runUpdateTools,
+	SilenceErrors: true, // main prints the error, and distinguishes skips
+	SilenceUsage:  true,
 }
 
 func init() {
@@ -64,12 +88,89 @@ func runUpdateTools(_ *cobra.Command, args []string) error {
 		fmt.Printf("Current tool definitions count: %d\n", len(currentDefs))
 	}
 
-	newTools, newDefs, err := fetchToolsFromServer(sf, serverName)
+	var newTools []string
+	var newDefs []mcp.Tool
+	if sf.IsRemoteServer() {
+		newTools, newDefs, err = fetchToolsFromRemote(sf)
+		if errors.Is(err, remoteclient.ErrAuthRequired) {
+			if verbose {
+				fmt.Printf("Remote connection error: %v\n", err)
+			}
+			return &skipError{reason: remoteclient.ErrAuthRequired}
+		}
+	} else {
+		newTools, newDefs, err = fetchToolsFromServer(sf, serverName)
+	}
 	if err != nil {
 		return err
 	}
 
 	return applyToolsUpdate(sf, ext, currentTools, newTools, currentDefs, newDefs)
+}
+
+// fetchToolsFromRemote connects directly to the server's first remote and
+// lists its tools without credentials.
+func fetchToolsFromRemote(sf *serverjson.ServerFile) ([]string, []mcp.Tool, error) {
+	remote := sf.ServerJSON.Remotes[0]
+	fmt.Printf("Connecting to remote MCP server: %s\n", remote.URL)
+
+	ctx, cancel := context.WithTimeout(context.Background(), remoteTimeout)
+	defer cancel()
+
+	remoteDefs, err := remoteclient.ListTools(ctx, remote.URL, remote.Type)
+	if err != nil {
+		return nil, nil, err
+	}
+	defs, err := catalogToolDefinitions(remoteDefs)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	tools := make([]string, 0, len(defs))
+	for _, d := range defs {
+		tools = append(tools, d.Name)
+	}
+	sort.Strings(tools)
+	fmt.Printf("Discovered %d tools (with definitions)\n", len(tools))
+	return tools, defs, nil
+}
+
+// catalogToolDefinition holds the tool fields the catalog stores. It matches
+// what the thv path records, so entries have the same shape whichever way
+// their tools were fetched. Fields such as outputSchema are dropped; some
+// servers embed very large output schemas.
+type catalogToolDefinition struct {
+	Name        string         `json:"name"`
+	Description string         `json:"description"`
+	InputSchema map[string]any `json:"inputSchema,omitempty"`
+	Annotations map[string]any `json:"annotations,omitempty"`
+}
+
+// catalogToolDefinitions reduces tools to the fields the catalog stores and
+// sorts them by name.
+func catalogToolDefinitions(tools []mcp.Tool) ([]mcp.Tool, error) {
+	defs := make([]mcp.Tool, 0, len(tools))
+	for _, t := range tools {
+		full, err := json.Marshal(t)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal tool %s: %w", t.Name, err)
+		}
+		var stored catalogToolDefinition
+		if err := json.Unmarshal(full, &stored); err != nil {
+			return nil, fmt.Errorf("failed to read tool %s: %w", t.Name, err)
+		}
+		reduced, err := json.Marshal(stored)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal tool %s: %w", t.Name, err)
+		}
+		var def mcp.Tool
+		if err := json.Unmarshal(reduced, &def); err != nil {
+			return nil, fmt.Errorf("failed to convert tool %s: %w", t.Name, err)
+		}
+		defs = append(defs, def)
+	}
+	sort.Slice(defs, func(i, j int) bool { return defs[i].Name < defs[j].Name })
+	return defs, nil
 }
 
 // fetchToolsFromServer starts a temporary MCP server and queries its tools.

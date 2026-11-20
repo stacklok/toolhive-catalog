@@ -9,7 +9,7 @@
             "homepage": "https://huggingface.co/mcp"
           },
           "metadata": {
-            "last_updated": "2026-09-25T02:26:15Z"
+            "last_updated": "2026-11-20T10:36:23Z"
           },
           "overview": "## Hugging Face MCP Server\n\nThe huggingface-mcp-server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with the Hugging Face ecosystem, including models, datasets, and Spaces. It allows AI-driven workflows to discover models, inspect metadata, download artifacts, and reason about available ML resources without switching tools or manually navigating the Hugging Face Hub. This server is especially useful for model exploration, experimentation, research, and workflows that integrate open-source ML assets into AI-assisted development.",
           "status": "Active",
@@ -25,17 +25,225 @@
             "authentication"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": true,
+                "title": "Hugging Face Hub: Find, use and view models, datasets, spaces, buckets, papers, documentation and collections. Get daily papers reports, and browse trending content. "
+              },
+              "description": "When to use: Hugging Face Hub models, datasets, Spaces, collections, papers, daily papers, today's trending models, current paper leaderboard, docs; list and read repository files, model and dataset cards (README, license).\n\nExamples:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/trending\",\"--limit\",\"10\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/trending\"]}]}\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://papers/daily/latest\"]}]}\n  {\"operations\":[{\"cmd\":\"cat\",\"args\":[\"hf://papers/2501.00001/paper.md\"]}]}\n  {\"operations\":[{\"cmd\":\"search\",\"args\":[\"hf://models\",\"--tag\",\"base_model:finetune:org/repo\"]}]}\n\nUse hf_fs for Hugging Face Hub filesystem operations. Call it with operations, an array of {cmd, args} items; multiple operations may be submitted together.\n\nUsage:\n  {\"operations\":[{\"cmd\":\"ls\",\"args\":[\"hf://models/org/repo\"]}]}\n\nGrammar; each string below is one args array item:\n  ls     URI [--recursive] [--glob GLOB] [--type TYPE] [--sort SORT] [--limit N]\n  cat    URI [--offset N] [--max-bytes N]\n  attach URI [--max-bytes N]\n  stat   URI\n  find   URI [--name GLOB] [--path GLOB] [--type TYPE] [--limit N]\n  search URI [QUERY] [--type TYPE] [--sort SORT] [--tag TAG] [--kind mcp] [--limit N]\n\nCOMMAND = ls|cat|attach|stat|find|search.\nTYPE = file|dir|repo|bucket|collection|paper|link.\nSORT = createdAt|downloads|likes|lastModified|likes30d|trendingScore|mainSize|id|trending|upvotes.\nURI is a canonical hf:// URI. QUERY and GLOB are each one string.\n\nUse search for resource discovery, not repository-content search; ls for a known directory, find for recursive file discovery by name/path (not file contents), stat for filesystem metadata or an uncertain target type, cat for text contents, and attach for a complete JPEG, PNG, or WebP image. When the request gives an exact text-file URI, use cat directly; do not add ls or stat first. stat does not read the contents of JSON, Markdown, or other text files.\n\nSearch scopes: hf://models[/OWNER], hf://datasets[/OWNER], hf://spaces[/OWNER], hf://collections[/OWNER], hf://papers, and hf://docs[/...]. Repository and repository-file scopes are not supported: search a resource root or owner scope to discover resources; use find for file discovery within a repository or cat for a known text file. Paper and documentation search require QUERY. --tag filters models, datasets, and Spaces by Hub tag (repeatable; all must match) and applies only to hf://models|datasets|spaces[/OWNER]; omit QUERY when the tag already identifies the target, because QUERY also filters repository names. Derived models carry base_model:ID and base_model:RELATION:ID tags, where RELATION is finetune, adapter, merge, or quantized. --kind applies only to hf://spaces[/OWNER]; the only valid --kind value is mcp, which selects MCP Spaces. Tag families are documented at hf://README.md.\nUse ls hf://models/trending, hf://datasets/trending, hf://spaces/trending, or hf://papers/trending for trending listings.\nhf://papers/ID is a paper directory, not paper text. Use cat hf://papers/ID/paper.md for paper text and cat hf://papers/ID/metadata.json for metadata. No preliminary listing is needed for these known paths. Use ls hf://papers/ID to discover other resources.\nOmit --limit, --sort, and --type unless the request requires them. Limits and path-specific behavior are documented at hf://README.md. Issue one hf_fs call.\n\nLinks: hf://models|datasets|spaces/OWNER/NAME/PATH maps to https://huggingface.co[/datasets|/spaces]/OWNER/NAME/resolve/main/PATH (buckets: https://huggingface.co/buckets/OWNER/NAME/resolve/PATH); URL-encode each path segment. arXiv ids (for example 2502.16161) link papers, models and datasets.",
+              "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
+                "properties": {
+                  "operations": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "args": {
+                          "description": "Command arguments. First item must be an hf:// URI, not a local path or bare filename. One argument per array item. search discovers resources, not repository contents; use root/owner discovery scopes, find for file discovery, or cat for a known text file. --tag requires hf://models|datasets|spaces[/OWNER]; --kind requires hf://spaces[/OWNER] and its only valid value is mcp.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "cmd": {
+                          "description": "Command to execute.",
+                          "enum": [
+                            "ls",
+                            "cat",
+                            "attach",
+                            "stat",
+                            "find",
+                            "search"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cmd",
+                        "args"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 30,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "operations"
+                ],
+                "type": "object"
+              },
+              "name": "hf_fs"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Hugging Face User Info"
+              },
+              "description": "Inspect the current Hugging Face authentication context, including the account, visible organization memberships, and credential access details. Read-only and never returns credential values.",
+              "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "hf_whoami"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": true,
+                "title": "Hub Repository Details"
+              },
+              "description": "Get details for one or more Hugging Face repos (model, dataset, or space): card metadata, license, downloads, files, Space hardware/status, dataset configs, splits, columns and preview rows. Auto-detects type unless specified. For datasets, use operations: overview, dataset_structure, dataset_preview. Use dataset_structure first to discover configs, splits, sizes, and schema. Use dataset_preview only when config and split are known, unless the dataset has a single config/split.",
+              "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "config": {
+                    "description": "Dataset Viewer config. Required for dataset_preview when the dataset has multiple config/split options. Discover via dataset_structure.",
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "Row count for dataset_preview. Defaults to 5 and is clamped to 1-100.",
+                    "maximum": 9007199254740991,
+                    "minimum": -9007199254740991,
+                    "type": "integer"
+                  },
+                  "offset": {
+                    "description": "Row offset for dataset_preview. Defaults to 0.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "operations": {
+                    "description": "Details to return. Defaults to [\"overview\"]. For datasets, prefer [\"overview\", \"dataset_structure\"] first; then call [\"dataset_preview\"] with config and split.",
+                    "items": {
+                      "enum": [
+                        "overview",
+                        "dataset_structure",
+                        "dataset_preview"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "repo_ids": {
+                    "description": "Repo IDs for (models|dataset/space) - usually in author/name format (e.g. openai/gpt-oss-120b)",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 10,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "repo_type": {
+                    "description": "Specify lookup type; otherwise auto-detects",
+                    "enum": [
+                      "model",
+                      "dataset",
+                      "space"
+                    ],
+                    "type": "string"
+                  },
+                  "split": {
+                    "description": "Dataset Viewer split. Required for dataset_preview when the dataset has multiple config/split options. Discover via dataset_structure.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "repo_ids"
+                ],
+                "type": "object"
+              },
+              "name": "hub_repo_details"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": true,
+                "title": "Repo Search"
+              },
+              "description": "Search and list Hugging Face models, datasets and Spaces (sort by downloads, likes, trending) with a shared query interface. You can target models, datasets, spaces, or aggregate across multiple repo types in one call. Include links to repositories in your response.",
+              "inputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "author": {
+                    "description": "Organization or user namespace to filter by (e.g. 'google', 'meta-llama', 'huggingface').",
+                    "type": "string"
+                  },
+                  "filters": {
+                    "description": "Optional hub filter tags. Applied to each selected repo type (e.g. [\"text-generation\"], [\"language:en\"], [\"mcp-server\"]).",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "limit": {
+                    "default": 20,
+                    "description": "Maximum number of results to return per selected repo type",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "number"
+                  },
+                  "query": {
+                    "description": "Search term. Leave blank and specify sort + limit to browse trending or recent repositories.",
+                    "type": "string"
+                  },
+                  "repo_types": {
+                    "default": [
+                      "model",
+                      "dataset"
+                    ],
+                    "description": "Repository types to search. Defaults to [\"model\", \"dataset\"]. space uses keyword search via /api/spaces.",
+                    "items": {
+                      "enum": [
+                        "model",
+                        "dataset",
+                        "space"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 3,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "sort": {
+                    "description": "Sort order (descending): trendingScore, downloads, likes, createdAt, lastModified",
+                    "enum": [
+                      "trendingScore",
+                      "downloads",
+                      "likes",
+                      "createdAt",
+                      "lastModified"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "hub_repo_search"
+            }
+          ],
           "tools": [
+            "hf_fs",
             "hf_whoami",
-            "space_search",
-            "model_search",
-            "model_details",
-            "paper_search",
-            "dataset_search",
-            "dataset_details",
-            "hf_doc_search",
-            "hf_doc_fetch",
-            "gr1_flux1_schnell_infer"
+            "hub_repo_details",
+            "hub_repo_search"
           ]
         }
       }

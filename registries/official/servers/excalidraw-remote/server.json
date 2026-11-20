@@ -10,7 +10,7 @@
             "license": "MIT"
           },
           "metadata": {
-            "last_updated": "2026-06-05T03:22:29Z",
+            "last_updated": "2026-11-20T10:36:22Z",
             "stars": 4652
           },
           "overview": "## Excalidraw (Remote)\n\nThe Excalidraw remote MCP App server streams hand-drawn Excalidraw diagrams directly into the chat with smooth viewport camera control and interactive fullscreen editing. AI assistants can draw architecture diagrams, sketches, and illustrations using Excalidraw's hand-drawn aesthetic, with support for checkpointing and restoring diagram state. Finished diagrams can be exported and shared via excalidraw.com.",
@@ -25,12 +25,104 @@
             "mcp-app"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Renders a hand-drawn diagram using Excalidraw elements.\nElements stream in one by one with draw-on animations.\nCall read_me first to learn the element format.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "elements": {
+                    "description": "JSON array string of Excalidraw elements. Must be valid JSON — no comments, no trailing commas. Keep compact. Call read_me first for format reference.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "elements"
+                ],
+                "type": "object"
+              },
+              "name": "create_view"
+            },
+            {
+              "annotations": {},
+              "description": "Upload diagram to excalidraw.com and return shareable URL.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "json": {
+                    "description": "Serialized Excalidraw JSON",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "json"
+                ],
+                "type": "object"
+              },
+              "name": "export_to_excalidraw"
+            },
+            {
+              "annotations": {},
+              "description": "Read checkpoint state for restore.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "type": "object"
+              },
+              "name": "read_checkpoint"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Returns the Excalidraw element format reference with color palettes, examples, and tips. Call this BEFORE using create_view for the first time.",
+              "inputSchema": {
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "read_me"
+            },
+            {
+              "annotations": {},
+              "description": "Update checkpoint with user-edited state.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "data": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "data"
+                ],
+                "type": "object"
+              },
+              "name": "save_checkpoint"
+            }
+          ],
           "tools": [
-            "read_me",
             "create_view",
             "export_to_excalidraw",
-            "save_checkpoint",
-            "read_checkpoint"
+            "read_checkpoint",
+            "read_me",
+            "save_checkpoint"
           ]
         }
       }

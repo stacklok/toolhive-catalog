@@ -9,7 +9,7 @@
             "homepage": "https://modelcontextprotocol.io"
           },
           "metadata": {
-            "last_updated": "2026-10-09T02:56:48Z"
+            "last_updated": "2026-11-20T10:36:24Z"
           },
           "overview": "## MCP Specification Server\n\nThe mcp-spec is a Model Context Protocol (MCP) server that provides AI assistants with direct, structured access to the MCP specification itself. It enables AI-driven workflows to reference the official protocol definition while reasoning about MCP servers, tools, transports, and behaviors. The server is particularly valuable for MCP client and server development, protocol education, validation, and tooling scenarios where assistants require authoritative, spec-accurate context.",
           "status": "Active",
@@ -22,8 +22,95 @@
             "official"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Query documentation filesystem"
+              },
+              "description": "Run a read-only shell-like query against a virtualized, in-memory filesystem rooted at `/` that contains ONLY the Model Context Protocol documentation pages. This is NOT a shell on any real machine — nothing runs on the user's computer, the server host, or any network. The filesystem is a sandbox backed by documentation chunks.\n\nThis is how you read documentation pages: there is no separate \"get page\" tool. To read a page, pass its `.mdx` path to `head` or `cat` — a page at the URL path `/some/page` lives at `/some/page.mdx`. To search the docs with exact keyword or regex matches, use `rg`. To understand the docs structure, use `tree` or `ls`.\n\n**Paths are specific to this site — never guess them.** Discover real paths with `tree / -L 2`, `ls /`, or the search tool before reading. If a path does not exist, that only means the guess was wrong; it does NOT mean the topic is undocumented — use `rg -il \"keyword\" /` to find where it is covered.\n\n**Workflow:** Start with the search tool for broad or conceptual queries like \"how to authenticate\" or \"rate limiting\". Use this tool when you need exact keyword/regex matching, structural exploration, or to read the full content of a specific page by path.\n\nSupported commands: rg (ripgrep), grep, find, tree, ls, cat, head, tail, stat, wc, sort, uniq, cut, sed, jq, plus basic text utilities. No writes, no network, no process control. Run `--help` on any command for usage.\n\nEach call is STATELESS: the working directory always resets to `/` and no shell variables, aliases, or history carry over between calls. If you need to operate in a subdirectory, chain commands in one call with `\u0026\u0026` or pass absolute paths (e.g., `cd /some-directory \u0026\u0026 ls` or `ls /some-directory`). Do NOT assume that `cd` in one call affects the next call.\n\nExamples (replace the placeholder paths with real ones from `tree` or search):\n- `tree / -L 2` — see the top-level directory layout\n- `rg -il \"rate limit\" /` — find all files mentioning \"rate limit\"\n- `rg -C 3 \"apiKey\" /some-directory/` — show matches with 3 lines of context around each hit\n- `head -80 /some/page.mdx` — read the top 80 lines of a specific page\n- `head -80 /page-one.mdx /page-two.mdx /section/page-three.mdx` — read multiple pages in one call\n- `cat /some/page.mdx` — read a full page when you need everything\n\nOutput is truncated to 30KB per call. Prefer targeted `rg -C` or `head -N` over broad `cat` on large files. To read only the relevant sections of a large file, use `rg -C 3 \"pattern\" /path/file.mdx`. Batch multiple file reads into a single `head` or `cat` call whenever possible.\n\nWhen referencing pages in your response to the user, convert filesystem paths to URL paths by removing the `.mdx` extension. For example, `/some/page.mdx` becomes `/some/page`.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "command": {
+                    "description": "A shell command to run against the virtualized documentation filesystem (e.g., `rg -il \"keyword\" /`, `tree / -L 2`, `head -80 /path/file.mdx`).",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "command"
+                ],
+                "type": "object"
+              },
+              "name": "query_docs_filesystem_model_context_protocol"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Search documentation"
+              },
+              "description": "Search across the Model Context Protocol knowledge base to find relevant information, code examples, API references, and guides. Use this tool when you need to answer questions about Model Context Protocol, find specific documentation, understand how features work, or locate implementation details. The search returns contextual content with titles and direct links to the documentation pages. If you need the full content of a specific page, use the query_docs_filesystem tool to `head` or `cat` the page path (append `.mdx` to the path returned from search — e.g. a result at `/some/page` is read with `head -200 /some/page.mdx`).",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "query": {
+                    "description": "Search query",
+                    "type": "string"
+                  },
+                  "version": {
+                    "description": "Filter to specific version (e.g., 'v0.7')",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "search_model_context_protocol"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": false,
+                "title": "Submit documentation feedback"
+              },
+              "description": "Report a problem with this documentation site so the docs team can fix it. Use when a documentation page is incorrect, outdated, confusing, incomplete, or has a broken example. This is for feedback about the documentation content itself — not for product support requests or feedback about this tool or assistant.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "feedback": {
+                    "description": "A clear description of the documentation issue or suggestion — what is incorrect, outdated, missing, or confusing.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "The URL path of the documentation page the feedback is about (the page you were reading, without the `.mdx` extension).",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path",
+                  "feedback"
+                ],
+                "type": "object"
+              },
+              "name": "submit_feedback"
+            }
+          ],
           "tools": [
-            "SearchModelContextProtocol"
+            "query_docs_filesystem_model_context_protocol",
+            "search_model_context_protocol",
+            "submit_feedback"
           ]
         }
       }

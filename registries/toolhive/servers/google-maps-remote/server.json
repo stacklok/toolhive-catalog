@@ -10,7 +10,7 @@
             "license": "Proprietary"
           },
           "metadata": {
-            "last_updated": "2026-05-29T03:21:49Z",
+            "last_updated": "2026-11-20T10:36:23Z",
             "stars": 4134
           },
           "overview": "## Google Maps Grounding Lite (Remote)\n\nThe Google Maps Grounding Lite remote MCP server is Google's official managed Model Context Protocol server providing access to Google Maps Platform geospatial data. It offers three tools for place search with summaries and Google Maps links, weather lookups with current conditions and forecasts, and route computation with distance and duration data. Authentication requires a Google Maps API key passed via the X-Goog-Api-Key header. The server is currently experimental and available at no charge during the pre-GA preview period.",
@@ -26,10 +26,650 @@
             "directions"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Computes travel routes between an origin and a destination, optionally through intermediate stops. Returns the distance and duration for each route.\n\n**Input Requirements (CRITICAL):**\n\n1.  **`origin` and `destination` (objects - MANDATORY):** Each must be provided using exactly one of:\n    *   **`address`** (string, e.g., `'Eiffel Tower, Paris'`). Named places, landmarks, and businesses are resolved directly, so do NOT call `search_places` first just to geocode a waypoint. Include any city, region, or country the user mentioned.\n    *   **`lat_lng`** (object, `{\"latitude\": number, \"longitude\": number}`).\n    *   **`place_id`** (string, e.g., `'ChIJOwE_Id1w5EAR4Q27FkL6T_0'`), for example from `search_places`.\n\n2.  **`intermediate_waypoints` (array of objects - OPTIONAL):** Up to 25 stops to pass through, in order, between the origin and destination. Same format as `origin`. Not supported with `TRANSIT`. Only include stops the user asked for; specifying more than 10 intermediate waypoints will incur a higher cost and higher latency.\n\n3.  **`travel_mode` (enum - OPTIONAL):** `DRIVE` (default), `WALK`, `BICYCLE`, or `TRANSIT`.\n\n4.  **Timing (OPTIONAL - set at most ONE):** RFC 3339 timestamps with a UTC offset, e.g., `'2026-09-19T08:00:00-07:00'`. Defaults to departing now. For `TRANSIT`, the time can be up to 7 days in the past or up to 100 days in the future. For other modes, the time can be up to 365 days in the future and must not be in the past.\n    *   **`departure_time`:** Use when the user says when they will leave (e.g., \"tomorrow at 8am\").\n    *   **`arrival_time`:** Use when the user says when they must arrive (e.g., \"be there by 9am\").\n\n5.  **`routing_preference` (enum - OPTIONAL):**\n    *   `ROUTING_PREFERENCE_TRAFFIC_UNAWARE` (default): ignores live traffic, incidents, and closures. Lowest latency.\n    *   `ROUTING_PREFERENCE_TRAFFIC_AWARE_OPTIMAL`: uses live traffic conditions when available. Not supported for `WALK` or `BICYCLE`. Set this ONLY when the user asks about traffic, congestion, or a traffic-adjusted ETA. It incurs higher cost and latency.\n\n6.  **`location_bias` (object - OPTIONAL):** `{\"latitude\": number, \"longitude\": number}` used to disambiguate place names in waypoint addresses. If a name is ambiguous (e.g., \"Springfield\") and the user gave no region, keep the name as given in `address` and set `location_bias` toward the intended area instead of guessing a region.\n\n7.  **`compute_alternative_routes` (boolean - OPTIONAL):** Set to `true` only when the user asks for route options or alternatives. Defaults to `false`, which returns only the recommended route.\n\n8.  **`include_polyline` (boolean - OPTIONAL):** Set to `true` only when the route geometry (`encoded_polyline`) is needed. Defaults to `false`.\n\n**Instructions for Tool Call:**\n\n*   If the origin or the destination is missing, **you MUST ask the user for clarification** before calling the tool.\n*   For \"How far is A from B?\" questions, use B as the `origin` and A as the `destination`.\n\n**Example Tool Call:**\n{\"origin\":{\"address\":\"Eiffel Tower\"},\"destination\":{\"place_id\":\"ChIJt_5xIthw5EARoJ71mGq7t74\"},\"intermediate_waypoints\":[{\"address\":\"Louvre Museum\"}],\"travel_mode\":\"DRIVE\",\"departure_time\":\"2026-09-19T08:00:00+02:00\"}\n\n**Instructions for Response:**\n\n*   When alternative routes are requested, routes are ordered from most to least recommended.\n*   If `routes` is empty, tell the user no route was found. Do not guess a route.\n*   To find places along a `DRIVE` route, pass the route's `retrieval_token` to `search_along_route`. The token is valid for 10 minutes.\n*   Only state facts returned by the tool. Do NOT invent turn-by-turn directions, transit lines, stations, platforms, or transfers.\n*   The grounded output must be attributed to the source using each route's `attribution` field when available.\n",
+              "inputSchema": {
+                "$defs": {
+                  "LatLng": {
+                    "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard \u003chttps://en.wikipedia.org/wiki/World_Geodetic_System#1984_version\u003e. Values must be within normalized ranges.",
+                    "properties": {
+                      "latitude": {
+                        "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "Waypoint": {
+                    "description": "Encapsulates a waypoint. Waypoints mark both the beginning and end of a route.",
+                    "properties": {
+                      "address": {
+                        "description": "Human readable address or a plus code. See https://plus.codes for details. Only one of the following fields should be set: this field, latLng, placeId.",
+                        "type": "string"
+                      },
+                      "latLng": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "A point specified using geographic coordinates. Only one of the following fields should be set: this field, placeId, address."
+                      },
+                      "placeId": {
+                        "description": "The Place ID associated with the waypoint. Only one of the following fields should be set: this field, latLng, address.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "description": "ComputeRoutesRequest.",
+                "properties": {
+                  "arrivalTime": {
+                    "description": "Optional. Indicates that the route should be computed based on arrival time. Only one of this field or departureTime should be set.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "computeAlternativeRoutes": {
+                    "description": "Optional. Whether to compute alternative routes in addition to the recommended route. Defaults to false, in which case only the recommended route is returned. When set to true, up to all available routes are returned, though alternatives may not be available for every request.",
+                    "type": "boolean"
+                  },
+                  "departureTime": {
+                    "description": "Optional. Indicates that the route should be computed based on departure time. Only one of this field or arrivalTime should be set.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "destination": {
+                    "$ref": "#/$defs/Waypoint",
+                    "description": "Required. Destination waypoint."
+                  },
+                  "includePolyline": {
+                    "description": "Optional. Whether to include the encoded polyline in the response routes. Defaults to `false`. When set to `true`, `Route.encoded_polyline` is returned.",
+                    "type": "boolean"
+                  },
+                  "intermediateWaypoints": {
+                    "description": "Optional. Intermediate stops between the origin and destination to pass through in order. Up to 25 intermediate waypoints are supported. Specifying more than 10 intermediate waypoints will incur higher cost and higher latency. Intermediate waypoints are not supported when `travel_mode` is `TRANSIT`.",
+                    "items": {
+                      "$ref": "#/$defs/Waypoint"
+                    },
+                    "type": "array"
+                  },
+                  "locationBias": {
+                    "$ref": "#/$defs/LatLng",
+                    "description": "Optional. A location to bias the search results toward, for example to disambiguate waypoint text queries."
+                  },
+                  "origin": {
+                    "$ref": "#/$defs/Waypoint",
+                    "description": "Required. Origin waypoint."
+                  },
+                  "routingPreference": {
+                    "description": "Optional. Determines how traffic data is used to compute the route. `ROUTING_PREFERENCE_TRAFFIC_AWARE_OPTIMAL` is not supported when `travel_mode` is `WALK` or `BICYCLE`. For `TRANSIT`, it enables realtime transit data, such as delays and cancellations.",
+                    "enum": [
+                      "ROUTING_PREFERENCE_UNSPECIFIED",
+                      "ROUTING_PREFERENCE_TRAFFIC_UNAWARE",
+                      "ROUTING_PREFERENCE_TRAFFIC_AWARE_OPTIMAL"
+                    ],
+                    "type": "string",
+                    "x-google-enum-descriptions": [
+                      "No routing preference specified. Defaults to `ROUTING_PREFERENCE_TRAFFIC_UNAWARE`.",
+                      "Computes routes without taking live traffic conditions into consideration. Suitable when traffic conditions don't matter or are not applicable. Using this value produces the lowest latency.",
+                      "Calculates routes taking live traffic conditions into consideration, when traffic data is available. For `TRANSIT`, uses realtime transit data, such as delays and cancellations, when available. This value will trigger the Pro tier and incur higher billing cost and latency."
+                    ]
+                  },
+                  "travelMode": {
+                    "description": "Optional. Specifies the mode of transportation.",
+                    "enum": [
+                      "ROUTE_TRAVEL_MODE_UNSPECIFIED",
+                      "DRIVE",
+                      "WALK",
+                      "BICYCLE",
+                      "TRANSIT"
+                    ],
+                    "type": "string",
+                    "x-google-enum-descriptions": [
+                      "No travel mode specified. Defaults to `DRIVE`.",
+                      "Travel by passenger car.",
+                      "Travel by walking. NOTE: `WALK` routes are in beta and might sometimes be missing clear sidewalks or pedestrian paths. You must display this warning to the user for all walking that you display in your app.",
+                      "Travel by bicycle.",
+                      "Travel by public transit."
+                    ]
+                  }
+                },
+                "required": [
+                  "origin",
+                  "destination"
+                ],
+                "type": "object"
+              },
+              "name": "compute_routes"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Retrieves comprehensive environmental intelligence for a location, including Weather, Air Quality (AQI \u0026 pollutants), and Pollen (tree, grass, weed, and plant species allergen levels): current conditions, hourly forecasts/history, and daily forecasts for Weather and Air Quality; Pollen is a daily forecast only (today through +4 days, no hourly or past data).\n**Available Environmental Domains \u0026 Capabilities (`capabilities`: `WEATHER`, `AIR_QUALITY`, `POLLEN` — CRITICAL):**\n*   **Mandatory Explicit Selection:** You **MUST** include at least one of `WEATHER`, `AIR_QUALITY`, or `POLLEN` in `capabilities` on every call. Omitting `capabilities` is **NOT allowed**.\n*   **Broad / Ambiguous Outdoor Queries (Full Ambient Outdoor Suite):** If the user asks a general outdoor, travel, or situational question without restricting to a specific domain (e.g., \"What are outdoor conditions like right now for a run?\"), **explicitly include all three capabilities** (`capabilities: [\"WEATHER\", \"AIR_QUALITY\", \"POLLEN\"]`) to return the complete ambient outdoor suite (Weather + Air Quality + Pollen); for a past `date`/`hour`, leave out `POLLEN`, which has no history.\n*   **Targeted Domain Selection (Specific Queries):** If the user asks specifically for only one or two domains (e.g., \"What is the AQI in Seattle right now?\"), include **only** the requested capabilities (`WEATHER`, `AIR_QUALITY`, and/or `POLLEN`). Only the requested domain(s) will be executed and returned.\n**Specific Data Available by Domain:**\n*   **Weather (`weather`):** Temperature (Current, Feels Like, Max/Min, Heat Index), Wind (Speed, Gusts, Direction), Celestial Events (Sunrise/Sunset, Moon Phase), Precipitation (Type, Probability, Quantity/QPF), and Atmospheric Conditions (UV Index, Humidity, Cloud Cover, Thunderstorm Probability, Air Pressure).\n*   **Air Quality (`air_quality`):** Universal \u0026 Local Air Quality Indexes (AQI value, category, dominant pollutant), Health Recommendations across 7 sensitivity groups, and Pollutant Concentrations (`include_pollutant_concentration: true`). Each index has its own dominant pollutant; report it per index (e.g., don't give the Universal AQI's pollutant for the US AQI).\n*   **Pollen (`pollen`):** Daily Universal Pollen Index (UPI, 0–5) per Tree, Grass, and Weed category and per plant species (`index.value` with its `index.category`, e.g. 1 = \"Very Low\"), in-season status, cross-reactions, and health recommendations.\n*   **Missing Pollen Fields:** a missing `in_season` means not in season. Leave out plant species returned without an `index`, unless the user asks about that plant; then say no pollen data is reported for it today (don't infer a level).\n**Location Rules (CRITICAL):**\nThe target location MUST be specified in `location` using **ONLY ONE** of the following `oneof` sub-fields:\n1.  **Geographic Coordinates (`lat_lng`):**\n    *   Use when exact latitude/longitude coordinates are known.\n    *   Example: `{\"location\": {\"lat_lng\": {\"latitude\": 34.0522, \"longitude\": -118.2437}}}`\n2.  **Place ID (`place_id`):**\n    *   An unambiguous Google Maps Place ID (e.g., obtained from `search_places` or `resolve_names`).\n    *   Example: `{\"location\": {\"place_id\": \"ChIJLU7jZClu5kcR4PcOOO6p3I0\"}}`\n3.  **Address String (`address`):**\n    *   A city/region, neighborhood, landmark or point of interest, street address, or postal code, ideally with the city/country.\n    *   Example: `{\"location\": {\"address\": \"Paris, France\"}}`\n**Time \u0026 Usage Modes (`date` and `hour` — CRITICAL):**\n*   **Local Timezone Reference:** All `date` (`{year, month, day}`) and `hour` (`0-23`) inputs MUST be expressed in the **requested `location`'s local civil time zone** (e.g., a query for `\"Paris tomorrow at 13:00\"` uses `Europe/Paris` local date and hour `13`), never UTC or the caller's time zone.\n*   **1. Current Conditions (`date` omitted AND `hour` omitted):**\n    *   Provide `location` and the target `capabilities` (`WEATHER`, `AIR_QUALITY`, `POLLEN`). Do **NOT** specify `date` or `hour`.\n    *   Returns real-time Current Conditions (`CC`) for the requested domain(s) (current Weather, current-hour Air Quality, and/or today's Pollen forecast).\n    *   For **Air Quality**, Current Conditions is a **single hour**: do **NOT** use it alone to answer air quality or broad outdoor questions about **today** as a whole (use Daily Queries below).\n*   **2. Hourly Forecast / History (`date` specified AND `hour` specified `0-23`):**\n    *   Provide `location`, `date` (`{year, month, day}`), `hour` (`0-23`), and the target `capabilities`. If minutes are mentioned, round down to the nearest hour.\n    *   **CRITICAL CONSTRAINT (`date` is REQUIRED when `hour` is set):** Providing `hour` without `date` (`date` omitted, `hour` set) is **NOT allowed** and will fail with an error. Even when the user asks about a specific hour **today** (e.g., `\"at 13:00 today\"`), you **MUST** populate both `date` (today's date at `location`) and `hour`.\n    *   Executes an hourly lookup for requested Weather and/or Air Quality at `YYYY-MM-DD-HH` and a daily lookup for requested Pollen on `YYYY-MM-DD`.\n    *   **Weather \"when\" questions:** for **weather** questions asking **when / what time / best time** (e.g., `\"what time will it stop raining?\"`), use hourly `WEATHER` calls (`date` + `hour`) for the relevant hours. A daily Weather forecast has no hourly values. For **broad outdoor** \"when / best time\" questions (e.g., `\"when is the best time to go walking today?\"`), make these hourly `WEATHER` calls in addition to the full-day call for Air Quality (and Pollen) described under Daily Queries.\n*   **3. Daily Queries (`date` specified AND `hour` omitted):**\n    *   Provide `location`, `date` (`{year, month, day}` in the requested `location`'s local civil time) without `hour`, and the target `capabilities` for full-day queries (e.g., `\"weather and pollen in London tomorrow\"`).\n    *   **Air Quality and broad outdoor questions about today:** for **air quality** questions and **broad outdoor** questions (which include Air Quality) about **today** (e.g., `\"how will the air quality change today\"`, `\"is today a good day for a picnic?\"`), set `date` to **today's date at `location`** (hour omitted) to get the day's hourly Air Quality series. A Current Conditions call alone returns only the current hour of Air Quality and is not enough; you may add one if the user also asks about \"now\".\n    *   **Air Quality time windows:** for an air quality question about a window within one day (e.g., `\"air quality between noon and 6 PM\"`), prefer **one Daily call** for that date and read the window's hours from the Air Quality series, rather than sampling individual hours. If you use hourly calls, cover **every** hour of the window.\n    *   Returns daily forecasts for requested **Weather** and/or **Pollen**, and the day's hourly **Air Quality** series covering the full local day (00:00–23:00 local): 24 historical hours for a past date, 24 forecasted hours for a future date, and for **today** the earlier hours (history), the current hour, and the remaining hours (forecast).\n**Supported Time Horizons by Domain:**\n*   **Weather:** Hourly from 24 hours ago up to 240 hours (10 days) ahead (past hours need both `date` and `hour`); daily up to 10 days including today (today through +9 days); no daily history.\n*   **Air Quality:** Hourly from 720 hours (30 days) ago up to 96 hours (4 days) ahead; a full-day call must fit inside that window (in practice today −29 days through +3 days).\n*   **Pollen:** Daily only, today through +4 days (5 days including today); no past dates, and `hour` is ignored.\n*   *(Note: If several capabilities are requested and the `date`/`hour` is outside one of their ranges, the call still succeeds and returns only the supported ones.)*\n*   **Out-of-range requests:** If a requested date or hour may be outside a domain's supported range above (e.g., Pollen for a past date), still call `lookup_weather` for the **requested** date/hour; the error states the supported range. Do **not** call a different date, hour, or domain as a substitute.\n**Domain Options \u0026 Attribution:**\n*   **Language (`language_code`):** Optional BCP-47 language code (e.g., `\"fr\"`). Defaults to `\"en\"`.\n*   **Weather Units (`weather_options.units_system` or `units_system`):** Defaults to `METRIC`. Set to `IMPERIAL` (Fahrenheit/mph) if the user implies US standards or explicitly requests Imperial units. Supported in both `weather_options.units_system` (preferred) and top-level `units_system`; if both are specified, they must not conflict.\n*   **Air Quality Options (`air_quality_options`):** Set `include_pollutant_concentration: true` when specific pollutant concentrations (PM2.5, PM10, O3, NO2, SO2, CO) are needed; optionally set `index_region_code` (2-letter ISO country code, e.g., `\"US\"`) to request a specific regional AQI scale. By default, the response includes the Universal AQI and the location's regional AQI.\n*   **Attribution:** Grounded output MUST be attributed to the source using the `attribution` field inside each returned domain container (`weather.attribution`, `air_quality.attribution`, `pollen.attribution`).\n*   **Returned Times:** Air Quality `date_time` values are already in the location's local time (`utc_offset` included); present them as-is. Weather `date_time` (current and hourly) and sunrise/sunset times are UTC; convert them to the location's local time using `time_zone`. Label all times as local.\n",
+              "inputSchema": {
+                "$defs": {
+                  "AirQualityOptions": {
+                    "description": "Options specific to air quality requests.",
+                    "properties": {
+                      "includePollutantConcentration": {
+                        "description": "Optional. If true, includes detailed pollutant concentrations and additional information (sources and effects) in the air quality response.",
+                        "type": "boolean"
+                      },
+                      "indexRegionCode": {
+                        "description": "Optional. Two-letter ISO 3166-1 alpha-2 country/region code (e.g. \"US\", \"FR\", \"CN\") used to select the preferred local Air Quality Index (AQI) scale alongside the Universal AQI (UAQI). If not specified, defaults to the region of the requested location.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "Date": {
+                    "description": "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp",
+                    "properties": {
+                      "day": {
+                        "description": "Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant.",
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "month": {
+                        "description": "Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.",
+                        "format": "int32",
+                        "type": "integer"
+                      },
+                      "year": {
+                        "description": "Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.",
+                        "format": "int32",
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "LatLng": {
+                    "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard \u003chttps://en.wikipedia.org/wiki/World_Geodetic_System#1984_version\u003e. Values must be within normalized ranges.",
+                    "properties": {
+                      "latitude": {
+                        "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "Location": {
+                    "description": "Represents a location for the weather request.",
+                    "properties": {
+                      "address": {
+                        "description": "Human-readable address (e.g., street address, city, or postal code). Only one of the following fields should be set: this field, latLng, placeId.",
+                        "type": "string"
+                      },
+                      "latLng": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "A point specified using geographic coordinates. Only one of the following fields should be set: this field, placeId, address."
+                      },
+                      "placeId": {
+                        "description": "The Place ID associated with the location. Only one of the following fields should be set: this field, latLng, address.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "WeatherOptions": {
+                    "description": "Options specific to weather requests.",
+                    "properties": {
+                      "unitsSystem": {
+                        "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                        "enum": [
+                          "UNITS_SYSTEM_UNSPECIFIED",
+                          "IMPERIAL",
+                          "METRIC"
+                        ],
+                        "type": "string",
+                        "x-google-enum-descriptions": [
+                          "The units system is unspecified.",
+                          "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                          "The metric units system (e.g. Celsius, kilometers, etc)."
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "description": "Request for the LookupWeather method - represents the weather conditions at the requested location.",
+                "properties": {
+                  "airQualityOptions": {
+                    "$ref": "#/$defs/AirQualityOptions",
+                    "description": "Optional. Options specific to air quality requests. Ignored if `AIR_QUALITY` is not requested in `capabilities`."
+                  },
+                  "capabilities": {
+                    "description": "Optional. The environmental capabilities to include in the response.",
+                    "items": {
+                      "enum": [
+                        "CAPABILITY_UNSPECIFIED",
+                        "WEATHER",
+                        "AIR_QUALITY",
+                        "POLLEN"
+                      ],
+                      "type": "string",
+                      "x-google-enum-descriptions": [
+                        "Unspecified capability.",
+                        "Weather conditions (temperature, precipitation, wind, UV, etc.).",
+                        "Air quality information (AQI, pollutants, and health recommendations).",
+                        "Pollen information (tree, grass, weed, and plant species allergen levels)."
+                      ]
+                    },
+                    "type": "array"
+                  },
+                  "date": {
+                    "$ref": "#/$defs/Date",
+                    "description": "Optional. Specifies the date of the requested environmental information, relative to the local timezone of the location specified in the `location` field. Supported date ranges depend on the requested capabilities: - `WEATHER`: up to 24 hours in the past (when `hour` is also set) and up to 10 days (240 hours) in the future (today through +9 days for daily forecasts). - `AIR_QUALITY`: up to 30 days (720 hours) in the past and up to 4 days (96 hours) in the future. - `POLLEN`: today through +4 days (up to 5 days including today; historical dates are not supported)."
+                  },
+                  "hour": {
+                    "description": "Optional. Specifies the hour of the requested environmental information, in 24-hour format (0-23), relative to the local timezone of the location specified in the `location` field. Requires `date` to be specified. Supported hourly ranges depend on the requested capabilities: - `WEATHER`: up to 24 hours in the past and up to 240 hours (10 days) in the future. - `AIR_QUALITY`: up to 30 days (720 hours) in the past and up to 4 days (96 hours) in the future. - `POLLEN`: returns daily forecasts only; `hour` is ignored for pollen.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "languageCode": {
+                    "description": "Optional. The BCP-47 language code for localized text in the response (e.g. \"en\", \"ja\", \"fr-CA\"). Defaults to \"en\" if not specified.",
+                    "type": "string"
+                  },
+                  "location": {
+                    "$ref": "#/$defs/Location",
+                    "description": "Required. The location to get the weather conditions for."
+                  },
+                  "unitsSystem": {
+                    "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC).",
+                    "enum": [
+                      "UNITS_SYSTEM_UNSPECIFIED",
+                      "IMPERIAL",
+                      "METRIC"
+                    ],
+                    "type": "string",
+                    "x-google-enum-descriptions": [
+                      "The units system is unspecified.",
+                      "The imperial units system (e.g. Fahrenheit, miles, etc).",
+                      "The metric units system (e.g. Celsius, kilometers, etc)."
+                    ]
+                  },
+                  "weatherOptions": {
+                    "$ref": "#/$defs/WeatherOptions",
+                    "description": "Optional. Options specific to weather requests. `weather_options.units_system` is supported in tandem with top-level `units_system` (tag 4) to preserve backwards compatibility for existing callers; returns INVALID_ARGUMENT if both specify conflicting unit systems. Ignored if `WEATHER` is not requested in `capabilities`."
+                  }
+                },
+                "required": [
+                  "location"
+                ],
+                "type": "object"
+              },
+              "name": "lookup_weather"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Resolves a list of Google Maps URLs into canonical Google Maps Place IDs.\n\n**When to call this tool (CRITICAL):**\n\n*   Use this tool when the user provides one or more Google Maps sharing links or URLs (e.g. 'https://maps.app.goo.gl/...', 'https://www.google.com/maps/place/...', or 'https://maps.google.com/...') and you need to extract the underlying canonical Place IDs.\n*   You can specify up to 20 URLs to resolve in a single batch request.\n\n**Input Requirements (CRITICAL):**\n\n*   **`urls` (array of strings - MANDATORY):** The list of Google Maps URLs to resolve. Each URL must be a valid, single-place Google Maps URL.\n\n**Save to Google Maps:**\n\n*   The response includes a `save_to_maps_url` field: a single Google Maps link containing all successfully resolved places.\n*   When the user wants to save, share, or open the resolved places as a list in Google Maps (e.g. collecting places shared in a conversation), present this link to the user. Do NOT construct this link yourself.\n\n**Error Handling (CRITICAL):**\n\n*   This is a batch processing tool. A request might return \"mixed results\" (e.g. some URLs resolve successfully while others fail).\n*   The output list of `entities` is guaranteed to map 1:1 with the input `urls` indices. A failed URL resolution will result in an empty `Entity` message (no fields are set) at its corresponding index in the `entities` list.\n*   You **MUST** check the `failed_requests` map field in the response to identify which specific URL index failed. The key of `failed_requests` represents the 0-based index of the failed URL in the request. Do not assume the entire batch call failed because of a partial failure.\n",
+              "inputSchema": {
+                "description": "Request message for ResolveMapsUrls.",
+                "properties": {
+                  "urls": {
+                    "description": "Required. The Google Maps URLs to be resolved. Each URL should be a valid Google Maps URL, for example, https://maps.app.goo.gl/..., https://www.google.com/maps/place/..., or https://maps.google.com/.... Currently, only URLs pointing to a single place are supported. You may specify up to 20 URLs.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "urls"
+                ],
+                "type": "object"
+              },
+              "name": "resolve_maps_urls"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Resolves a batch list of specific location queries (landmark names or exact addresses) into canonical Google Maps Place IDs.\n\n**Input Requirements (CRITICAL):**\n\n1.  **`queries` (array of objects - MANDATORY):** A list of location queries to resolve. You may specify up to 20 queries.\n    *   **Each query object must have:**\n        *   **`text` (string - MANDATORY):** The text query representing a specific place name or address to resolve.\n            *   **Examples:** `'Googleplex, Mountain View, CA'`, `'1600 Amphitheatre Pkwy, Mountain View, CA'`, `'Eiffel Tower, Paris'`.\n\n2.  **`location_bias` (object - OPTIONAL):** Use this to prioritize results near a specific geographic area.\n    *   **Format:** `{\"viewport\": {\"low\": {\"latitude\": [value], \"longitude\": [value]}, \"high\": {\"latitude\": [value], \"longitude\": [value]}}}`\n\n3.  **`region_code` (string - OPTIONAL):** The Unicode CLDR region code (two-letter country code, e.g., `US`, `CA`) of the user to bias the results.\n\n**Instructions for Tool Call:**\n\n*   Specificity (CRITICAL): Queries must represent a specific place name or address. General searches like `'restaurants'` or chain names like `'Starbucks'` are not supported.\n*   Do NOT call this tool if the downstream tools you plan to invoke already accept raw address or place name strings directly.\n\n**Save to Google Maps:**\n\n*   The response includes a `save_to_maps_url` field: a single Google Maps link containing all successfully resolved places.\n*   When the user wants to save, share, or open the resolved places as a list in Google Maps, present this link to the user. Do NOT construct this link yourself.\n\n**Error Handling (CRITICAL):**\n\n*   This is a batch processing tool. A request might return \"mixed results\" (e.g. some queries resolve successfully while others fail).\n*   The output list of `results` is guaranteed to map 1:1 with the input `queries` indices. A failed query will result in an empty `Result` message (no `entity` is set) at its corresponding index in the `results` list.\n*   You **MUST** check the `failed_requests` map field in the response to identify which specific query index failed. The key of `failed_requests` represents the 0-based index of the failed query in the request. Do not assume the entire batch call failed because of a partial failure.\n",
+              "inputSchema": {
+                "$defs": {
+                  "LatLng": {
+                    "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard \u003chttps://en.wikipedia.org/wiki/World_Geodetic_System#1984_version\u003e. Values must be within normalized ranges.",
+                    "properties": {
+                      "latitude": {
+                        "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "LocationBias": {
+                    "description": "The region to bias the resolution results to.",
+                    "properties": {
+                      "viewport": {
+                        "$ref": "#/$defs/Viewport",
+                        "description": "A viewport defined by a bounding box."
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "LocationQuery": {
+                    "description": "A location query represents a specific location entity that can be resolved with Google Maps. Currently, only place names and addresses are supported as location queries.",
+                    "properties": {
+                      "text": {
+                        "description": "Required. The text query to resolve to a specific geospatial entity on Google Maps, such as a place or an address. The more specific the query, the more accurate the resolution. For example, \"San Francisco\", \"Googleplex, Mountain View, CA\", \"1600 Amphitheatre Parkway, Mountain View, CA\", or \"Eiffel Tower, Paris\". Queries must be a specific address or place name. General locations like a chain name (e.g. Starbucks) or a search query like \"restaurants\" are not supported.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "type": "object"
+                  },
+                  "Viewport": {
+                    "description": "A latitude-longitude viewport, represented as two diagonally opposite `low` and `high` points. A viewport is considered a closed region, i.e. it includes its boundary. The latitude bounds must range between -90 to 90 degrees inclusive, and the longitude bounds must range between -180 to 180 degrees inclusive. Various cases include: - If `low` = `high`, the viewport consists of that single point. - If `low.longitude` \u003e `high.longitude`, the longitude range is inverted (the viewport crosses the 180 degree longitude line). - If `low.longitude` = -180 degrees and `high.longitude` = 180 degrees, the viewport includes all longitudes. - If `low.longitude` = 180 degrees and `high.longitude` = -180 degrees, the longitude range is empty. - If `low.latitude` \u003e `high.latitude`, the latitude range is empty. Both `low` and `high` must be populated, and the represented box cannot be empty (as specified by the definitions above). An empty viewport will result in an error. For example, this viewport fully encloses New York City: { \"low\": { \"latitude\": 40.477398, \"longitude\": -74.259087 }, \"high\": { \"latitude\": 40.91618, \"longitude\": -73.70018 } }",
+                    "properties": {
+                      "high": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "Required. The high point of the viewport."
+                      },
+                      "low": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "Required. The low point of the viewport."
+                      }
+                    },
+                    "required": [
+                      "low",
+                      "high"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "description": "Request message for ResolveNames.",
+                "properties": {
+                  "locationBias": {
+                    "$ref": "#/$defs/LocationBias",
+                    "description": "Optional. An optional region to bias the resolution results. If specified, the resolution results will be biased towards the entities that are closer to this region. Including `location_bias` or `region_code` often provides better results by narrowing the search space. If both `location_bias` and `region_code` are specified, `location_bias` takes precedence over `region_code`."
+                  },
+                  "queries": {
+                    "description": "Required. A list of location queries to be resolved. You may specify up to 20 queries.",
+                    "items": {
+                      "$ref": "#/$defs/LocationQuery"
+                    },
+                    "type": "array"
+                  },
+                  "regionCode": {
+                    "description": "Optional. An optional region code to bias the resolution results. If specified, the resolution results will be biased towards the entities that are in or near the specified region. This should be a CLDR region code. For example, \"US\" or \"CA\". Including `location_bias` or `region_code` often provides better results by narrowing the search space. If both `location_bias` and `region_code` are specified, `location_bias` takes precedence over `region_code`.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "queries"
+                ],
+                "type": "object"
+              },
+              "name": "resolve_names"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Call this tool when the user wants to find places, businesses, or points of interest along a travel route (e.g., \"gas stations on my way to Tahoe\", \"coffee shops between SF and San Jose\"). Calling this tool incurs higher cost than `search_places`, so use `search_places` instead when searching near a single location rather than along a route.\n\n**Input Requirements (CRITICAL):**\n\n1.  **`text_query` (string - MANDATORY):** A natural language description of what to search for along the route.\n    *   **Examples:** `'ev chargers'`, `'coffee'`, `'vegetarian restaurants'`, `'rest stops'`.\n\n2.  **Route specification (MANDATORY - provide exactly ONE of the following):**\n    *   **`retrieval_token` (string):** The `retrieval_token` returned by a prior `compute_routes` call for a `DRIVE` route. Prefer this whenever the route was already computed. The token is valid for 10 minutes.\n    *   **`route_endpoints` (object):** The route's `origin` and `destination`. Each must be provided using one of `address`, `lat_lng`, or `place_id`.\n        *   **Example:** `{\"route_endpoints\": {\"origin\": {\"address\": \"San Francisco, CA\"}, \"destination\": {\"address\": \"Lake Tahoe, CA\"}}}`\n    *   **`encoded_polyline` (string):** An encoded polyline representing a `DRIVE` route.\n\n3.  **`travel_mode` (enum - OPTIONAL):** `DRIVE` (default), `WALK`, or `BICYCLE`. `WALK` and `BICYCLE` are only supported with `route_endpoints`. `TRANSIT` is not supported.\n\n4.  **`routing_preference` (enum - OPTIONAL):**\n    *   `ROUTING_PREFERENCE_TRAFFIC_UNAWARE` (default): computes the route and detours without live traffic. Lowest latency.\n    *   `ROUTING_PREFERENCE_TRAFFIC_AWARE_OPTIMAL`: uses live traffic conditions when available. Not supported for `WALK` or `BICYCLE`. Set this ONLY when the user asks about traffic, congestion, or traffic-adjusted detour times. It incurs higher latency.\n\n5.  **`include_extended_details` (boolean - OPTIONAL):** Set to `true` only when the request requires qualitative review insights, specific menu items or offerings, atmosphere, visitor tips or busyness, EV charger availability, gas prices, or other rich qualitative details. Defaults to `false`. Enabling it may increase latency.\n\n6.  **`language_code` (string - OPTIONAL):** The language for the results summary and place details, e.g., `en`, `ja`, `en-US`. Defaults to `en-US`.\n\n7.  **`region_code` (string - OPTIONAL):** The Unicode CLDR region code of the user, e.g., `US`, `CA`.\n\n**Instructions for Tool Call:**\n\n*   Each result includes a `detour_summary` (when available) describing the extra distance (`localized_detour_distance`) and, unless the route was given as `encoded_polyline`, the extra time (`detour_duration`) incurred by stopping at that place. Use it to compare options.\n*   The response `summary` may contain zero-based citations (e.g., \"[0]\") referencing entries in `results`.\n*   The grounded output must be attributed to the source using the `attribution` field of each `results[].place` when available.\n",
+              "inputSchema": {
+                "$defs": {
+                  "LatLng": {
+                    "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard \u003chttps://en.wikipedia.org/wiki/World_Geodetic_System#1984_version\u003e. Values must be within normalized ranges.",
+                    "properties": {
+                      "latitude": {
+                        "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "RouteEndpoints": {
+                    "description": "Route endpoints (origin, destination).",
+                    "properties": {
+                      "destination": {
+                        "$ref": "#/$defs/Waypoint",
+                        "description": "Required. Destination point (address, Place ID, or geographic coordinates)."
+                      },
+                      "origin": {
+                        "$ref": "#/$defs/Waypoint",
+                        "description": "Required. Starting point (address, Place ID, or geographic coordinates)."
+                      }
+                    },
+                    "required": [
+                      "origin",
+                      "destination"
+                    ],
+                    "type": "object"
+                  },
+                  "Waypoint": {
+                    "description": "Encapsulates a waypoint. Waypoints mark both the beginning and end of a route.",
+                    "properties": {
+                      "address": {
+                        "description": "Human readable address or a plus code. See https://plus.codes for details. Only one of the following fields should be set: this field, latLng, placeId.",
+                        "type": "string"
+                      },
+                      "latLng": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "A point specified using geographic coordinates. Only one of the following fields should be set: this field, placeId, address."
+                      },
+                      "placeId": {
+                        "description": "The Place ID associated with the waypoint. Only one of the following fields should be set: this field, latLng, address.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "description": "Request message for SearchAlongRoute.",
+                "properties": {
+                  "encodedPolyline": {
+                    "description": "An encoded polyline string representing the route. See https://developers.google.com/maps/documentation/utilities/polylinealgorithm. Only one of the following fields should be set: this field, retrievalToken, routeEndpoints.",
+                    "type": "string"
+                  },
+                  "includeExtendedDetails": {
+                    "description": "Optional. Includes extended place details in the response. Set this field to `true` when the user request requires rich qualitative insights, real-time dynamics, or specialized entity attributes: - Qualitative reviews, customer sentiment, and feedback. - Specific offerings like menu items, dishes, food specialties, beverages, or business highlights. - Qualitative atmosphere, interior decor, aesthetic, ambience, or mood. - Real-time data and specialized facility specs, visitor policies/tips, wait times. Leave `false` (default) for standard discovery searches (e.g., cuisines, store types), location/address lookups, contact info, operating hours, and standard metadata/amenities. Enabling this field may incur higher latency.",
+                    "type": "boolean"
+                  },
+                  "languageCode": {
+                    "description": "Optional. The language for summary and place details. Defaults to \"en-US\".",
+                    "type": "string"
+                  },
+                  "regionCode": {
+                    "description": "Optional. Country/region code (CLDR) of location (e.g., \"US\").",
+                    "type": "string"
+                  },
+                  "retrievalToken": {
+                    "description": "A retrieval token returned from a prior ComputeRoutes call representing the route. Only one of the following fields should be set: this field, encodedPolyline, routeEndpoints.",
+                    "type": "string"
+                  },
+                  "routeEndpoints": {
+                    "$ref": "#/$defs/RouteEndpoints",
+                    "description": "Explicit route endpoints (origin and destination). Only one of the following fields should be set: this field, encodedPolyline, retrievalToken."
+                  },
+                  "routingPreference": {
+                    "description": "Optional. Optional routing preference specifying how traffic data is used. Defaults to TRAFFIC_UNAWARE.",
+                    "enum": [
+                      "ROUTING_PREFERENCE_UNSPECIFIED",
+                      "ROUTING_PREFERENCE_TRAFFIC_UNAWARE",
+                      "ROUTING_PREFERENCE_TRAFFIC_AWARE_OPTIMAL"
+                    ],
+                    "type": "string",
+                    "x-google-enum-descriptions": [
+                      "No routing preference specified. Defaults to `ROUTING_PREFERENCE_TRAFFIC_UNAWARE`.",
+                      "Computes routes without taking live traffic conditions into consideration. Suitable when traffic conditions don't matter or are not applicable. Using this value produces the lowest latency.",
+                      "Calculates routes taking live traffic conditions into consideration, when traffic data is available. For `TRANSIT`, uses realtime transit data, such as delays and cancellations, when available. This value will trigger the Pro tier and incur higher billing cost and latency."
+                    ]
+                  },
+                  "textQuery": {
+                    "description": "Required. Natural language search query (e.g., \"ev chargers\", \"coffee\").",
+                    "type": "string"
+                  },
+                  "travelMode": {
+                    "description": "Optional. Specifies the travel mode used to compute the route and the detours. Defaults to `DRIVE`. `WALK` and `BICYCLE` are only supported with `route_endpoints`. `TRANSIT` is not supported.",
+                    "enum": [
+                      "ROUTE_TRAVEL_MODE_UNSPECIFIED",
+                      "DRIVE",
+                      "WALK",
+                      "BICYCLE",
+                      "TRANSIT"
+                    ],
+                    "type": "string",
+                    "x-google-enum-descriptions": [
+                      "No travel mode specified. Defaults to `DRIVE`.",
+                      "Travel by passenger car.",
+                      "Travel by walking. NOTE: `WALK` routes are in beta and might sometimes be missing clear sidewalks or pedestrian paths. You must display this warning to the user for all walking that you display in your app.",
+                      "Travel by bicycle.",
+                      "Travel by public transit."
+                    ]
+                  }
+                },
+                "required": [
+                  "textQuery"
+                ],
+                "type": "object"
+              },
+              "name": "search_along_route"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Call this tool when the user's request is to find places, businesses, addresses, locations, points of interest, or any other Google Maps related search.\n\n**Input Requirements (CRITICAL):**\n\n1.  **`text_query` (string - MANDATORY):** The primary search query. This must clearly define what the user is looking for.\n\n    *   **Examples:** `'restaurants in New York'`, `'coffee shops near Golden Gate Park'`, `'SF MoMA'`, `'1600 Amphitheatre Pkwy, Mountain View, CA, USA'`, `'pets friendly parks in Manhattan, New York'`, `'date night restaurants in Chicago'`, `'accessible public libraries in Los Angeles'`.\n\n    *   **For specific place details:** Include the requested attribute (e.g., `'Google Store Mountain View opening hours'`, `'SF MoMa phone number'`, `'Shoreline Park Mountain View address'`).\n\n2.  **`location_bias` (object - OPTIONAL):** Use this to prioritize results near a specific geographic area.\n    *   **Format:** `{\"location_bias\": {\"circle\": {\"center\": {\"latitude\": [value], \"longitude\": [value]}, \"radius_meters\": [value (optional)]}}}`\n\n    *   **Usage:**\n        *   **To bias to a 5km radius:** `{\"location_bias\": {\"circle\": {\"center\": {\"latitude\": 34.052235, \"longitude\": -118.243683}, \"radius_meters\": 5000}}}`\n        *   **To bias strongly to the center point:** `{\"location_bias\": {\"circle\": {\"center\": {\"latitude\": 34.052235, \"longitude\": -118.243683}}}}` (omitting `radius_meters`).\n\n3. **`language_code` (string - OPTIONAL):** The language to show the search results summary in.\n    *   **Format:** A two-letter language code (ISO 639-1), optionally followed by an underscore and a two-letter country code (ISO 3166-1 alpha-2), e.g., `en`, `ja`, `en_US`, `zh_CN`, `es_MX`. If the language code is not provided, the results will be in English.\n\n4. **`region_code` (string - OPTIONAL):** The Unicode CLDR region code of the user. This parameter is used to display the place details, like region-specific place name, if available. The parameter canaffect results based on applicable law.\n    *   **Format:** A two-letter country code (ISO 3166-1 alpha-2), e.g., `US`, `CA`.\n\n5. **`page_size` (integer - OPTIONAL):** The maximum number of places to return, from `1` to `10`. Defaults to `5`. Set above `5` only when the user wants to compare more than 5 places; values from `6` to `10` incur higher cost and higher latency.\n\n6. **`include_extended_details` (boolean - OPTIONAL):** Set this field to `true` when the user request requires rich qualitative insights, real-time dynamics, or specialized entity attributes. Defaults to `false`. Setting this to `true` incurs higher cost and latency.\n\n**Instructions for Tool Call:**\n\n*   Location Information (CRITICAL): The search must contain sufficient location information. If the location is ambiguous (e.g., just \"pizza places\"), *you must* specify it in the `text_query` (e.g., \"pizza places in New York\") or use the `location_bias` parameter. Include city, state/province, and region/country name if needed for disambiguation.\n\n*   Always provide the most specific and contextually rich `text_query` possible.\n\n*   Only use `location_bias` if coordinates are explicitly provided or if inferring a location from a user's known context is appropriate *and* necessary for better results.\n\n*   The grounded output must be attributed to the source using the information from the `attribution` field when available.\n",
+              "inputSchema": {
+                "$defs": {
+                  "Circle": {
+                    "description": "A circle defined by center point and radius.",
+                    "properties": {
+                      "center": {
+                        "$ref": "#/$defs/LatLng",
+                        "description": "Required. The center point of the circle."
+                      },
+                      "radiusMeters": {
+                        "description": "The radius of the circle in meters. The radius must be within 50,000 meters.",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "center"
+                    ],
+                    "type": "object"
+                  },
+                  "LatLng": {
+                    "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard \u003chttps://en.wikipedia.org/wiki/World_Geodetic_System#1984_version\u003e. Values must be within normalized ranges.",
+                    "properties": {
+                      "latitude": {
+                        "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                        "format": "double",
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                        "format": "double",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "LocationBias": {
+                    "description": "The region to bias the search results to. Places outside of this region may still be returned.",
+                    "properties": {
+                      "circle": {
+                        "$ref": "#/$defs/Circle",
+                        "description": "Optional. A circle defined by center point and radius. The `radius_meters` is optional. If not set, the results will be biased towards the center point."
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "description": "Request message for SearchText.",
+                "properties": {
+                  "includeExtendedDetails": {
+                    "description": "Optional. Includes extended place details in the response. Set this field to `true` when the user request requires rich qualitative insights, real-time dynamics, or specialized entity attributes: - Qualitative reviews, customer sentiment, and feedback. - Specific offerings like menu items, dishes, food specialties, beverages, or business highlights. - Qualitative atmosphere, interior decor, aesthetic, ambience, or mood. - Real-time data and specialized facility specs, visitor policies/tips, wait times. Leave `false` (default) for standard discovery searches (e.g., cuisines, store types), location/address lookups, contact info, operating hours, and standard metadata/amenities. Enabling this field will trigger the Pro tier and incur higher billing cost and higher latency.",
+                    "type": "boolean"
+                  },
+                  "languageCode": {
+                    "description": "Optional. The language to request that the summary is returned in. If the language code is unspecified or unrecognized, the summary with a preference for English will be returned. For example, \"en\" for English. Current list of supported languages: https://developers.google.com/maps/faq#languagesupport.",
+                    "type": "string"
+                  },
+                  "locationBias": {
+                    "$ref": "#/$defs/LocationBias",
+                    "description": "An optional region to bias the search results to. If an explicit location is in `text_query`, it will be used to bias the search results instead of this field."
+                  },
+                  "pageSize": {
+                    "description": "Optional. The maximum number of places to return, up to 10. The service may return fewer than this value. The default value is 5. Requesting more than 5 places will trigger the Pro tier and incur higher billing cost and latency.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "regionCode": {
+                    "description": "Optional. The Unicode country/region code (CLDR) of the location where the request is coming from. This parameter is used to display the place details, like region-specific place name, if available. The parameter can affect results based on applicable law. For example, \"US\" for United States. For more information, see https://www.unicode.org/cldr/charts/latest/supplemental/territory_language_information.html. Note that 3-digit region codes are not currently supported.",
+                    "type": "string"
+                  },
+                  "textQuery": {
+                    "description": "Required. The text query.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "textQuery"
+                ],
+                "type": "object"
+              },
+              "name": "search_places"
+            }
+          ],
           "tools": [
-            "search_places",
+            "compute_routes",
             "lookup_weather",
-            "compute_routes"
+            "resolve_maps_urls",
+            "resolve_names",
+            "search_along_route",
+            "search_places"
           ]
         }
       }

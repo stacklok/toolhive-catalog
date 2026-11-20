@@ -9,7 +9,7 @@
             "homepage": "https://docs.browserbase.com/integrations/mcp/setup"
           },
           "metadata": {
-            "last_updated": "2026-10-09T02:56:47Z"
+            "last_updated": "2026-11-20T10:36:21Z"
           },
           "overview": "## Browserbase (Remote)\n\nBrowserbase's hosted MCP server gives MCP clients cloud-browser automation through a Streamable HTTP endpoint. It supports starting and ending sessions, navigating pages, interacting with page elements, observing available actions, and extracting page data. Authenticate tool calls by supplying a Browserbase API key as the required `browserbaseApiKey` query parameter. Pass the session ID returned by `start` to later calls when the client does not preserve its MCP transport session.",
           "status": "Active",
@@ -21,13 +21,144 @@
             "testing"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {},
+              "description": "Perform an action on the page",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "name": "act"
+            },
+            {
+              "annotations": {},
+              "description": "Close the current Browserbase session",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "end"
+            },
+            {
+              "annotations": {},
+              "description": "Extract data from the page",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "instruction": {
+                    "type": "string"
+                  },
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "extract"
+            },
+            {
+              "annotations": {},
+              "description": "Navigate to a URL",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "url": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "type": "object"
+              },
+              "name": "navigate"
+            },
+            {
+              "annotations": {},
+              "description": "Observe actionable elements on the page",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "instruction": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "instruction"
+                ],
+                "type": "object"
+              },
+              "name": "observe"
+            },
+            {
+              "annotations": {},
+              "description": "Create or reuse a Browserbase session",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "sessionId": {
+                    "description": "Optional Browserbase session ID. For `start`, pass an existing session ID to reuse it instead of creating a new session. For other tools, pass the sessionId returned by `start` to target or reattach to that session; if omitted, they use the current active session.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "start"
+            }
+          ],
           "tools": [
-            "navigate",
             "act",
-            "observe",
+            "end",
             "extract",
-            "start",
-            "end"
+            "navigate",
+            "observe",
+            "start"
           ]
         }
       }

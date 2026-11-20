@@ -9,7 +9,7 @@
             "homepage": "https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp"
           },
           "metadata": {
-            "last_updated": "2026-10-30T02:19:18Z"
+            "last_updated": "2026-11-20T10:36:20Z"
           },
           "oauth_config": {
             "authorize_url": "https://accounts.google.com/o/oauth2/v2/auth",
@@ -34,16 +34,372 @@
             "sql"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": false
+              },
+              "description": "Cancel a running BigQuery job.\n\nUse this tool to cancel a query job that is currently executing (i.e. returned `jobComplete: false`\nwith a `jobId` from `execute_sql` or `execute_sql_readonly`). Specify the `jobId` to abort.\n",
+              "inputSchema": {
+                "description": "Request for cancelling a job.",
+                "properties": {
+                  "jobId": {
+                    "description": "Required. Job ID of the job to cancel.",
+                    "type": "string"
+                  },
+                  "location": {
+                    "description": "Required. The geographic location of the job.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the job to cancel.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "jobId",
+                  "location"
+                ],
+                "type": "object"
+              },
+              "name": "cancel_job"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "openWorldHint": true,
+                "readOnlyHint": false
+              },
+              "description": "Run a SQL query in the project and return the result. Prefer the `execute_sql_readonly`\ntool if possible.\n\nThis tool can execute any query that bigquery supports including:\n\n* SQL Queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, etc.)\n* AI/ML functions like `AI.FORECAST`, `AI.KEY_DRIVERS`, `ML.EVALUATE`, `ML.PREDICT`\n* Any other query that bigquery supports.\n\nExample Queries:\n\n```sql\n-- Insert data into a table.\nINSERT INTO `my_project.my_dataset`.my_table (name, age)\nVALUES ('Alice', 30);\n\n-- Create a table.\nCREATE TABLE `my_project.my_dataset`.my_table (\n  name STRING,\n  age INT64);\n\n-- DELETE data from a table.\nDELETE FROM `my_project.my_dataset`.my_table WHERE name = 'Alice';\n\n-- Create Dataset\nCREATE SCHEMA `my_project.my_dataset` OPTIONS (location = 'US');\n\n-- Drop table\nDROP TABLE `my_project.my_dataset`.my_table;\n\n-- Drop dataset\nDROP SCHEMA `my_project.my_dataset`;\n\n-- Create Model\nCREATE OR REPLACE MODEL `my_project.my_dataset.my_model`\nOPTIONS (\n  model_type = 'LINEAR_REG'\n  LS_INIT_LEARN_RATE=0.15,\n  L1_REG=1,\n  MAX_ITERATIONS=5,\n  DATA_SPLIT_METHOD='SEQ',\n  DATA_SPLIT_EVAL_FRACTION=0.3,\n  DATA_SPLIT_COL='timestamp') AS\nSELECT col1, col2, timestamp, label FROM `my_project.my_dataset.my_table`;\n```\n\nQueries executed using the `execute_sql` tool will always have the default job label\n`goog-mcp-server: true` automatically set in addition to any custom `labels` provided in the\nrequest. Queries are charged to the project specified in the `projectId` field.\n\nQuery Execution Behavior:\n* If the query completes within the synchronous timeout (default 20 seconds or custom `timeoutMs`),\n  the tool returns `jobComplete: true` and the initial result rows directly. For fast queries, `jobId` may\n  be omitted as no persistent background job is created; no polling is needed.\n* If the query takes longer than `timeoutMs`, the tool returns `jobComplete: false` and a `jobId` and `location`.\n  In this case, use the `get_query_results` tool with `jobId` and `location` to poll until `jobComplete: true`,\n  or use `cancel_job` to abort the running query.\n* The tool returns at most 3,000 rows, and `totalRows` gives the full count. If the response has a\n  `pageToken`, more rows are available: to read the next page, call the `get_query_results` tool with\n  the returned `jobId`, `location`, and `pageToken`.\n* You can optionally specify `timeoutMs` to configure the maximum synchronous wait time in milliseconds\n  (defaults to 20,000 ms), and `jobTimeoutMs` to enforce a hard server-side timeout after which\n  BigQuery automatically terminates the job.\n",
+              "inputSchema": {
+                "description": "Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout.",
+                "properties": {
+                  "dryRun": {
+                    "description": "Optional. If set to true, BigQuery doesn't run the job. Instead, if the query is valid, BigQuery returns statistics about the job such as how many bytes would be processed. If the query is invalid, an error returns. The default value is false.",
+                    "type": "boolean"
+                  },
+                  "jobTimeoutMs": {
+                    "description": "Optional. Optional: Job timeout in milliseconds. If this time limit is exceeded, BigQuery will attempt to stop the query job.",
+                    "format": "int64",
+                    "type": "string"
+                  },
+                  "labels": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Optional. The labels associated with this query. Labels can be used to organize and group query jobs. Label keys and values can be no longer than 63 characters, can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. Label keys must start with a letter and each label in the map must have a different key.",
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Required. Project that will be used for query execution and billing.",
+                    "type": "string"
+                  },
+                  "query": {
+                    "description": "Required. The query to execute in the form of a GoogleSQL query.",
+                    "type": "string"
+                  },
+                  "timeoutMs": {
+                    "description": "Optional. Optional: Specifies the maximum amount of time, in milliseconds, that the client is willing to wait for the query to complete. By default, this limit is 20 seconds (20,000 milliseconds).",
+                    "format": "int64",
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "execute_sql"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Run a read-only SQL query in the project and return the result. Prefer this tool over\n`execute_sql` if possible.\n\nThis tool is restricted to only `SELECT` statements. `INSERT`, `UPDATE`, and `DELETE`\nstatements and stored procedures aren't allowed. If the query doesn't include a `SELECT`\nstatement, an error is returned. For information on creating queries, see the [GoogleSQL\ndocumentation](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax).\n\nIMPORTANT: For predictive and analytical tasks (forecasting, anomaly detection,\nkey driver / root cause analysis, classification, churn prediction, or text generation),\nALWAYS execute computation in-warehouse using BigQuery native AI/ML functions\n(`AI.FORECAST`, `AI.DETECT_ANOMALIES`, `AI.KEY_DRIVERS`, `AI.CLASSIFY`, `AI.GENERATE`)\nrather than exporting raw rows to a local Python sandbox. In-warehouse execution\nscales to billions of rows, preserves governance, and eliminates data egress latency.\n\n\nExample Queries:\n\n```sql\n-- Count the number of penguins in each island.\nSELECT island, COUNT(*) AS population\nFROM bigquery-public-data.ml_datasets.penguins GROUP BY island\n\n-- Forecast data using AI.FORECAST\nSELECT *\nFROM AI.FORECAST(TABLE `project.dataset.my_table`, data_col =\u003e 'num_trips',\n  timestamp_col =\u003e 'date', id_cols =\u003e ['usertype'], horizon =\u003e 30)\n\n-- Detect anomalies in time series data using AI.DETECT_ANOMALIES\nSELECT *\nFROM AI.DETECT_ANOMALIES(\n  TABLE `project.dataset.historical_metrics`,\n  TABLE `project.dataset.recent_metrics`,\n  data_col =\u003e 'num_requests',\n  timestamp_col =\u003e 'timestamp'\n)\n\n-- Identify key drivers of metric changes using AI.KEY_DRIVERS\nSELECT *\nFROM AI.KEY_DRIVERS(\n  TABLE `project.dataset.sales_summary`,\n  metric_col =\u003e 'total_revenue',\n  dimension_cols =\u003e ['region', 'product_category'],\n  interest_label_col =\u003e 'is_current_quarter'\n)\n\n-- Classify text into categories using AI.CLASSIFY\nSELECT\n  ticket_id,\n  AI.CLASSIFY(ticket_text, ['Billing', 'Technical Support', 'Feature Request']) AS category\nFROM `project.dataset.support_tickets`\n\n-- Generate text or summaries using AI.GENERATE\nSELECT\n  review_id,\n  AI.GENERATE(CONCAT('Summarize this customer review: ', review_text)).result AS summary\nFROM `project.dataset.reviews`\n```\n\nQueries executed using the `execute_sql_readonly` tool will always have the job label\n`goog-mcp-server: true` automatically set in addition to any custom `labels` provided in\nthe request. Queries are charged to the project specified in the `projectId` field.\n\nQuery Execution Behavior:\n* If the query completes within the synchronous timeout (default 20 seconds or custom `timeoutMs`),\n  the tool returns `jobComplete: true` and the initial result rows directly. For fast queries, `jobId` may\n  be omitted as no persistent background job is created; no polling is needed.\n* If the query takes longer than `timeoutMs`, the tool returns `jobComplete: false` and a `jobId` and `location`.\n  In this case, use the `get_query_results` tool with `jobId` and `location` to poll until `jobComplete: true`,\n  or use `cancel_job` to abort the running query.\n* The tool returns at most 3,000 rows, and `totalRows` gives the full count. If the response has a\n  `pageToken`, more rows are available: to read the next page, call the `get_query_results` tool with\n  the returned `jobId`, `location`, and `pageToken`.\n* You can optionally specify `timeoutMs` to configure the maximum synchronous wait time in milliseconds\n  (defaults to 20,000 ms), and `jobTimeoutMs` to enforce a hard server-side timeout after which\n  BigQuery automatically terminates the job.\n",
+              "inputSchema": {
+                "description": "Runs a BigQuery SQL query synchronously and returns query results if the query completes within a specified timeout.",
+                "properties": {
+                  "dryRun": {
+                    "description": "Optional. If set to true, BigQuery doesn't run the job. Instead, if the query is valid, BigQuery returns statistics about the job such as how many bytes would be processed. If the query is invalid, an error returns. The default value is false.",
+                    "type": "boolean"
+                  },
+                  "jobTimeoutMs": {
+                    "description": "Optional. Optional: Job timeout in milliseconds. If this time limit is exceeded, BigQuery will attempt to stop the query job.",
+                    "format": "int64",
+                    "type": "string"
+                  },
+                  "labels": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Optional. The labels associated with this query. Labels can be used to organize and group query jobs. Label keys and values can be no longer than 63 characters, can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. Label keys must start with a letter and each label in the map must have a different key.",
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Required. Project that will be used for query execution and billing.",
+                    "type": "string"
+                  },
+                  "query": {
+                    "description": "Required. The query to execute in the form of a GoogleSQL query.",
+                    "type": "string"
+                  },
+                  "timeoutMs": {
+                    "description": "Optional. Optional: Specifies the maximum amount of time, in milliseconds, that the client is willing to wait for the query to complete. By default, this limit is 20 seconds (20,000 milliseconds).",
+                    "format": "int64",
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "execute_sql_readonly"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Get metadata information about a BigQuery dataset or BigLake namespace.",
+              "inputSchema": {
+                "description": "Request for a dataset.",
+                "properties": {
+                  "datasetId": {
+                    "description": "Required. Dataset ID of the dataset request.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the dataset request.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "datasetId"
+                ],
+                "type": "object"
+              },
+              "name": "get_dataset_info"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Get information and status about a BigQuery job.\n\nUse this tool to check the status, statistics, or configuration of a job using its `jobId`.\n",
+              "inputSchema": {
+                "description": "Request for getting information about a job.",
+                "properties": {
+                  "jobId": {
+                    "description": "Required. Job ID of the requested job.",
+                    "type": "string"
+                  },
+                  "location": {
+                    "description": "Required. The geographic location of the job.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the requested job.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "jobId",
+                  "location"
+                ],
+                "type": "object"
+              },
+              "name": "get_job"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Get the results of a BigQuery SQL query job.\n\nUse this tool ONLY when:\n1. A previous `execute_sql` or `execute_sql_readonly` call returned `jobComplete: false` with a `jobId`\n   (poll with this tool until `jobComplete: true`), OR\n2. You need to paginate through additional rows using `pageToken` or `startIndex` for a previously completed job.\n\nDo NOT call this tool if the query already returned `jobComplete: true` with all rows (no `pageToken`).\n\nSupports pagination. Use `maxResults` to limit results (3,000 by default) and `pageToken` to retrieve the next page of results.\nA response has a `pageToken` only when more rows are available.\n",
+              "inputSchema": {
+                "description": "Request for getting query results of a job.",
+                "properties": {
+                  "jobId": {
+                    "description": "Required. Job ID of the query job.",
+                    "type": "string"
+                  },
+                  "location": {
+                    "description": "Required. The geographic location of the job.",
+                    "type": "string"
+                  },
+                  "maxResults": {
+                    "description": "Optional. Maximum number of results to read. Defaults to 3,000.",
+                    "format": "int64",
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "pageToken": {
+                    "description": "Optional. Page token, returned by a previous call, to request the next page of results.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the query job.",
+                    "type": "string"
+                  },
+                  "startIndex": {
+                    "description": "Optional. Zero-based index of the starting row.",
+                    "format": "uint64",
+                    "type": "string"
+                  },
+                  "timeoutMs": {
+                    "description": "Optional. Specifies the maximum amount of time, in milliseconds, that the client is willing to wait for the query to complete.",
+                    "format": "int64",
+                    "maximum": 4294967295,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "jobId",
+                  "location"
+                ],
+                "type": "object"
+              },
+              "name": "get_query_results"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Get metadata information about a BigQuery table or BigLake table.",
+              "inputSchema": {
+                "description": "Request for a table.",
+                "properties": {
+                  "datasetId": {
+                    "description": "Required. Dataset ID of the table request.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the table request.",
+                    "type": "string"
+                  },
+                  "tableId": {
+                    "description": "Required. Table ID of the table request.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "datasetId",
+                  "tableId"
+                ],
+                "type": "object"
+              },
+              "name": "get_table_info"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "List BigQuery dataset IDs and BigLake namespaces in a Google Cloud project.\nSupports pagination. Use `pageSize` to limit results and `pageToken` to retrieve next page.\n",
+              "inputSchema": {
+                "description": "Request for a list of datasets in a project.",
+                "properties": {
+                  "pageSize": {
+                    "description": "Optional. The maximum number of results to return in a single response page. If unset, the default page size of 5000 is used.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "pageToken": {
+                    "description": "Optional. Page token, returned by a previous call, to request the next page of results.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the dataset request.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId"
+                ],
+                "type": "object"
+              },
+              "name": "list_dataset_ids"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "List table ids in a BigQuery dataset or BigLake namespace.\nSupports pagination. Use `pageSize` to limit results and `pageToken` to retrieve next page.\n",
+              "inputSchema": {
+                "description": "Request for a list of tables in a dataset.",
+                "properties": {
+                  "datasetId": {
+                    "description": "Required. Dataset ID of the table request.",
+                    "type": "string"
+                  },
+                  "pageSize": {
+                    "description": "Optional. The maximum number of results to return in a single response page. If unset, the default page size of 5000 is used.",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "pageToken": {
+                    "description": "Optional. Page token, returned by a previous call, to request the next page of results.",
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Required. Project ID of the table request.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId",
+                  "datasetId"
+                ],
+                "type": "object"
+              },
+              "name": "list_table_ids"
+            }
+          ],
           "tools": [
-            "list_dataset_ids",
-            "get_dataset_info",
-            "list_table_ids",
-            "get_table_info",
-            "execute_sql_readonly",
-            "execute_sql",
-            "get_query_results",
             "cancel_job",
-            "get_job"
+            "execute_sql",
+            "execute_sql_readonly",
+            "get_dataset_info",
+            "get_job",
+            "get_query_results",
+            "get_table_info",
+            "list_dataset_ids",
+            "list_table_ids"
           ]
         }
       }
