@@ -65,7 +65,7 @@ jobs:
       has-changes: ${{ steps.set-matrix.outputs.has-changes }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -167,7 +167,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
@@ -175,13 +175,13 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7
+        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           go-version-file: 'go.mod'
           cache: true
 
       - name: Install ToolHive
-        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0
+        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0.0.7
         with:
           version: 'v0.64.0'
 
@@ -286,7 +286,7 @@ jobs:
 
       - name: Upload tool update status
         if: steps.update.outputs.update-status != ''
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tool-status-${{ steps.server-info.outputs.server-key }}
           path: /tmp/tool-status/
@@ -316,7 +316,7 @@ jobs:
 
       - name: Upload commit info
         if: (steps.update.outputs.changed == 'true' || steps.update.outputs.warning-added == 'true')
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: commit-info-${{ steps.server-info.outputs.server-key }}
           path: /tmp/commit-info/
@@ -385,7 +385,7 @@ jobs:
           echo "id=$USER_ID" >> "$GITHUB_OUTPUT"
 
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref || github.ref }}
@@ -394,7 +394,7 @@ jobs:
           persist-credentials: true
 
       - name: Download all commit info artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: /tmp/artifacts/
           pattern: commit-info-*
@@ -492,7 +492,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download all tool status artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: /tmp/tool-status/
           pattern: tool-status-*
