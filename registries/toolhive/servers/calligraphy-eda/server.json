@@ -1,0 +1,58 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.calligraphyeda/calligraphy-eda-mcp-server",
+  "title": "calligraphy-eda",
+  "description": "Autonomous 0-DRC PCB routing, free $0 pre-flight KiCad/DSN/DFM/RF stackup auditing, impedance calculation, and turnkey Gerber synthesis.",
+  "version": "1.3.0",
+  "repository": {
+    "url": "https://github.com/calligraphysystems/vibe-hardware-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://calligraphyeda.com/api/v1/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://calligraphyeda.com/api/v1/mcp": {
+          "tier": "Official",
+          "status": "Active",
+          "tags": [
+            "pcb",
+            "kicad",
+            "hardware",
+            "eda",
+            "electronics"
+          ],
+          "tools": [
+            "analyze_kicad_pcb",
+            "analyze_specctra_dsn",
+            "calculate_pcb_trace_impedance",
+            "audit_pcb_dfm_rules",
+            "audit_pre_route_rf_and_fab_stackup",
+            "calligraphy_list_gallery_boards",
+            "calligraphy_preflight_audit",
+            "calligraphy_compile_board",
+            "calligraphy_apply_promo",
+            "calligraphy_get_job_status",
+            "calligraphy_verify_stablecoin_payment",
+            "calligraphy_download_fab_bundle",
+            "calligraphy_lookup_b2b_invoice",
+            "calligraphy_create_coinbase_checkout",
+            "calligraphy_route_pcb",
+            "calligraphy_request_ip_whitelist",
+            "calligraphy_get_crypto_payment_intent",
+            "calligraphy_verify_crypto_payment"
+          ],
+          "custom_metadata": {
+            "author": "Calligraphy Systems LLC",
+            "homepage": "https://calligraphyeda.com"
+          }
+        }
+      }
+    }
+  }
+}
