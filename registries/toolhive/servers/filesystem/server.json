@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.0.1": {
+        "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.4.0": {
           "args": [
             "/projects"
           ],
@@ -64,7 +64,7 @@
   "name": "io.github.stacklok/filesystem",
   "packages": [
     {
-      "identifier": "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.0.1",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/server-filesystem:2.4.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
