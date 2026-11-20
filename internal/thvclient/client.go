@@ -1,6 +1,7 @@
 package thvclient
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -11,11 +12,42 @@ import (
 	"github.com/stacklok/toolhive-catalog/internal/serverjson"
 )
 
+const (
+	// defaultReadyTimeout bounds how long RunServer waits for a workload to
+	// reach "running". It covers image pulls and slow container startup on
+	// CI runners, where large images can take well over a minute.
+	defaultReadyTimeout = 3 * time.Minute
+
+	// defaultReadyPollInterval is how often RunServer checks workload status.
+	defaultReadyPollInterval = 2 * time.Second
+)
+
+// Workload statuses reported by `thv status`. These mirror the
+// WorkloadStatus values in ToolHive's pkg/container/runtime package.
+const (
+	statusRunning   = "running"
+	statusStarting  = "starting"
+	statusError     = "error"
+	statusStopped   = "stopped"
+	statusStopping  = "stopping"
+	statusUnhealthy = "unhealthy"
+	statusRemoving  = "removing"
+)
+
+// WorkloadStatus is the subset of `thv status --format json` output that
+// RunServer needs.
+type WorkloadStatus struct {
+	Status string `json:"status"`
+	Health string `json:"health,omitempty"`
+}
+
 // Client interacts with the ToolHive CLI (thv) to run MCP servers
 // and discover their available tools.
 type Client struct {
-	thvPath string
-	verbose bool
+	thvPath      string
+	verbose      bool
+	readyTimeout time.Duration
+	pollInterval time.Duration
 }
 
 // NewClient creates a new ToolHive client. If thvPath is empty, it searches PATH.
@@ -29,8 +61,10 @@ func NewClient(thvPath string, verbose bool) (*Client, error) {
 	}
 
 	return &Client{
-		thvPath: thvPath,
-		verbose: verbose,
+		thvPath:      thvPath,
+		verbose:      verbose,
+		readyTimeout: defaultReadyTimeout,
+		pollInterval: defaultReadyPollInterval,
 	}, nil
 }
 
@@ -71,10 +105,110 @@ func (c *Client) RunServer(sf *serverjson.ServerFile, serverName string) (string
 		)
 	}
 
-	// Give the server time to start
-	time.Sleep(5 * time.Second)
+	if err := c.waitForReady(tempName); err != nil {
+		if logs, logErr := c.Logs(tempName); logErr == nil && logs != "" {
+			fmt.Printf("Server logs:\n%s\n", logs)
+		}
+		if stopErr := c.StopServer(tempName); stopErr != nil {
+			fmt.Printf("Warning: %v\n", stopErr)
+		}
+		return "", err
+	}
 
 	return tempName, nil
+}
+
+// statusWaitDelay bounds how long a cancelled `thv status` call may take to
+// release its output pipes before Wait returns anyway.
+const statusWaitDelay = 5 * time.Second
+
+// Status returns the current status of a workload. The thv subprocess is
+// killed if ctx is cancelled or its deadline passes.
+func (c *Client) Status(ctx context.Context, serverName string) (WorkloadStatus, error) {
+	// #nosec G204 - thvPath is validated in NewClient via exec.LookPath
+	cmd := exec.CommandContext(ctx, c.thvPath, "status", serverName, "--format", "json")
+	cmd.WaitDelay = statusWaitDelay
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return WorkloadStatus{}, fmt.Errorf(
+			"thv status failed: %w\nOutput: %s",
+			err, string(output),
+		)
+	}
+	return ParseStatusJSON(string(output))
+}
+
+// waitForReady polls the workload status until the server is running.
+func (c *Client) waitForReady(serverName string) error {
+	if c.verbose {
+		fmt.Printf("Waiting up to %s for %s to be ready\n", c.readyTimeout, serverName)
+	}
+	ctx, cancel := context.WithTimeoutCause(context.Background(), c.readyTimeout,
+		fmt.Errorf("timed out after %s", c.readyTimeout))
+	defer cancel()
+
+	start := time.Now()
+	err := waitForStatus(ctx, serverName, c.Status, c.pollInterval)
+	if err == nil && c.verbose {
+		fmt.Printf("Server %s ready after %s\n", serverName, time.Since(start).Round(time.Second))
+	}
+	return err
+}
+
+// waitForStatus polls getStatus until the workload is running, reaches a
+// state it won't recover from, or ctx is done. getStatus receives ctx so an
+// in-flight status check is cancelled when the deadline passes.
+func waitForStatus(
+	ctx context.Context,
+	serverName string,
+	getStatus func(context.Context, string) (WorkloadStatus, error),
+	interval time.Duration,
+) error {
+	var last WorkloadStatus
+	var lastErr error
+
+	for {
+		st, err := getStatus(ctx, serverName)
+		if err != nil {
+			// The workload may not be registered yet; keep polling.
+			lastErr = err
+		} else {
+			last, lastErr = st, nil
+			switch st.Status {
+			case statusRunning:
+				return nil
+			case statusError, statusStopped, statusStopping, statusUnhealthy, statusRemoving:
+				return fmt.Errorf("server %s failed to start (status: %s)%s",
+					serverName, st.Status, healthSuffix(st.Health))
+			}
+		}
+
+		if ctx.Err() == nil {
+			select {
+			case <-ctx.Done():
+			case <-time.After(interval):
+				continue
+			}
+		}
+
+		if lastErr != nil {
+			return fmt.Errorf("server %s did not become ready: %w (last status check: %w)",
+				serverName, context.Cause(ctx), lastErr)
+		}
+		status := last.Status
+		if status == "" {
+			status = statusStarting
+		}
+		return fmt.Errorf("server %s did not become ready: %w (status: %s)%s",
+			serverName, context.Cause(ctx), status, healthSuffix(last.Health))
+	}
+}
+
+func healthSuffix(health string) string {
+	if health == "" {
+		return ""
+	}
+	return ": " + health
 }
 
 // ListTools queries a running MCP server for its tools.

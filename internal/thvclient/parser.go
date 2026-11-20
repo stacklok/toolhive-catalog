@@ -122,3 +122,19 @@ func ParseToolsText(output string) ([]string, error) {
 	sort.Strings(tools)
 	return tools, nil
 }
+
+// ParseStatusJSON parses JSON output from thv status --format json.
+func ParseStatusJSON(output string) (WorkloadStatus, error) {
+	jsonStart := strings.Index(output, "{")
+	if jsonStart == -1 {
+		return WorkloadStatus{}, fmt.Errorf("no JSON in thv status output: %s", output)
+	}
+	var st WorkloadStatus
+	if err := json.Unmarshal([]byte(output[jsonStart:]), &st); err != nil {
+		return WorkloadStatus{}, fmt.Errorf("failed to parse thv status output: %w", err)
+	}
+	if st.Status == "" {
+		return WorkloadStatus{}, fmt.Errorf("thv status output has no status field: %s", output)
+	}
+	return st, nil
+}

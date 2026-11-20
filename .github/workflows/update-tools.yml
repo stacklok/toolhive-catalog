@@ -65,7 +65,7 @@ jobs:
       has-changes: ${{ steps.set-matrix.outputs.has-changes }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -167,7 +167,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
@@ -175,13 +175,13 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7
+        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           go-version-file: 'go.mod'
           cache: true
 
       - name: Install ToolHive
-        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0
+        uses: StacklokLabs/toolhive-actions/install@0570ceb9fb21c3e1ca0ccb2a62284e1d0762f160 # v0.0.7
         with:
           version: 'v0.64.0'
 
@@ -211,8 +211,14 @@ jobs:
         run: |
           echo "Updating tools for $SERVER_NAME..."
 
-          # Run the update tool
-          if /tmp/catalog update-tools "$SERVER_FILE" -v; then
+          # Run the update tool, keeping its output so a failure reason can be
+          # reported in the PR summary.
+          set +e
+          /tmp/catalog update-tools "$SERVER_FILE" -v 2>&1 | tee /tmp/update-tools.log
+          UPDATE_EXIT=${PIPESTATUS[0]}
+          set -e
+
+          if [ "$UPDATE_EXIT" -eq 0 ]; then
             echo "update-status=success" >> $GITHUB_OUTPUT
 
             # Check if file was modified
@@ -233,6 +239,17 @@ jobs:
             echo "update-status=failed" >> $GITHUB_OUTPUT
             echo "changed=false" >> $GITHUB_OUTPUT
 
+            # Some servers can't start or list tools without credentials or
+            # other configuration, so a failure here doesn't fail the job.
+            # Surface it as an annotation and in the PR summary instead.
+            # A crash or panic may not print an "Error: " line; tolerate the
+            # grep miss (even under pipefail) so the fallback reason applies.
+            REASON=$({ grep -m1 '^Error: ' /tmp/update-tools.log || true; } | sed 's/^Error: //' | cut -c1-300)
+            REASON=${REASON:-catalog update-tools exited with status $UPDATE_EXIT}
+            echo "failure-reason=$REASON" >> "$GITHUB_OUTPUT"
+            ANNOTATION=$(printf '%s' "$REASON" | sed 's/%/%25/g')
+            echo "::warning title=Tool list not updated for ${SERVER_NAME}::${ANNOTATION}"
+
             # Check if warning was added
             if git diff "$SERVER_FILE" | grep -q "WARNING"; then
               echo "Warning comment added to server file"
@@ -247,6 +264,34 @@ jobs:
 
       - name: Validate updated catalog entries
         run: /tmp/catalog validate -v
+
+      - name: Record tool update status
+        if: steps.update.outputs.update-status != ''
+        run: |
+          mkdir -p /tmp/tool-status
+          if [ "$UPDATE_STATUS" != "success" ]; then
+            STATUS=failed
+          elif [ "$UPDATE_CHANGED" = "true" ]; then
+            STATUS=updated
+          else
+            STATUS=unchanged
+          fi
+          echo "$SERVER_NAME" > "/tmp/tool-status/${SERVER_KEY}.name"
+          echo "$STATUS" > "/tmp/tool-status/${SERVER_KEY}.status"
+          printf '%s\n' "$FAILURE_REASON" > "/tmp/tool-status/${SERVER_KEY}.reason"
+        env:
+          SERVER_NAME: ${{ steps.server-info.outputs.server-name }}
+          SERVER_KEY: ${{ steps.server-info.outputs.server-key }}
+          UPDATE_STATUS: ${{ steps.update.outputs.update-status }}
+          UPDATE_CHANGED: ${{ steps.update.outputs.changed }}
+          FAILURE_REASON: ${{ steps.update.outputs.failure-reason }}
+
+      - name: Upload tool update status
+        if: steps.update.outputs.update-status != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tool-status-${{ steps.server-info.outputs.server-key }}
+          path: /tmp/tool-status/
 
       - name: Prepare changes for commit
         if: (steps.update.outputs.changed == 'true' || steps.update.outputs.warning-added == 'true')
@@ -273,7 +318,7 @@ jobs:
 
       - name: Upload commit info
         if: (steps.update.outputs.changed == 'true' || steps.update.outputs.warning-added == 'true')
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: commit-info-${{ steps.server-info.outputs.server-key }}
           path: /tmp/commit-info/
@@ -342,7 +387,7 @@ jobs:
           echo "id=$USER_ID" >> "$GITHUB_OUTPUT"
 
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref || github.ref }}
@@ -351,7 +396,7 @@ jobs:
           persist-credentials: true
 
       - name: Download all commit info artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: /tmp/artifacts/
           pattern: commit-info-*
@@ -448,50 +493,63 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Download all commit info artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+      - name: Download all tool status artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          path: /tmp/comment-artifacts/
-          pattern: commit-info-*
+          path: /tmp/tool-status/
+          pattern: tool-status-*
           merge-multiple: true
 
       - name: Post or update summary comment
         if: github.event_name == 'pull_request'
         run: |
-          # Build summary table from artifacts
+          # Build summary table from per-server status artifacts
           SUMMARY=""
+          HAS_FAILURES=false
 
-          if [ -d "/tmp/comment-artifacts" ] && [ "$(ls -A /tmp/comment-artifacts 2>/dev/null)" ]; then
-            for file in /tmp/comment-artifacts/*.type; do
-              if [ -f "$file" ]; then
-                SERVER_KEY=$(basename "$file" .type)
-                SERVER_NAME=$(cat "/tmp/comment-artifacts/${SERVER_KEY}.name")
-                TYPE=$(cat "$file")
+          for file in /tmp/tool-status/*.status; do
+            [ -f "$file" ] || continue
+            SERVER_KEY=$(basename "$file" .status)
+            SERVER_NAME=$(cat "/tmp/tool-status/${SERVER_KEY}.name")
+            STATUS=$(cat "$file")
 
-                if [ "$TYPE" = "update" ]; then
-                  SUMMARY="${SUMMARY}| ${SERVER_NAME} | Updated | Tool list refreshed |
-          "
-                else
-                  SUMMARY="${SUMMARY}| ${SERVER_NAME} | Warning | Could not fetch tools, added warning comment |
-          "
-                fi
-              fi
-            done
-          fi
+            case "$STATUS" in
+              updated)
+                ROW="| ${SERVER_NAME} | Updated | Tool list refreshed |"
+                ;;
+              unchanged)
+                ROW="| ${SERVER_NAME} | Up to date | No tool changes |"
+                ;;
+              *)
+                HAS_FAILURES=true
+                # Escape pipes so the reason doesn't break the table
+                REASON=$(sed 's/|/\\|/g' "/tmp/tool-status/${SERVER_KEY}.reason")
+                ROW="| ${SERVER_NAME} | Not updated | \`${REASON}\` |"
+                ;;
+            esac
+            SUMMARY="${SUMMARY}${ROW}"$'\n'
+          done
 
           if [ -z "$SUMMARY" ]; then
-            SUMMARY="| _No changes detected_ | | |"
+            SUMMARY="| _No servers processed_ | | |"
+          fi
+
+          NOTE=""
+          if [ "$HAS_FAILURES" = "true" ]; then
+            NOTE="Servers marked **Not updated** still list tools from before this change. That's expected for servers that need credentials or other configuration to start. Otherwise, re-run this workflow or run \`catalog update-tools\` locally."
           fi
 
           COMMENT_BODY="## MCP Server Tool List Updates (server.json)
 
-          The tool lists for modified MCP server entries have been automatically updated using \`catalog update-tools\`.
+          This workflow runs \`catalog update-tools\` for each modified MCP server entry and commits any tool list changes.
 
           ### Summary
 
           | Server | Status | Details |
           |--------|--------|---------|
           ${SUMMARY}
+          ${NOTE}
+
           ---
           _This comment is automatically generated and will be updated as the workflow progresses._"
 
