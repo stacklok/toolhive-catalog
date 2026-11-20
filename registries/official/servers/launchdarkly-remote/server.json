@@ -8,6 +8,10 @@
             "author": "LaunchDarkly",
             "homepage": "https://launchdarkly.com/docs/home/getting-started/mcp-hosted"
           },
+          "metadata": {
+            "last_updated": "2026-11-20T10:09:08Z",
+            "stars": 31
+          },
           "overview": "## LaunchDarkly (Remote)\n\nLaunchDarkly's hosted MCP server connects AI assistants to feature flags, AgentControl configs, and observability data. Use it to inspect flag configuration and make changes using your LaunchDarkly account permissions.\n\n### Setup\n\nYou need a LaunchDarkly commercial account and a member role with access to the relevant projects and environments. Run `thv run launchdarkly-remote --remote-auth` and authorize with LaunchDarkly. Dynamic client registration is supported, so no API key, pre-created OAuth application, or custom headers are required. The hosted server is unavailable for LaunchDarkly EU and Federal environments; use the existing local entry for those environments.\n\nAccess follows the role of the member who authorizes the connection. Optional `toolsets` and `writes` URL parameters filter tool discovery but do not enforce account permissions. See the [hosted setup guide](https://launchdarkly.com/docs/home/getting-started/mcp-hosted) for role requirements, connection renewal, and troubleshooting.",
           "status": "Active",
           "tags": [
