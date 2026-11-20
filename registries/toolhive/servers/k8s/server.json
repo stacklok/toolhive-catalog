@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stackloklabs/mkp/server:0.5.1": {
           "metadata": {
-            "last_updated": "2026-09-11T02:27:19Z",
+            "last_updated": "2026-11-20T09:49:11Z",
             "stars": 59
           },
           "overview": "## Kubernetes MCP Server\n\nThe k8s MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Kubernetes clusters through a structured, AI-friendly interface. It allows AI-driven workflows to inspect cluster state, explore resources, and reason about workloads without switching tools or manually using kubectl or the Kubernetes dashboard. This server is ideal for platform engineering, operations, troubleshooting, and infrastructure-aware AI workflows built on Kubernetes.",
@@ -39,10 +39,139 @@
             "list"
           ],
           "tier": "Community",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Kubernetes Resource"
+              },
+              "description": "Get a Kubernetes resource or its subresource",
+              "inputSchema": {
+                "properties": {
+                  "group": {
+                    "description": "API group (e.g., apps, networking.k8s.io)",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Name of the resource to get",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "description": "Namespace (required for namespaced resources)",
+                    "type": "string"
+                  },
+                  "parameters": {
+                    "description": "Optional parameters for the request. For regular resources: resourceVersion. \n\t\t\tFor pod logs: container, previous, sinceSeconds, sinceTime, timestamps, limitBytes, tailLines",
+                    "properties": {},
+                    "type": "object"
+                  },
+                  "resource": {
+                    "description": "Resource name (e.g., deployments, services)",
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "description": "Type of resource to get (clustered or namespaced)",
+                    "type": "string"
+                  },
+                  "subresource": {
+                    "description": "Subresource to get (e.g., status, scale, logs)",
+                    "type": "string"
+                  },
+                  "version": {
+                    "description": "API version (e.g., v1, v1beta1)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resource_type",
+                  "version",
+                  "resource",
+                  "name"
+                ],
+                "type": "object"
+              },
+              "name": "get_resource"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Kubernetes Resources"
+              },
+              "description": "List Kubernetes resources",
+              "inputSchema": {
+                "properties": {
+                  "continue": {
+                    "description": "Continue token for pagination (use the value from previous response's ListMeta.Continue)",
+                    "type": "string"
+                  },
+                  "exclude_annotation_keys": {
+                    "description": "List of annotation keys to exclude from output (supports wildcards with *)",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "group": {
+                    "description": "API group (e.g., apps, networking.k8s.io)",
+                    "type": "string"
+                  },
+                  "include_annotation_keys": {
+                    "description": "List of annotation keys to include in output (if specified, only these are included)",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "include_annotations": {
+                    "description": "Whether to include annotations in the output (default: true)",
+                    "type": "boolean"
+                  },
+                  "label_selector": {
+                    "description": "Kubernetes label selector for filtering resources (optional)",
+                    "type": "string"
+                  },
+                  "limit": {
+                    "description": "Maximum number of resources to return per page (1-500). 0 or omitted returns up to 500; use the returned continue token to fetch the next page.",
+                    "maximum": 500,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "namespace": {
+                    "description": "Namespace (required for namespaced resources)",
+                    "type": "string"
+                  },
+                  "resource": {
+                    "description": "Resource name (e.g., deployments, services)",
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "description": "Type of resource to list (clustered or namespaced)",
+                    "type": "string"
+                  },
+                  "version": {
+                    "description": "API version (e.g., v1, v1beta1)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resource_type",
+                  "version",
+                  "resource"
+                ],
+                "type": "object"
+              },
+              "name": "list_resources"
+            }
+          ],
           "tools": [
-            "list_resources",
             "get_resource",
-            "apply_resource"
+            "list_resources"
           ]
         }
       }
