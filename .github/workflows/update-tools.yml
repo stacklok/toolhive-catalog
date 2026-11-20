@@ -430,7 +430,9 @@ jobs:
             exit 0
           fi
 
-          # Collect all the server names that were updated
+          # Collect the servers that were updated, one "- registry/name" line
+          # each. The same server name can exist in several registries, so the
+          # bare name alone is ambiguous.
           UPDATED_SERVERS=""
           WARNING_SERVERS=""
 
@@ -438,16 +440,17 @@ jobs:
             if [ -f "$file" ]; then
               SERVER_KEY=$(basename "$file" .type)
               SERVER_NAME=$(cat "/tmp/artifacts/${SERVER_KEY}.name")
+              SERVER_FILE=$(cat "/tmp/artifacts/${SERVER_KEY}.server")
+              REGISTRY_NAME=$(echo "$SERVER_FILE" | cut -d/ -f2)
               TYPE=$(cat "$file")
 
               if [ "$TYPE" = "update" ]; then
-                UPDATED_SERVERS="$UPDATED_SERVERS $SERVER_NAME"
+                UPDATED_SERVERS+="- ${REGISTRY_NAME}/${SERVER_NAME}"$'\n'
               else
-                WARNING_SERVERS="$WARNING_SERVERS $SERVER_NAME"
+                WARNING_SERVERS+="- ${REGISTRY_NAME}/${SERVER_NAME}"$'\n'
               fi
 
               # Restore the modified server.json from the artifact
-              SERVER_FILE=$(cat "/tmp/artifacts/${SERVER_KEY}.server")
               if [ -f "/tmp/artifacts/${SERVER_KEY}.server.json" ]; then
                 cp "/tmp/artifacts/${SERVER_KEY}.server.json" "$SERVER_FILE"
                 git add "$SERVER_FILE"
@@ -457,22 +460,27 @@ jobs:
             fi
           done
 
-          # Create commit message
-          COMMIT_MSG="chore: update tool lists for MCP servers (server.json)"
-
-          if [ -n "$UPDATED_SERVERS" ]; then
-            COMMIT_MSG="$COMMIT_MSG\n\nUpdated servers:$(echo $UPDATED_SERVERS | sed 's/ /\\n- /g' | sed 's/^/\\n- /')"
-          fi
-
-          if [ -n "$WARNING_SERVERS" ]; then
-            COMMIT_MSG="$COMMIT_MSG\n\nWarning added for servers:$(echo $WARNING_SERVERS | sed 's/ /\\n- /g' | sed 's/^/\\n- /')"
-          fi
-
-          COMMIT_MSG="$COMMIT_MSG\n\nAutomatically updated using 'catalog update-tools' command.\n\nCo-authored-by: $GH_ACTOR <${GH_ACTOR}@users.noreply.github.com>"
+          # Write the commit message to a file so it contains real newlines.
+          # Bash doesn't expand "\n" inside double quotes, so building it as a
+          # string and passing it to -m left literal "\n" in the subject line.
+          COMMIT_MSG_FILE=$(mktemp)
+          {
+            echo "chore: update tool lists for MCP servers (server.json)"
+            if [ -n "$UPDATED_SERVERS" ]; then
+              printf '\nUpdated servers:\n%s' "$UPDATED_SERVERS"
+            fi
+            if [ -n "$WARNING_SERVERS" ]; then
+              printf '\nWarning added for servers:\n%s' "$WARNING_SERVERS"
+            fi
+            echo
+            echo "Automatically updated using 'catalog update-tools' command."
+            echo
+            echo "Co-authored-by: $GH_ACTOR <${GH_ACTOR}@users.noreply.github.com>"
+          } > "$COMMIT_MSG_FILE"
 
           # Check if there are actually any changes to commit
           if ! git diff --cached --quiet; then
-            git commit -m "$COMMIT_MSG"
+            git commit -F "$COMMIT_MSG_FILE"
             git push
             echo "Successfully committed and pushed all tool updates"
           else
