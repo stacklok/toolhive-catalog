@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/weaviate:0.3.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/weaviate:0.3.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/weaviate/agent-skills",
-      "ref": "b19751cb6aab9365fcd643974cfc1ae895fe92a8",
+      "ref": "111248bd20565122bfc3d03c7ba3ad3c00b044b4",
       "subfolder": "skills/weaviate"
     }
   ]

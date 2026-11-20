@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/workers-best-practices:0.2.7"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/workers-best-practices:0.3.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/cloudflare/skills",
-      "ref": "86505e44f87d801aa1864a3c4109e9a8ae5c409f",
+      "ref": "6eb6c781aa9b6438e0c7307bd102788a75fe1a6d",
       "subfolder": "skills/workers-best-practices"
     }
   ]

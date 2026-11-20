@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/microsoft-cloud-solution-architect:0.1.2"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/microsoft-cloud-solution-architect:0.1.3"
     },
     {
       "registryType": "git",
       "url": "https://github.com/microsoft/skills",
-      "ref": "2130750147dee0311215099ddf36647ba1e0f006",
+      "ref": "0696600436a9669184ce47e8d8b2ceac62e4bfac",
       "subfolder": ".github/skills/cloud-solution-architect"
     }
   ]

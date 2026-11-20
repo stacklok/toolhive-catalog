@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/hashicorp-terraform-style-guide:0.3.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/hashicorp-terraform-style-guide:0.4.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/hashicorp/agent-skills",
-      "ref": "f706481af9b8fedb66de909f6243ad29601afa0c",
+      "ref": "5e30fa5c867ba6777c37e4206babfd08049c396f",
       "subfolder": "plugins/terraform/skills/terraform-style-guide"
     }
   ]

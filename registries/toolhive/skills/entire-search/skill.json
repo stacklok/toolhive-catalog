@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-search:0.4.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-search:0.4.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/entireio/skills",
-      "ref": "2f9a8758e9c5220685ed049f396c826768957030",
+      "ref": "11902e22deddf7b867ea1cf958c0220288be4d63",
       "subfolder": "skills/search"
     }
   ]

@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-session-handoff:0.2.4"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-session-handoff:0.3.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/entireio/skills",
-      "ref": "fe5266f76d846222c73b080ce39fd803dd705198",
+      "ref": "11902e22deddf7b867ea1cf958c0220288be4d63",
       "subfolder": "skills/session-handoff"
     }
   ]

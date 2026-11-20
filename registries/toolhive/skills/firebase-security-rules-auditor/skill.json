@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-security-rules-auditor:0.4.1"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-security-rules-auditor:0.4.2"
     },
     {
       "registryType": "git",
       "url": "https://github.com/firebase/agent-skills",
-      "ref": "92eed24c0976a79a66d5b8038e9eda8b441ef92d",
+      "ref": "b76be96aaf5f152a5fb3112dde85c723c45539e7",
       "subfolder": "skills/firebase-security-rules-auditor"
     }
   ]

@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/expo-upgrade:0.1.2"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/expo-upgrade:0.1.3"
     },
     {
       "registryType": "git",
       "url": "https://github.com/expo/skills",
-      "ref": "d5caf7fdf8b4854351f05841a7e315ac87ad7d24",
+      "ref": "a9e5bd3fa00b4e61f632e43f85da73aee1942582",
       "subfolder": "plugins/expo/skills/expo-upgrade"
     }
   ]
