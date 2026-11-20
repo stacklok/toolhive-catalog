@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stackloklabs/gofetch/server:2.0.1": {
           "metadata": {
-            "last_updated": "2026-11-19T22:24:32Z",
+            "last_updated": "2026-11-20T09:49:17Z",
             "stars": 25
           },
           "overview": "## Fetch MCP Server\n\nThe fetch-mcp-server is a lightweight Model Context Protocol (MCP) server that gives AI assistants direct access to external HTTP and HTTPS resources. It allows AI-driven workflows to retrieve web content, APIs, and remote resources on demand, making it easy to incorporate live data, documentation, or machine-readable endpoints into an assistant's reasoning loop. This server is commonly used as a foundational building block for research, data ingestion, and integration workflows where simple, reliable network access is required.",
@@ -42,27 +42,38 @@
           "tier": "Community",
           "tool_definitions": [
             {
-              "annotations": {},
+              "annotations": {
+                "idempotentHint": true,
+                "openWorldHint": true,
+                "readOnlyHint": true,
+                "title": "Fetch URL"
+              },
               "description": "Fetches a URL from the internet and optionally extracts its contents as markdown.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
                   "max_length": {
+                    "description": "Maximum number of characters to return (default: no limit)",
+                    "minimum": 1,
                     "type": [
                       "null",
                       "integer"
                     ]
                   },
                   "raw": {
+                    "description": "Return the raw page content without converting HTML to markdown",
                     "type": "boolean"
                   },
                   "start_index": {
+                    "description": "Character index to start from when paging through truncated content",
+                    "minimum": 0,
                     "type": [
                       "null",
                       "integer"
                     ]
                   },
                   "url": {
+                    "description": "URL to fetch",
                     "type": "string"
                   }
                 },
