@@ -3,12 +3,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/buildkite/buildkite-mcp-server:1.32.1": {
+        "ghcr.io/buildkite/buildkite-mcp-server:1.33.0": {
           "args": [
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-11-19T22:32:15Z",
+            "last_updated": "2026-11-20T00:02:28Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -1254,7 +1254,7 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a Buildkite build failure in one call. Returns build.state, build.job_state_counts tallying every job in the build by state (when present, use it to confirm the returned problem jobs are the build's only problems without calling list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: ran and failed, but the step's soft_fail setting in the pipeline allowed that exit status, so they did not block the build; soft_failed is authoritative, so the pipeline configuration is not needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and — unless include_never_ran_jobs is false, using the remaining max_jobs slots — the jobs that never ran (waiting_failed/blocked_failed/unblocked_failed stopped by a failed dependency, broken excluded by pipeline configuration — no logs, never the cause), and size-bounded diagnostic content from logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason joined from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'); an empty or absent failed_tests list does NOT mean the job's tests passed — follow the job's failed_tests_hint and treat the job's log_tail as the authoritative fallback. A failed test with failure_detail_status 'not_retrieved' had no execution fetched for its job; when it carries both test_suite_slug and run_id, call get_failed_executions with them for the detail (page past the first 100 if needed). When run_id is absent, the suite lists several runs for this build or none: use get_build_test_engine_runs to list them and query each. Each failed test also carries its Test Engine labels, such as 'flaky', and executions_count_by_result for its attempts within that job (failed: 2 means the first run and a retry both failed, which is why the job log can report more failures than failed_tests lists), so there is no need to call a test tool or get_failed_executions for them. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Unrendered annotation content is in body (Markdown or HTML; safety filtering still applies); artifact:// references in it name artifacts of this build, which you can fetch with list_artifacts_for_build and get_artifact. Start with this tool before calling individual job, log, annotation, or test tools.",
+              "description": "Diagnose a build failure in one call. Start here before job, log, annotation, test, or artifact tools. Returns build.state, build.job_state_counts (every job's state tally; when present, confirms whether returned jobs are the only problems without list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: the step's soft_fail allowed that exit status, so they did not block the build; soft_failed is authoritative, no pipeline configuration read needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and, unless include_never_ran_jobs is false, jobs that never ran in the remaining max_jobs slots (waiting_failed/blocked_failed/unblocked_failed: failed dependency; broken: excluded by pipeline configuration — no logs, never the cause), and size-bounded logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'). Empty or absent failed_tests does NOT mean tests passed: follow failed_tests_hint and use log_tail as the authoritative fallback. A test with failure_detail_status 'not_retrieved' had no execution fetched for its job; call get_failed_executions with its test_suite_slug and run_id (page past 100 if needed). When run_id is absent, the suite has several runs for this build or none: list them with get_build_test_engine_runs and query each. Tests include Test Engine labels such as 'flaky' and executions_count_by_result within that job (failed: 2 means the first run and retry both failed, so logs can report more failures than failed_tests lists); no extra test calls are needed for these fields. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Each returned failed, timed-out, and canceled job carries its uploaded artifacts (max_artifacts shared across jobs; ranked: failed-test files, screenshots, then logs; artifacts_truncated when more exist). Uploaded test logs and screenshots often hold the server-side error a job log lacks. Unrendered annotation content is in body (Markdown or HTML; safety filtering applies); artifact:// references name artifacts of this build, fetchable with list_artifacts_for_build and get_artifact.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -1267,6 +1267,13 @@
                   },
                   "include_annotations": {
                     "description": "Include error and warning annotation bodies (default true)",
+                    "type": [
+                      "null",
+                      "boolean"
+                    ]
+                  },
+                  "include_artifacts": {
+                    "description": "Include a bounded list of artifacts uploaded by the returned failed, timed-out, and canceled jobs, such as test logs and screenshots (default true)",
                     "type": [
                       "null",
                       "boolean"
@@ -1306,6 +1313,10 @@
                   },
                   "max_annotations": {
                     "description": "Maximum error or warning annotations to return (default 20, max 100); the server scans at most 500 total annotations",
+                    "type": "integer"
+                  },
+                  "max_artifacts": {
+                    "description": "Maximum artifacts to list from the returned failed, timed-out, and canceled jobs, shared evenly across those jobs (default 10, max 100)",
                     "type": "integer"
                   },
                   "max_failed_tests": {
@@ -1523,6 +1534,60 @@
                 "type": "object"
               },
               "name": "get_cluster_queue"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Cluster Queue Insights"
+              },
+              "description": "Get queue agent/job counts, recent completions and wait times, with optional history and comparisons. Current counts are snapshots; history counts are last values per bucket; hourly_changes counts are time-weighted averages, not totals. Null means unavailable, not zero. Check timestamps and coverage; attribute limitations to the section that reports them. Zero sampled values do not prove there was no backlog or waiting throughout a period. Treat capacity diagnoses and causal explanations as hypotheses unless supported by further evidence. Requires Cluster Insights entitlement and the Queue Insights REST API feature enabled.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "cluster_id": {
+                    "description": "Cluster UUID, available from list_clusters",
+                    "type": "string"
+                  },
+                  "include": {
+                    "description": "Comma-separated: history, history_comparison, hourly_changes. Each works independently. history_comparison includes both history periods and changes; hourly_changes compares hourly averages with yesterday and last week. Omit for current and recent only.",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "queue_id": {
+                    "description": "Queue UUID, not its key; available from list_cluster_queues",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "time_period": {
+                    "description": "1h (default), 24h or 7d. Requires history or history_comparison; does not affect hourly_changes.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "queue_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_cluster_queue_insights"
             },
             {
               "annotations": {
@@ -4844,6 +4909,7 @@
             "get_cache_registry",
             "get_cluster",
             "get_cluster_queue",
+            "get_cluster_queue_insights",
             "get_cluster_secret",
             "get_failed_executions",
             "get_job",
@@ -4956,7 +5022,7 @@
           "name": "BUILDKITE_FAILURE_SUMMARY_MAX_JOBS"
         }
       ],
-      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.32.1",
+      "identifier": "ghcr.io/buildkite/buildkite-mcp-server:1.33.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
