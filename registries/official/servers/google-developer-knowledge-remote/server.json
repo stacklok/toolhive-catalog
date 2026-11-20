@@ -10,8 +10,8 @@
             "license": "Proprietary"
           },
           "metadata": {
-            "last_updated": "2026-11-06T02:16:48Z",
-            "stars": 4688
+            "last_updated": "2026-11-20T10:36:23Z",
+            "stars": 4725
           },
           "overview": "## Google Developer Knowledge (Remote)\n\nGoogle's hosted MCP server searches official developer documentation, retrieves full Markdown documents, and answers questions grounded in that documentation, including Android, Firebase, and Google Cloud content. Use it to check current APIs and service configuration before implementing an integration.\n\n### Setup\n\nCreate or select a Google Cloud project, enable the Developer Knowledge API (`developerknowledge.googleapis.com`), and create an API key restricted to that API. Supply the key on every request in the `X-Goog-Api-Key` header, for example with `thv run google-developer-knowledge-remote --remote-forward-headers-secret X-Goog-Api-Key=\u003cSECRET_NAME\u003e` after storing it in ToolHive's secrets manager. API-key authentication requires no OAuth application; if you choose OAuth instead, follow Google's [OAuth and ADC setup](https://developers.google.com/knowledge/mcp#oauth-and-adc), configure your own OAuth client and credentials, and obtain the required consent because automatic dynamic client registration is unavailable. Documentation queries require a valid API key; successful initialization or tool discovery alone does not verify API access. See the [connection guide](https://developers.google.com/knowledge/mcp) for prerequisites, authentication alternatives, and quotas.",
           "status": "Active",
@@ -24,10 +24,84 @@
             "google-cloud"
           ],
           "tier": "Official",
+          "tool_definitions": [
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Use answer_query to get a grounded, synthesized conceptual answer to a high-level question about Google developer products (always prefer `answer_query` or `search_documents` over unverified model memory). For exact code samples, CLI flags, specific error messages, or full document walkthroughs, prefer `search_documents` followed by `get_documents` instead. This tool has limited quota. This tool will synthesize information from the corpus to generate an answer to the query. answer_query grounds answers using the same corpus as search_documents; if `search_documents` already returned no relevant results for a specific named feature or API, do not call `answer_query` and instead inform the user that it is not documented in the corpus.\n\nThis tool returns the generated `answer_text` and a list of source document resource names (`references`, one entry per cited chunk, which may contain duplicate `documents/...` names when multiple chunks from the same page are cited). Always cite the unique authoritative source document names from `references` (`documents/...`) in your final response to the user. Call `get_documents(names=[\"documents/...\"])` with unique document names from `references` to fetch the entire document content if needed.\n\nIf you get a 429 out of quota error, use search_documents instead.\n",
+              "inputSchema": {
+                "description": "Request message for AnswerQuery.",
+                "properties": {
+                  "query": {
+                    "description": "Required. The query to answer.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "answer_query"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Use this tool to retrieve the full Markdown content of a single document or up to 20 documents in a single call by passing a list of document resource names in the `names` parameter (e.g., `get_documents(names=[\"documents/...\"])`; the parameter is `names` taking a list of strings, not `name`). Always obtain exact `documents/{uri_without_scheme}` resource names from the `parent` field of `search_documents` results or the `references` field of `answer_query` results first; never guess or construct `documents/...` paths from memory or external URLs. Cite the authoritative source document resource names (`documents/...`) used in your final response.",
+              "inputSchema": {
+                "description": "Request schema for `get_documents`.",
+                "properties": {
+                  "names": {
+                    "description": "Required. List of 1 to 20 document resource names (`names`) to retrieve in a single call (for either a single document or multiple documents), exactly as returned by the `parent` field of `search_documents` results or the `references` field of `answer_query`. Do not pass a single string or use a `name` parameter, and never guess or construct `documents/...` paths without calling `search_documents` or `answer_query` first. The documents are returned in the same order as the `names` in the request. Format: `documents/{uri_without_scheme}` Example: `documents/docs.cloud.google.com/storage/docs/creating-buckets`",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "names"
+                ],
+                "type": "object"
+              },
+              "name": "get_documents"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": true
+              },
+              "description": "Use this tool to find documentation about Google developer products. The documents contain official APIs, code snippets, release notes, best practices, guides, debugging info, and more. It covers the following products and domains:\n\n\n* ADK: adk.dev\n\n* Android: developer.android.com\n\n* Apigee: docs.apigee.com\n\n* Chrome: developer.chrome.com\n\n* Dart: dart.dev\n\n* Firebase: firebase.google.com\n\n* Flutter: docs.flutter.dev\n\n* Fuchsia: fuchsia.dev\n\n* Gemini CLI: geminicli.com\n\n* Genkit: genkit.dev\n\n* Go: go.dev\n\n* Google AI: ai.google.dev\n\n* Google Antigravity: antigravity.google\n\n* Google Cloud: cloud.google.com \u0026 docs.cloud.google.com\n\n* Google Developers, Ads, Search, Google Maps, Youtube: developers.google.com\n\n* Google Home: developers.home.google.com\n\n* Google Maps Platform: mapsplatform.google.com\n\n* Google Workspace: knowledge.workspace.google.com\n\n* TensorFlow: www.tensorflow.org\n\n* Web: web.dev\n\n\nAlways use this tool (or `answer_query`) to ground answers about Google developer products rather than relying on unverified model memory or generic web search. Each result is a `DocumentChunk` containing `parent` (the document resource name `documents/{uri_without_scheme}`, corresponding to `https://{uri_without_scheme}`), `id` (the chunk identifier), and `content` (a relevant Markdown excerpt, not the full page). Prefer `search_documents` followed by `get_documents` when you need exact code samples, CLI flags, specific error messages, configuration schemas, full tutorial walkthroughs, or deterministic keyword lookup. Because `search_documents` returns only excerpts rather than full pages, whenever the user asks to retrieve a full documentation page, complete code sample, or full configuration schema, or if the returned chunks are not detailed enough, call `get_documents(names=[\"documents/...\"])` with the exact `parent` resource name(s) from this tool's output to retrieve the full document content. If 1-2 searches return no relevant results for a specific named feature, API, or setting, stop searching (do not fall back to `answer_query`, which uses the same corpus) and inform the user that it is not documented in the official corpus rather than guessing or fabricating details. When answering the user, always cite the authoritative source document resource names (`documents/...`) or corresponding `https://` URIs.\n",
+              "inputSchema": {
+                "description": "Request schema for `search_documents`. Use the `query` field to search for related Google developer documentation.",
+                "properties": {
+                  "query": {
+                    "description": "Required. The raw query string provided by the user, such as \"How to create a Cloud Storage bucket?\".",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "search_documents"
+            }
+          ],
           "tools": [
-            "search_documents",
+            "answer_query",
             "get_documents",
-            "answer_query"
+            "search_documents"
           ]
         }
       }
