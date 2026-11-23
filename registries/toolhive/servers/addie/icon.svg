@@ -1,0 +1,68 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" rx="22" fill="#000000"/>
+  <g transform="translate(60 60) scale(0.84) translate(-60 -60.7)">
+    <g stroke="#fff" stroke-linecap="square" stroke-linejoin="miter">
+      <path d="M60 5.2L6.8 116.2H28.2" stroke-width="4.2"/>
+      <path d="M60 5.2L113.2 116.2H91.8" stroke-width="4.2"/>
+      <path d="M56.3 50.8L47.4 69.7L38.4 92L30.2 116.2M63.7 50.8L72.6 69.7L81.6 92L89.8 116.2" stroke-width="3.6"/>
+      <path d="M60 5.2C58.4 7.3 56.9 10.1 55.6 13.5C58.4 12.9 61.6 12.9 64.4 13.5C63.1 10.1 61.6 7.3 60 5.2Z" fill="#fff" stroke-width="1" opacity="0.95"/>
+      <path d="M50.5 50.7H69.5" stroke-width="2.1"/>
+      <path d="M54.4 58.2H65.6" stroke-width="1.5" opacity="0.86"/>
+      <path d="M45.7 91.8L54.2 82.5L58.5 88.8L51.3 101.4H42.1L45.7 91.8ZM74.3 91.8L65.8 82.5L61.5 88.8L68.7 101.4H77.9L74.3 91.8Z" stroke-width="2"/>
+      <path d="M54.7 85.2L46.5 96.6M65.3 85.2L73.5 96.6" stroke-width="1.1" opacity="0.72"/>
+      <path d="M47.9 98.8H55.5M64.5 98.8H72.1M51.2 93.1H57.7M62.3 93.1H68.8" stroke-width="1.1" opacity="0.72"/>
+    </g>
+    <g stroke="#fff" stroke-linecap="square" stroke-linejoin="miter" opacity="0.88">
+      <g>
+        <path d="M51.7 22.8L58.6 20.6M48.7 28.2L55.3 30.7M45.3 35.1L53.1 38.1M42 42L50.1 45.3M38.4 49.2L47.5 52.8M34.8 56.6L43.6 60.3M31.1 64.4L40.4 68.2M27.3 72.2L36.6 75.9M23.4 80.4L33.1 84.2M19.5 88.6L29.2 92.6M15.5 97.1L25.1 100.8M11.2 106.1L21.6 110.1" stroke-width="1.5"/>
+        <path d="M47.1 30.1L41.7 42.5M43.1 44.3L37.2 57.6M38.1 60.6L31.9 75.5M33.7 77.8L27.2 92.7M28.8 95.2L22.7 111.4" stroke-width="1.6"/>
+        <path d="M46.3 45.8L34.6 48.5M43.1 55.3L31 58.4M39.2 66.5L26.7 69.1M35.7 75.4L22.3 78M31.7 86.6L18.2 88.6M27 97.6L12.7 99.7" stroke-width="1.8"/>
+        <path d="M35.4 48.6L35.9 56.7M31.4 58.4L31.9 66.8M27 69.2L27.5 76.9M22.7 78.2L23 87.3M18.6 88.7L18.9 97.8M13.1 99.8L13.6 109.3" stroke-width="1.5"/>
+        <path d="M22.4 80.4H30.8V90.8H19.3M18.2 94.2H27.1M16.7 97.3H25.4M15.3 100.5H23.7M13.9 103.6H22.1" stroke-width="1.05" opacity="0.72"/>
+        <path d="M10.7 112H27.1M5.5 116.2H24.7M19.3 109.9V116.2M12.8 111.2V116.2" stroke-width="2.3" opacity="0.94"/>
+        <path d="M47.8 27.1L51.6 33.6L45.7 36.3M48.9 58.9L42.9 63.7L47.3 68.5M38.7 91.1L35 96.8L39.7 101.1" stroke-width="1.45" opacity="0.7"/>
+      </g>
+      <g transform="translate(120 0) scale(-1 1)">
+        <path d="M51.7 22.8L58.6 20.6M48.7 28.2L55.3 30.7M45.3 35.1L53.1 38.1M42 42L50.1 45.3M38.4 49.2L47.5 52.8M34.8 56.6L43.6 60.3M31.1 64.4L40.4 68.2M27.3 72.2L36.6 75.9M23.4 80.4L33.1 84.2M19.5 88.6L29.2 92.6M15.5 97.1L25.1 100.8M11.2 106.1L21.6 110.1" stroke-width="1.5"/>
+        <path d="M47.1 30.1L41.7 42.5M43.1 44.3L37.2 57.6M38.1 60.6L31.9 75.5M33.7 77.8L27.2 92.7M28.8 95.2L22.7 111.4" stroke-width="1.6"/>
+        <path d="M46.3 45.8L34.6 48.5M43.1 55.3L31 58.4M39.2 66.5L26.7 69.1M35.7 75.4L22.3 78M31.7 86.6L18.2 88.6M27 97.6L12.7 99.7" stroke-width="1.8"/>
+        <path d="M35.4 48.6L35.9 56.7M31.4 58.4L31.9 66.8M27 69.2L27.5 76.9M22.7 78.2L23 87.3M18.6 88.7L18.9 97.8M13.1 99.8L13.6 109.3" stroke-width="1.5"/>
+        <path d="M22.4 80.4H30.8V90.8H19.3M18.2 94.2H27.1M16.7 97.3H25.4M15.3 100.5H23.7M13.9 103.6H22.1" stroke-width="1.05" opacity="0.72"/>
+        <path d="M10.7 112H27.1M5.5 116.2H24.7M19.3 109.9V116.2M12.8 111.2V116.2" stroke-width="2.3" opacity="0.94"/>
+        <path d="M47.8 27.1L51.6 33.6L45.7 36.3M48.9 58.9L42.9 63.7L47.3 68.5M38.7 91.1L35 96.8L39.7 101.1" stroke-width="1.45" opacity="0.7"/>
+      </g>
+    </g>
+    <g fill="#fff" opacity="0.72" font-family="Georgia, serif" font-style="italic" font-size="5.2">
+      <text x="58.4" y="18.8">c</text>
+      <text x="56.6" y="38">a</text>
+      <text x="57.4" y="62.4">b</text>
+      <text x="44.2" y="45">e</text>
+      <text x="37.2" y="54.8">f</text>
+      <text x="30.3" y="65.7">h</text>
+      <text x="26.1" y="76.5">i</text>
+      <text x="20.3" y="86.1">o</text>
+      <text x="15.8" y="94.6">p</text>
+      <text x="13.3" y="104.5">q</text>
+      <text x="7.8" y="113.1">r</text>
+      <text x="23.8" y="111.7">t</text>
+      <text x="31.8" y="100.5">u</text>
+      <text x="31.4" y="85.5">n</text>
+      <text x="44.2" y="95.5">m</text>
+      <text x="48.2" y="73">x</text>
+      <text x="70.6" y="45">e</text>
+      <text x="77.5" y="54.8">f</text>
+      <text x="84.4" y="65.7">h</text>
+      <text x="88.6" y="76.5">i</text>
+      <text x="94.4" y="86.1">o</text>
+      <text x="98.6" y="94.6">p</text>
+      <text x="101.2" y="104.5">q</text>
+      <text x="106.9" y="113.1">r</text>
+      <text x="91" y="111.7">t</text>
+      <text x="82.7" y="100.5">u</text>
+      <text x="83" y="85.5">n</text>
+      <text x="70.9" y="95.5">m</text>
+      <text x="67.3" y="73">x</text>
+      <text x="58.5" y="103.6">l</text>
+    </g>
+  </g>
+</svg>
