@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://mcp.flowfeed.cc/mcp": {
+          "custom_metadata": {
+            "author": "FlowFeed",
+            "homepage": "https://flowfeed.cc"
+          },
+          "overview": "## FlowFeed Remote MCP Server\n\nFlowFeed is a hosted MCP server that gives AI assistants real-time macro, forex, commodities and crypto news. It returns central bank publications (Fed, ECB, Bank of England, Bank of Japan), economic data releases parsed into actual vs forecast vs previous, an economic calendar and deduplicated market headlines, each with its source, publish time, measured latency and a link to the original. All tools are read-only. Authentication uses OAuth 2.1 (users sign in with their FlowFeed key); FlowFeed is a paid subscription.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "finance",
+            "news",
+            "forex",
+            "macro",
+            "economic-calendar",
+            "central-banks",
+            "oauth"
+          ],
+          "tier": "Official",
+          "tools": [
+            "get_market_brief",
+            "get_latest_news",
+            "search_news",
+            "get_economic_calendar",
+            "get_official_releases"
+          ]
+        }
+      }
+    }
+  },
+  "description": "Real-time macro, forex and crypto news, economic calendar and central bank releases for AI agents",
+  "icons": [
+    {
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ],
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-registry/main/registries/toolhive/servers/flowfeed-remote/icon.svg"
+    }
+  ],
+  "name": "io.github.stacklok/flowfeed-remote",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.flowfeed.cc/mcp"
+    }
+  ],
+  "title": "FlowFeed (Remote)",
+  "version": "1.0.0"
+}
