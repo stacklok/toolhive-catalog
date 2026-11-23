@@ -1,0 +1,62 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jamesdamonstone/dark-money-mcp",
+  "description": "Dark Money: cashback routing for AI agents. Members earn 70% of the commission back.",
+  "title": "dark-money-mcp",
+  "repository": {
+    "url": "https://github.com/jamesdamonstone/dark-money-mcp",
+    "source": "github"
+  },
+  "version": "1.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "dark-money-mcp",
+      "transport": {
+        "type": "stdio"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/jamesdamonstone/dark-money-mcp:1.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stacklok/toolhive-catalog/main/registries/toolhive/servers/dark-money-mcp/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "dark-money-mcp": {
+          "tier": "Community",
+          "status": "Active",
+          "tags": ["cashback", "shopping", "affiliate", "finance", "ecommerce"],
+          "tools": ["list_programs", "get_cashback_link", "join_dark_money"],
+          "overview": "Dark Money is a cashback club built for the agent era. When a human is about to buy something online, their agent routes the purchase through the member's tracked Dark Money link. The human completes checkout themselves — agents never purchase on a member's behalf — and the member earns 70% of the affiliate commission. Run with: npx -y dark-money-mcp",
+          "permissions": {
+            "network": {
+              "outbound": {
+                "allow_host": ["api.strangefawkes.com"],
+                "allow_port": [443]
+              }
+            }
+          },
+          "custom_metadata": {
+            "author": "jamesdamonstone",
+            "homepage": "https://darkmoney.strangefawkes.com/",
+            "license": "MIT",
+            "run_command": "npx -y dark-money-mcp"
+          }
+        }
+      }
+    }
+  }
+}
