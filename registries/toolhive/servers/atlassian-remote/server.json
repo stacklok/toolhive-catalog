@@ -3,60 +3,63 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "https://mcp.atlassian.com/v1/sse": {
+        "https://mcp.atlassian.com/v2/mcp": {
           "custom_metadata": {
             "author": "Atlassian",
-            "homepage": "https://www.atlassian.com/platform/remote-mcp-server"
+            "homepage": "https://www.atlassian.com/platform/mcp"
           },
           "metadata": {
             "last_updated": "2026-10-09T02:56:48Z"
           },
-          "overview": "## Atlassian Remote MCP Server\n\nThe atlassian-remote MCP Server is a cloud-hosted Model Context Protocol (MCP) implementation from Atlassian that lets AI assistants and agents securely access and interact with Atlassian Cloud data — including Jira, Confluence, and Compass — without manual integrations. This official Atlassian tool enables AI systems to query and modify enterprise data across multiple Atlassian products through a secure, OAuth 2.1-authenticated remote endpoint, supporting operations like issue creation, documentation updates, and cross-tool workflows while respecting existing user permissions.",
+          "overview": "## Atlassian Remote MCP Server\n\nThe Atlassian MCP server is a cloud-hosted Model Context Protocol (MCP) server from Atlassian that lets AI assistants and agents work with Atlassian Cloud data, including Jira, Confluence, Jira Service Management, Bitbucket Cloud, Loom, Goals, Projects, and Assets. Version 2 exposes a small set of primary tools directly, plus `discover` and `executeRead`/`executeWrite`/`executeDestructive` tools that give agents access to the full catalog of product tools on demand. Authentication uses OAuth 2.1 by default, with optional API token support, and all operations respect the user's existing Atlassian permissions. Some Teamwork Graph and search tools are enriched and consume Rovo credits.",
           "status": "Active",
           "tags": [
             "remote",
             "atlassian",
             "jira",
             "confluence",
-            "compass",
+            "jira-service-management",
+            "bitbucket",
+            "loom",
             "oauth",
             "project-management",
             "collaboration",
-            "documentation",
-            "beta"
+            "documentation"
           ],
           "tier": "Official",
           "tools": [
-            "atlassianUserInfo",
             "getAccessibleAtlassianResources",
-            "getConfluenceSpaces",
-            "getConfluencePage",
-            "getPagesInConfluenceSpace",
-            "getConfluencePageFooterComments",
-            "getConfluencePageInlineComments",
-            "getConfluencePageDescendants",
-            "createConfluencePage",
-            "updateConfluencePage",
-            "createConfluenceFooterComment",
-            "createConfluenceInlineComment",
-            "searchConfluenceUsingCql",
+            "atlassianUserInfo",
+            "getConfluenceContent",
+            "createConfluenceContent",
+            "updateConfluenceContent",
+            "searchConfluence",
             "getJiraIssue",
-            "editJiraIssue",
-            "createJiraIssue",
-            "getTransitionsForJiraIssue",
-            "transitionJiraIssue",
-            "lookupJiraAccountId",
+            "listJiraIssueComments",
             "searchJiraIssuesUsingJql",
-            "addCommentToJiraIssue",
-            "getJiraIssueRemoteIssueLinks",
-            "getVisibleJiraProjects",
-            "getJiraProjectIssueTypesMetadata"
+            "createJiraIssue",
+            "editJiraIssue",
+            "transitionJiraIssue",
+            "addOrEditJiraIssueComment",
+            "getLoomObjectsContent",
+            "getGraphContext",
+            "getGraphObject",
+            "addGraphContext",
+            "getCollaborators",
+            "getPeopleInfo",
+            "getWorkActivity",
+            "getWorkPortfolio",
+            "discover",
+            "executeRead",
+            "executeWrite",
+            "executeDestructive",
+            "search"
           ]
         }
       }
     }
   },
-  "description": "Atlassian's official remote MCP server for Jira, Confluence, and Compass with OAuth 2.1",
+  "description": "Atlassian's official remote MCP server for Jira, Confluence, JSM, Bitbucket, Loom, and more",
   "icons": [
     {
       "mimeType": "image/svg+xml",
@@ -69,10 +72,10 @@
   "name": "io.github.stacklok/atlassian-remote",
   "remotes": [
     {
-      "type": "sse",
-      "url": "https://mcp.atlassian.com/v1/sse"
+      "type": "streamable-http",
+      "url": "https://mcp.atlassian.com/v2/mcp"
     }
   ],
   "title": "Atlassian (Remote)",
-  "version": "1.0.0"
+  "version": "2.0.0"
 }
