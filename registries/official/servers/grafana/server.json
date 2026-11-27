@@ -3,13 +3,13 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/grafana/mcp-grafana:2.3.0": {
+        "docker.io/grafana/mcp-grafana:2.4.0": {
           "args": [
             "--transport",
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-11-06T05:25:38Z",
+            "last_updated": "2026-11-27T01:51:50Z",
             "stars": 3239
           },
           "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -203,6 +203,10 @@
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
+                  "cursor": {
+                    "description": "Pagination cursor from a previous 'list' response. Set it to next_cursor and resend the same filters to get the next page.",
+                    "type": "string"
+                  },
                   "datasource_uid": {
                     "description": "Optional: UID of a Prometheus or Loki datasource to query for datasource-managed alert rules. If omitted, returns Grafana-managed rules.",
                     "type": "string"
@@ -313,11 +317,11 @@
                     "type": "array"
                   },
                   "datasource_uid": {
-                    "description": "Datasource UID for list or explicit managed_by=datasource creation. For creation omit to select the sole compatible datasource. Ambiguity returns candidates for selection.",
+                    "description": "Datasource UID for managed_by=datasource creation. Omit to select the sole compatible datasource. Ambiguity returns candidates for selection.",
                     "type": "string"
                   },
                   "disable_provenance": {
-                    "description": "If true, the alert remains editable in the Grafana UI (sets X-Disable-Provenance header). Defaults to true.",
+                    "description": "If true, the alert remains editable in the Grafana UI (sets X-Disable-Provenance header). Defaults to true. Set false to update a provisioned rule only after the user confirms they want to edit it.",
                     "type": "boolean"
                   },
                   "evaluation_interval": {
@@ -325,7 +329,12 @@
                     "type": "string"
                   },
                   "exec_err_state": {
-                    "description": "Grafana-managed only. State on execution error: NoData, Alerting, OK (required for 'create', 'update')",
+                    "description": "Grafana-managed only. State on execution error: OK, Alerting or Error. NoData is not accepted here (required for 'create', 'update')",
+                    "enum": [
+                      "OK",
+                      "Alerting",
+                      "Error"
+                    ],
                     "type": "string"
                   },
                   "expression": {
@@ -333,7 +342,7 @@
                     "type": "string"
                   },
                   "folder_uid": {
-                    "description": "The folder UID. For 'list': filter by exact folder UID (mutually exclusive with search_folder). For Grafana-managed 'create'/'update': required destination folder.",
+                    "description": "The folder UID. Required destination folder for Grafana-managed 'create'/'update'.",
                     "type": "string"
                   },
                   "for": {
@@ -348,23 +357,12 @@
                     "description": "Enables continous firing of alert for specified time even when condition is no longer met. Default is 0 (resolves immediately)",
                     "type": "string"
                   },
-                  "label_selectors": {
-                    "description": "Prometheus-style selectors to filter alert rules by labels. Each string is a selector e.g. '{severity=\"critical\", team=~\"backend.*\"}'. All selectors must match (AND).",
-                    "items": {
-                      "type": "string"
-                    },
-                    "type": "array"
-                  },
                   "labels": {
                     "additionalProperties": {
                       "type": "string"
                     },
                     "description": "Optional labels for the alert rule",
                     "type": "object"
-                  },
-                  "limit_alerts": {
-                    "description": "Limit alert instances per rule. For list: 0 omits alerts. For get: \u003c=0 defaults to 200. Max 200.",
-                    "type": "integer"
                   },
                   "managed_by": {
                     "default": "grafana",
@@ -375,13 +373,6 @@
                     ],
                     "type": "string"
                   },
-                  "matchers": {
-                    "description": "Label matchers to filter alert instances. Each string is a Prometheus-style matcher e.g. 'severity=\"critical\"', 'env!=\"dev\"', 'team=~\"backend.*\"'. Requires Grafana 12.4+.",
-                    "items": {
-                      "type": "string"
-                    },
-                    "type": "array"
-                  },
                   "missing_series_evals_to_resolve": {
                     "description": "Consecutive evaluation intervals with no data required to mark the alert as resolved. Default is 2.",
                     "type": "integer"
@@ -391,19 +382,21 @@
                     "type": "string"
                   },
                   "no_data_state": {
-                    "description": "Grafana-managed only. State when no data: NoData, Alerting, OK (required for 'create', 'update')",
+                    "description": "Grafana-managed only. State when no data: Alerting, NoData or OK (required for 'create', 'update')",
+                    "enum": [
+                      "Alerting",
+                      "NoData",
+                      "OK"
+                    ],
                     "type": "string"
                   },
                   "notification_settings": {
-                    "description": "Notification settings object. Fields: receiver (string, required), groupBy ([]string), groupWait/groupInterval/repeatInterval (duration strings), muteTimeIntervals/activeTimeIntervals ([]string).",
+                    "description": "Notification settings object. Fields: receiver (string, required), groupBy ([]string), groupWait/groupInterval/repeatInterval (duration strings), muteTimeIntervals/activeTimeIntervals ([]string). snake_case keys are also accepted.",
                     "type": "object"
                   },
                   "operation": {
-                    "description": "The operation to perform: 'list', 'get', 'versions', 'create', 'update', or 'delete'. To create a rule, use operation 'create' and provide all required fields in a single call. To update a rule, first use 'get' to retrieve its full configuration, then 'update' with all required fields plus your changes.",
+                    "description": "The operation to perform: 'create', 'update', or 'delete'. To create a rule, use operation 'create' and provide all required fields in a single call. To update a rule, use 'update' with the rule's full current configuration plus your changes.",
                     "enum": [
-                      "list",
-                      "get",
-                      "versions",
                       "create",
                       "update",
                       "delete"
@@ -422,37 +415,9 @@
                     "description": "The rule group name (required for 'create', 'update')",
                     "type": "string"
                   },
-                  "rule_limit": {
-                    "default": 200,
-                    "description": "Maximum number of rules to return (default 200, max 200). Requires Grafana 12.4+ (for 'list' operation)",
-                    "type": "integer"
-                  },
-                  "rule_type": {
-                    "description": "Filter by rule type (for 'list' operation)",
-                    "enum": [
-                      "alerting",
-                      "recording"
-                    ],
-                    "type": "string"
-                  },
                   "rule_uid": {
-                    "description": "The UID of the alert rule (required for 'get', 'versions', 'update', 'delete'; optional for 'create')",
+                    "description": "The UID of the alert rule (required for 'update' and 'delete'; optional for 'create')",
                     "type": "string"
-                  },
-                  "search_folder": {
-                    "description": "Search folders by path using partial matching (for 'list' operation). Requires Grafana 12.4+. Mutually exclusive with folder_uid.",
-                    "type": "string"
-                  },
-                  "search_rule_name": {
-                    "description": "Search alert rule names/titles using partial matching. Requires Grafana 12.4+ (for 'list' operation)",
-                    "type": "string"
-                  },
-                  "states": {
-                    "description": "Filter by alert state: firing, pending, normal, recovering, nodata, error (for 'list' operation)",
-                    "items": {
-                      "type": "string"
-                    },
-                    "type": "array"
                   },
                   "title": {
                     "description": "The title of the alert rule (required for 'create', 'update')",
@@ -556,7 +521,7 @@
                     "type": "string"
                   },
                   "matchers": {
-                    "description": "Label matchers. Required (at least one) for 'create' and 'update'. For 'list', used as an optional filter.",
+                    "description": "Label matchers. Required (at least one) for 'create' and 'update'.",
                     "items": {
                       "properties": {
                         "isEqual": {
@@ -585,26 +550,20 @@
                     "type": "array"
                   },
                   "operation": {
-                    "description": "The operation to perform: 'list' to list silences, 'get' to retrieve a silence by id, 'create' to create a new silence, 'update' to modify an existing silence by id, 'delete' to expire a silence by id",
+                    "description": "The operation to perform: 'create' to create a new silence, 'update' to modify an existing silence by id, 'delete' to expire a silence by id",
                     "enum": [
-                      "list",
-                      "get",
                       "create",
                       "update",
                       "delete"
                     ],
                     "type": "string"
                   },
-                  "rule_uid": {
-                    "description": "Optional: filter listed silences to those scoped to this alert rule UID (matches the __alert_rule_uid__ label). Only used with 'list'.",
-                    "type": "string"
-                  },
                   "silence_id": {
-                    "description": "The silence id (required for 'get', 'update' and 'delete')",
+                    "description": "The silence id (required for 'update' and 'delete')",
                     "type": "string"
                   },
                   "starts_at": {
-                    "description": "Silence start time in RFC3339 format, e.g. '2026-07-11T10:00:00Z' (required for 'create' and 'update'). Grafana clamps a start time in the past to the moment of creation, so for 'update' pass back the starts_at returned by 'get' to keep the silence id stable.",
+                    "description": "Silence start time in RFC3339 format, e.g. '2026-07-11T10:00:00Z' (required for 'create' and 'update'). Grafana clamps a start time in the past to the moment of creation, so for 'update' pass back the silence's stored starts_at to keep the silence id stable.",
                     "type": "string"
                   }
                 },
@@ -825,11 +784,11 @@
               "annotations": {
                 "destructiveHint": false,
                 "idempotentHint": false,
-                "openWorldHint": false,
+                "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Create datasource"
               },
-              "description": "Create a datasource in two steps. Called with only the type, it returns the plugin's field schema and creates nothing. Called with the type, the display name in the top-level name argument, schemaReviewed=true, and field values in the fields map, it creates the datasource. The plugin for the type must already be installed. Secrets (passwords, tokens) are not accepted. Returns UID, health check, and a config page link.",
+              "description": "Create a datasource in two steps. Called with only the type, it returns the fields to fill in and creates nothing. Called again with the type, a display name in name, and the field values, it creates the datasource; for a type with a field schema, put the values in the fields map and set schemaReviewed=true. The plugin for the type must already be installed. Secrets (passwords, tokens) can't be set. Returns the UID, the result of a health check against the new datasource, and a config page link.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -854,7 +813,7 @@
                     "type": "boolean"
                   },
                   "name": {
-                    "description": "Datasource display name",
+                    "description": "Datasource display name. Required to create; omit it on the first call to get the fields to fill in.",
                     "type": "string"
                   },
                   "schemaReviewed": {
@@ -875,7 +834,6 @@
                   }
                 },
                 "required": [
-                  "name",
                   "type"
                 ],
                 "type": "object"
@@ -1012,7 +970,7 @@
               "annotations": {
                 "destructiveHint": false,
                 "idempotentHint": false,
-                "openWorldHint": false,
+                "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Create snapshot"
               },
@@ -1476,7 +1434,7 @@
                 "readOnlyHint": true,
                 "title": "Get dashboard panel queries"
               },
-              "description": "Retrieve panel queries from a Grafana dashboard. Supports all datasource types (Prometheus, Loki, CloudWatch, SQL, etc.) and row-nested panels. Optionally filter to a specific panel by ID with `panelId`. Provide `variables` (an empty object uses saved selections) or `start`/`end` to populate `processedQuery` and `requiredVariables`. Referenced All selections return `warnings` requesting explicit values. Returns an array of objects with fields: title, query (raw expression), datasource (object with uid and type), and optionally processedQuery, refId, requiredVariables, and target. Targets built in a visual editor (CloudWatch metric search, InfluxDB query builder) have no string expression: those return an empty query plus `target`, the panel's raw query JSON. They can be executed as panel queries but not as standalone expressions.",
+              "description": "Retrieve panel queries from a Grafana dashboard. Supports all datasource types (Prometheus, Loki, CloudWatch, SQL, etc.), row-nested panels and library panels (resolved from their library element). A library panel that cannot be resolved returns an entry with a warning naming its uid. Optionally filter to a specific panel by ID with `panelId`. Provide `variables` (an empty object uses saved selections) or `start`/`end` to populate `processedQuery` and `requiredVariables`. Referenced All selections, and variables saved without a value, return `warnings` requesting explicit values. Returns an array of objects with fields: title, query (raw expression), datasource (object with uid and type), and optionally processedQuery, refId, requiredVariables, and target. Targets built in a visual editor (CloudWatch metric search, InfluxDB query builder) have no string expression: those return an empty query plus `target`, the panel's raw query JSON. They can be executed as panel queries but not as standalone expressions.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -1924,7 +1882,7 @@
                 "readOnlyHint": false,
                 "title": "Grafana API request"
               },
-              "description": "Make an authenticated HTTP request to the Grafana API. Similar to 'gh api' for GitHub. Supports any Grafana API endpoint with optional jq-style response filtering. Use this for API endpoints that don't have a dedicated tool.",
+              "description": "Make an authenticated HTTP request to the Grafana API. Supports any Grafana API endpoint with optional jq-style response filtering. Use this for API endpoints that don't have a dedicated tool.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -2069,7 +2027,7 @@
                     "type": "integer"
                   },
                   "start": {
-                    "description": "Version to start from. Only versions at or below this number are returned",
+                    "description": "Number of newest versions to skip. This is an offset and not a version number",
                     "minimum": 1,
                     "type": "integer"
                   },
@@ -2637,6 +2595,7 @@
                     "type": "string"
                   },
                   "matchers": {
+                    "description": "Optionally, Prometheus style matchers used to filter the result set (defaults to: {})",
                     "type": "string"
                   },
                   "start_rfc_3339": {
@@ -2766,8 +2725,16 @@
                     "description": "UID of the tempo datasource to query",
                     "type": "string"
                   },
+                  "end": {
+                    "description": "End time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be after start.",
+                    "type": "string"
+                  },
                   "scope": {
                     "description": "Scope to filter attributes by (span, resource, event, link, instrumentation). Strongly recommended — omitting scope returns all attributes across all scopes which can be very large (100K+ chars).",
+                    "type": "string"
+                  },
+                  "start": {
+                    "description": "Start time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be before end.",
                     "type": "string"
                   }
                 },
@@ -2794,12 +2761,20 @@
                     "description": "UID of the tempo datasource to query",
                     "type": "string"
                   },
+                  "end": {
+                    "description": "End time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be after start.",
+                    "type": "string"
+                  },
                   "filter-query": {
                     "description": "Filter query to apply to the attribute values. It can only have one spanset and only \u0026\u0026'ed conditions like { \u003ccond\u003e \u0026\u0026 \u003ccond\u003e \u0026\u0026 ... }. This is useful for filtering the values to a specific set of values.",
                     "type": "string"
                   },
                   "name": {
                     "description": "The attribute name to get values for (e.g. 'span.http.method', 'resource.service.name')",
+                    "type": "string"
+                  },
+                  "start": {
+                    "description": "Start time for the search (RFC3339 format). If not provided will search the past 1 hour. If provided, must be before end.",
                     "type": "string"
                   }
                 },
@@ -2836,10 +2811,11 @@
                     "type": "string"
                   },
                   "format": {
-                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries.",
+                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries. 'loki' returns Loki's query_range JSON, also for metric queries.",
                     "enum": [
                       "full",
-                      "compact"
+                      "compact",
+                      "loki"
                     ],
                     "type": "string"
                   },
@@ -2853,7 +2829,11 @@
                     "type": "string"
                   },
                   "queryType": {
-                    "description": "Query type: 'range' (default) or 'instant'. Instant queries return a single value at one point in time. Range queries return values over a time window. Use 'instant' for metric queries when you want the current value.",
+                    "description": "Query type: 'range' (default) or 'instant'. Instant queries return a single value at one point in time. Range queries return values over a time window. Use 'instant' for metric queries when you want the current value. On VictoriaLogs, 'instant' returns the newest log lines from the hour before endRfc3339 (default now).",
+                    "enum": [
+                      "range",
+                      "instant"
+                    ],
                     "type": "string"
                   },
                   "startRfc3339": {
@@ -3185,6 +3165,7 @@
                     "anyOf": [
                       {
                         "additionalProperties": false,
+                        "description": "Query a PromQL-compatible datasource (Prometheus, Thanos, Mimir, Cloud Monitoring, etc.) using a PromQL expression. Returns data without opening a chart. Supports instant and range queries. Time: RFC3339 or relative expressions like 'now', 'now-1h'.",
                         "properties": {
                           "datasourceUid": {
                             "description": "The UID of the datasource to query",
@@ -3220,10 +3201,12 @@
                           "expr",
                           "endTime"
                         ],
+                        "title": "query_prometheus",
                         "type": "object"
                       },
                       {
                         "additionalProperties": false,
+                        "description": "Retrieve a specific trace by ID. Returns its spans grouped by service and resource, with span attributes, events and links.",
                         "properties": {
                           "datasourceUid": {
                             "description": "UID of the tempo datasource to query",
@@ -3250,12 +3233,15 @@
                           "datasourceUid",
                           "trace_id"
                         ],
+                        "title": "get_tempo_trace",
                         "type": "object"
                       }
                     ],
+                    "description": "Inputs for the selected query tool: the schema whose title is toolName",
                     "type": "object"
                   },
                   "toolName": {
+                    "description": "The query tool whose result to display",
                     "enum": [
                       "query_prometheus",
                       "get_tempo_trace"
@@ -3382,7 +3368,7 @@
                 "readOnlyHint": true,
                 "title": "Search plugins"
               },
-              "description": "Search the Grafana plugin catalog by keyword, purpose, or partial name (e.g. 'azure monitoring', 'loki', 'database'). Returns results sorted by trust: official Grafana Labs plugins first, then commercial partner plugins, then community plugins, each with its exact pluginId. Results include warnings for enterprise-only or Angular-based plugins.",
+              "description": "Search the Grafana plugin catalog by keyword, purpose, or partial name (e.g. 'azure monitoring', 'loki', 'database'). Returns results ordered by signature type (Grafana Labs, commercial, community), each with its exact pluginId. Results include warnings for enterprise-only or Angular-based plugins.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -3570,7 +3556,7 @@
                 "readOnlyHint": false,
                 "title": "Create or update dashboard"
               },
-              "description": "Create or update a dashboard. Returns the saved dashboard UID and dashboard link in the 'url' field, using the instance public URL when available. Two modes: (1) Full JSON — provide 'dashboard' for new dashboards or complete replacements. (2) Patch — provide 'uid' + 'operations' to make targeted changes to an existing dashboard. One of these two modes is required; 'folderUid', 'message', and 'overwrite' are supplementary and do nothing on their own. Dashboard authoring guidance: if a saved query must support one, many, or All values from a multi-select variable inside a regex expression or matcher, save '${var:regex}' rather than plain '$var'. Saved dashboard annotation queries/definitions live in dashboard JSON under 'annotations.list'; annotation events are stored separately and are not part of the dashboard JSON. For stat panels over the current dashboard range, make the query return the range-level result the stat should display; panel-side reduction only reduces returned series and does not compute peak-over-range or ratio-of-peaks semantics for you. Patch operations support JSONPaths like '$.panels[0].targets[0].expr', '$.panels[1].title', '$.panels[2].targets[0].datasource', '$.templating.list/-', and '$.annotations.list/-'. Append to arrays with '/- ' syntax: '$.panels/- '. Remove by index: {\"op\": \"remove\", \"path\": \"$.panels[2]\"}. Multiple removes on the same array are automatically reordered to avoid index-shifting issues. Note: only numeric array indices are supported in patch paths; filter expressions like [?(@.id==2)] and wildcards like [*] are not supported. Schema: prefer v2 for new dashboards; if this Grafana lacks v2 the save fails saying so, then send v1. Keep an existing dashboard in its stored schema (indicated by 'isV2'/'apiVersion' on the fetched dashboard). A body with top-level 'elements'/'layout' is saved as v2. Minimal v2 body: {\"title\":\"T\",\"timeSettings\":{\"from\":\"now-6h\",\"to\":\"now\"},\"variables\":[],\"elements\":{\"p1\":{\"kind\":\"Panel\",\"spec\":{\"id\":1,\"title\":\"Up\",\"vizConfig\":{\"kind\":\"VizConfig\",\"group\":\"timeseries\",\"spec\":{}},\"data\":{\"kind\":\"QueryGroup\",\"spec\":{\"queries\":[{\"kind\":\"PanelQuery\",\"spec\":{\"refId\":\"A\",\"query\":{\"kind\":\"DataQuery\",\"group\":\"prometheus\",\"datasource\":{\"name\":\"\u003cds uid\u003e\"},\"spec\":{\"expr\":\"up\"}}}}]}}}}},\"layout\":{\"kind\":\"GridLayout\",\"spec\":{\"items\":[{\"kind\":\"GridLayoutItem\",\"spec\":{\"x\":0,\"y\":0,\"width\":24,\"height\":8,\"element\":{\"kind\":\"ElementReference\",\"name\":\"p1\"}}}]}}}. For tabs, layout is {\"kind\":\"TabsLayout\",\"spec\":{\"tabs\":[{\"kind\":\"TabsLayoutTab\",\"spec\":{\"title\":\"A\",\"layout\":\u003cGridLayout\u003e}}]}}.",
+              "description": "Create or update a dashboard. Returns the saved dashboard UID and dashboard link in the 'url' field, using the instance public URL when available. Two modes: (1) Full JSON — provide 'dashboard' for new dashboards or complete replacements. (2) Patch — provide 'uid' + 'operations' to make targeted changes to an existing dashboard. One of these two modes is required; 'folderUid', 'message', and 'overwrite' are supplementary and do nothing on their own. Dashboard authoring guidance: if a saved query must support one, many, or All values from a multi-select variable inside a regex expression or matcher, save '${var:regex}' rather than plain '$var'. Saved dashboard annotation queries/definitions live in dashboard JSON under 'annotations.list'; annotation events are stored separately and are not part of the dashboard JSON. For stat panels over the current dashboard range, make the query return the range-level result the stat should display; panel-side reduction only reduces returned series and does not compute peak-over-range or ratio-of-peaks semantics for you. Patch operations support JSONPaths like '$.panels[0].targets[0].expr', '$.panels[1].title', '$.panels[2].targets[0].datasource', '$.templating.list/-', and '$.annotations.list/-'. Append to arrays with '/- ' syntax: '$.panels/- '. Remove by index: {\"op\": \"remove\", \"path\": \"$.panels[2]\"}. Multiple removes on the same array are automatically reordered to avoid index-shifting issues. Note: only numeric array indices are supported in patch paths; filter expressions like [?(@.id==2)] and wildcards like [*] are not supported. Schema: prefer v2 for new dashboards; if this Grafana lacks v2 the save fails saying so, then send v1. Keep an existing dashboard in its stored schema (indicated by 'isV2'/'apiVersion' on the fetched dashboard). A body with top-level 'elements'/'layout' is saved as v2. Send list fields as [] when empty; the server fills links, tags, variables and each panel's links and transformations if omitted. Minimal v2 body: {\"title\":\"T\",\"timeSettings\":{\"from\":\"now-6h\",\"to\":\"now\"},\"variables\":[],\"links\":[],\"elements\":{\"p1\":{\"kind\":\"Panel\",\"spec\":{\"id\":1,\"title\":\"Up\",\"vizConfig\":{\"kind\":\"VizConfig\",\"group\":\"timeseries\",\"spec\":{}},\"data\":{\"kind\":\"QueryGroup\",\"spec\":{\"queries\":[{\"kind\":\"PanelQuery\",\"spec\":{\"refId\":\"A\",\"query\":{\"kind\":\"DataQuery\",\"group\":\"prometheus\",\"datasource\":{\"name\":\"\u003cds uid\u003e\"},\"spec\":{\"expr\":\"up\"}}}}],\"transformations\":[]}}}}},\"layout\":{\"kind\":\"GridLayout\",\"spec\":{\"items\":[{\"kind\":\"GridLayoutItem\",\"spec\":{\"x\":0,\"y\":0,\"width\":24,\"height\":8,\"element\":{\"kind\":\"ElementReference\",\"name\":\"p1\"}}}]}}}. For tabs, layout is {\"kind\":\"TabsLayout\",\"spec\":{\"tabs\":[{\"kind\":\"TabsLayoutTab\",\"spec\":{\"title\":\"A\",\"layout\":\u003cGridLayout\u003e}}]}}.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -3641,7 +3627,7 @@
               "annotations": {
                 "destructiveHint": true,
                 "idempotentHint": true,
-                "openWorldHint": false,
+                "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Update datasource"
               },
@@ -3928,7 +3914,7 @@
           "name": "GRAFANA_USAGE_STATS"
         }
       ],
-      "identifier": "docker.io/grafana/mcp-grafana:2.3.0",
+      "identifier": "docker.io/grafana/mcp-grafana:2.4.0",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
