@@ -8,7 +8,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-11-20T00:02:28Z",
+            "last_updated": "2026-11-27T01:52:16Z",
             "stars": 50
           },
           "overview": "## Buildkite MCP Server\n\nThe buildkite MCP server is a Model Context Protocol (MCP) server that allows AI assistants and agents to interact directly with Buildkite CI/CD pipelines through a structured, AI-friendly interface. It enables AI-driven workflows to inspect builds, trigger pipelines, monitor execution status, and analyze failures — all without switching tools or manually navigating the Buildkite UI. This server is well suited for developer productivity, CI/CD observability, incident response, and automated release workflows powered by AI.",
@@ -1254,7 +1254,7 @@
                 "readOnlyHint": true,
                 "title": "Get Build Failure Summary"
               },
-              "description": "Diagnose a build failure in one call. Start here before job, log, annotation, test, or artifact tools. Returns build.state, build.job_state_counts (every job's state tally; when present, confirms whether returned jobs are the only problems without list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: the step's soft_fail allowed that exit status, so they did not block the build; soft_failed is authoritative, no pipeline configuration read needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and, unless include_never_ran_jobs is false, jobs that never ran in the remaining max_jobs slots (waiting_failed/blocked_failed/unblocked_failed: failed dependency; broken: excluded by pipeline configuration — no logs, never the cause), and size-bounded logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'). Empty or absent failed_tests does NOT mean tests passed: follow failed_tests_hint and use log_tail as the authoritative fallback. A test with failure_detail_status 'not_retrieved' had no execution fetched for its job; call get_failed_executions with its test_suite_slug and run_id (page past 100 if needed). When run_id is absent, the suite has several runs for this build or none: list them with get_build_test_engine_runs and query each. Tests include Test Engine labels such as 'flaky' and executions_count_by_result within that job (failed: 2 means the first run and retry both failed, so logs can report more failures than failed_tests lists); no extra test calls are needed for these fields. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. Each returned failed, timed-out, and canceled job carries its uploaded artifacts (max_artifacts shared across jobs; ranked: failed-test files, screenshots, then logs; artifacts_truncated when more exist). Uploaded test logs and screenshots often hold the server-side error a job log lacks. Unrendered annotation content is in body (Markdown or HTML; safety filtering applies); artifact:// references name artifacts of this build, fetchable with list_artifacts_for_build and get_artifact.",
+              "description": "Diagnose a build failure in one call. Start here before job, log, annotation, test, or artifact tools. Returns build.state, build.job_state_counts (every job's state tally; when present, confirms whether returned jobs are the only problems without list_jobs), terminal problem jobs, canceled jobs, promised failures from running jobs, soft-failed jobs (soft_failed true: the step's soft_fail allowed that exit status, so they did not block the build; soft_failed is authoritative, no pipeline configuration read needed; listed after blocking failures and canceled jobs — not proof the problem is harmless, but do not dig into their logs, retry, or fix them unless the user asks or evidence links them to the reported failure), and, unless include_never_ran_jobs is false, jobs that never ran in the remaining max_jobs slots (waiting_failed/blocked_failed/unblocked_failed: failed dependency; broken: excluded by pipeline configuration — no logs, never the cause), and size-bounded logs, annotations, and failed Test Engine tests. Each terminal failed or timed-out job carries failed_tests (only enabled tests whose every execution within that job failed, with failure_reason from that job's newest failed execution) and failed_tests_status ('found', 'none_recorded', 'ingestion_pending', or 'unavailable'). Empty or absent failed_tests does NOT mean tests passed: follow failed_tests_hint and use log_tail as the authoritative fallback. A test with failure_detail_status 'not_retrieved' had no execution fetched for its job; call get_failed_executions with its test_suite_slug and run_id (page past 100 if needed). When run_id is absent, the suite has several runs for this build or none: list them with get_build_test_engine_runs and query each. Tests include Test Engine labels such as 'flaky' and executions_count_by_result within that job (failed: 2 means the first run and retry both failed, so logs can report more failures than failed_tests lists); no extra test calls are needed for these fields. If a failed test is labeled 'flaky', do not stop at the label: trace the actual error (failure_reason, failure_expanded, or the job log) and propose a permanent fix. Never conclude a failure is flaky from a PR or commit title alone. Retry the job with retry_job only when the user explicitly permits it. When artifact listings are enabled and accessible, returned failed, timed-out, and canceled jobs include uploaded artifacts (max_artifacts shared across jobs; ranked: failed-test files, screenshots, then logs; artifacts_truncated when more exist). Uploaded test logs and screenshots often hold the server-side error a job log lacks. Unrendered annotation content is in body (Markdown or HTML; safety filtering applies); artifact:// references name artifacts of this build, fetchable with list_artifacts_for_build and get_artifact.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -1273,7 +1273,7 @@
                     ]
                   },
                   "include_artifacts": {
-                    "description": "Include a bounded list of artifacts uploaded by the returned failed, timed-out, and canceled jobs, such as test logs and screenshots (default true)",
+                    "description": "List job artifacts (default true) unless the reported scopes exclude read_artifacts",
                     "type": [
                       "null",
                       "boolean"
@@ -1785,6 +1785,51 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "Get Job Diagnostics"
+              },
+              "description": "Get diagnostic evidence for a job UUID: lifecycle, timings, retry policy, concurrency and capacity requirements, with optional dependency expansion, recorded events, queue insights and server-provided findings and leads. Read each section's limitations and each finding's evidence, limits and next_check. Empty findings do not establish that the job is healthy. Null means evidence was not obtained, not an empty result. Context is current, not historical; queue insights do not establish why this job waited. Requires the Job Diagnostics feature enabled for the organization.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "include": {
+                    "description": "Comma-separated: auto, dependencies, events, insights, guidance. Omit to leave optional reads and guidance off. auto selects evidence based on the job and availability; explicit evidence includes can extend it. guidance adds findings from returned evidence without extra reads. Availability depends on permissions and feature flags.",
+                    "type": "string"
+                  },
+                  "job_id": {
+                    "description": "Job UUID, available from list_jobs or get_job",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "job_id"
+                ],
+                "type": "object"
+              },
+              "name": "get_job_diagnostics"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "Get Job Environment Variables"
               },
               "description": "Get the environment variables for a specific job in a Buildkite build",
@@ -2102,6 +2147,98 @@
                 "type": "object"
               },
               "name": "get_test"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Test Pool"
+              },
+              "description": "Inspect one Test Scheduler pool's state, error, retry/lease policy, expiry and optional parallelism/muted-test planning snapshot. A generic 'Test pool failed.' error does not identify the failure phase or cause. Consumed does not prove passing; use that pool's result metrics before claiming success. The max_attempts in an attempt policy (including named policies) limits completed attempts per entry; it is not a count of retries or executions. lease.max_attempts controls the target batch size for a lease, and lease.costs is a per-lease workload budget. Parallelism is planned worker sizing, not a pool-wide lease cap. expires_at is the pool availability deadline, not a lease deadline. Muted tests are a planning snapshot, not a pending backlog or execution history. This response does not establish whether those tests contributed to aggregate result counts. Use get_test_pool_metrics for aggregate progress; individual pending tests and lease operations are not exposed. Requires read_test_pool and build/suite access; a 403 can explicitly report a missing scope. Interpret these codes only when returned: test_scheduler_not_enabled means Scheduler is currently disabled for the organization; the feature check precedes the scope check, so this does not establish scope access. test_scheduler_build_usage_not_found means no Scheduler usage was found for this build; it does not prove the build never used Scheduler or that its pools expired. An uncoded not-found response remains ambiguous between missing, inaccessible, expired or gated data, even after a successful empty listing. Report the returned message or code and leave workload, completion and results unknown. Do not infer an HTTP status that the tool did not return.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "build_uuid": {
+                    "description": "UUID of the pool's build, not its sequential build number",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pool_uuid": {
+                    "description": "Pool id returned by list_test_pools or supplied by the user; never invent a placeholder id to probe access errors",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pool_uuid",
+                  "build_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "get_test_pool"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "Get Test Pool Metrics"
+              },
+              "description": "Inspect one Test Scheduler pool's aggregate entry/attempt totals, state/result counts, estimated workload, current lease holds and timing. This snapshot can lag recent writes and is unavailable after pool expiry. Report outstanding work as waiting and leased attempts; canceled attempts are terminal, not pending. Report attempt counts as attempts, never as counts of resolved or unresolved entries: several attempts can belong to one entry. Leave per-entry resolution and retry/execution history unknown; even equal entry and attempt totals do not prove each entry ran once or no retries occurred. Waiting attempts may have been requeued. A consuming state or active lease describes the snapshot, not observed progress; one snapshot cannot establish a stall or worker failure. Reconcile leased attempts with active and expired lease attempt_count values: expired holds are included, so leased attempts are not a count of active workers. Expired lease counts are not historical totals or proof of worker death. When summarizing workload, include the returned attempts.states[*].costs totals by state, labelled aggregate estimated workload, not elapsed time, ETA or a per-lease budget; retain that label when converting milliseconds to seconds. lease.costs in pool detail is the per-lease policy budget. The oldest waiting timestamp is attempt creation, not every attempt's age or uninterrupted wait. pool.expires_at is pool availability; timing.next_active_lease_expires_at is a lease deadline. Scope expiry and progress claims to this response's observed_at, not guaranteed current state or freshness; separate reads are not atomic. Neither drained=true nor zero active leases alone proves completion or success: an errored/drained pool can retain waiting work, with null timing. Aggregates cannot name individual pending tests. Requires read_test_pool and build/suite access; a 403 can explicitly report a missing scope. Interpret these codes only when returned: test_scheduler_not_enabled means Scheduler is currently disabled for the organization; the feature check precedes the scope check, so this does not establish scope access. test_scheduler_build_usage_not_found means no Scheduler usage was found for this build; it does not prove the build never used Scheduler or that its pools expired. An uncoded not-found response remains ambiguous between missing, inaccessible, expired or gated data, even after a successful empty listing. Report the returned message or code and leave workload, completion and results unknown. Do not infer an HTTP status that the tool did not return.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "build_uuid": {
+                    "description": "UUID of the pool's build, not its sequential build number",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "pool_uuid": {
+                    "description": "Pool id returned by list_test_pools or supplied by the user; never invent a placeholder id to probe access errors",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pool_uuid",
+                  "build_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "get_test_pool_metrics"
             },
             {
               "annotations": {
@@ -2781,6 +2918,83 @@
               "annotations": {
                 "idempotentHint": false,
                 "readOnlyHint": true,
+                "title": "List Organization Usage"
+              },
+              "description": "List an organization's raw daily usage for one resource. Each row has a UTC date and the resource's counters for that day, split by pipeline, suite, registry, cluster, or model where the resource records them. Values are raw usage, not billed amounts, plan limits, or percentiles. Without from and to, returns the organization's current billing period; from and to are inclusive, must be given together, span at most 2 years, and start within the last 2 years. Rows are ordered by date. Returns one page; when headers.Link has rel=\"next\", request that page for more rows. Requires the read_usages scope and permission to view the organization's usage. Returns not found when the usage API isn't enabled for the organization; cache also needs hosted cache usage enabled",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "from": {
+                    "description": "First UTC day to include, as YYYY-MM-DD; requires to",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "page": {
+                    "description": "Page number for pagination (min 1)",
+                    "type": "integer"
+                  },
+                  "per_page": {
+                    "description": "Rows per page (1-500; omitted or 0 uses 100)",
+                    "maximum": 500,
+                    "type": "integer"
+                  },
+                  "resource": {
+                    "description": "Usage resource to read",
+                    "enum": [
+                      "active_users",
+                      "self_hosted_jobs",
+                      "hosted_jobs",
+                      "self_hosted_concurrent_agents",
+                      "hosted_concurrent_agents",
+                      "managed_tests",
+                      "test_executions",
+                      "otel_ingestion",
+                      "otel_storage",
+                      "artifact_storage",
+                      "artifact_uploads",
+                      "artifact_downloads",
+                      "package_storage",
+                      "package_transfer",
+                      "cache",
+                      "anthropic_tokens",
+                      "openai_tokens"
+                    ],
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "to": {
+                    "description": "Last UTC day to include, as YYYY-MM-DD; requires from",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "resource"
+                ],
+                "type": "object"
+              },
+              "name": "list_organization_usage"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
                 "title": "List Pipeline Schedules"
               },
               "description": "List the pipeline schedules for a pipeline, including cron expression, target branch, environment variables, enabled state, and next scheduled build time",
@@ -3207,6 +3421,68 @@
                 "type": "object"
               },
               "name": "list_step_uploads"
+            },
+            {
+              "annotations": {
+                "idempotentHint": false,
+                "readOnlyHint": true,
+                "title": "List Test Pools"
+              },
+              "description": "Find Test Scheduler pools for one pipeline/build before inspecting pool errors or workload progress. Returns one page of summaries and cursor links; use get_test_pool for policies and optional planning detail, get_test_pool_metrics for progress. No automatic pagination. Only accessible, unexpired pools matching the filters are returned. Successful listing does not establish access to individual pools. An empty page does not establish that no pools exist or explain a later failed lookup. Requires read_test_pool and build/suite access; a 403 can explicitly report a missing scope. Interpret these codes only when returned: test_scheduler_not_enabled means Scheduler is currently disabled for the organization; the feature check precedes the scope check, so this does not establish scope access. test_scheduler_build_usage_not_found means no Scheduler usage was found for this build; it does not prove the build never used Scheduler or that its pools expired. An uncoded not-found response remains ambiguous between missing, inaccessible, expired or gated data, even after a successful empty listing. Report the returned message or code and leave workload, completion and results unknown. Do not infer an HTTP status that the tool did not return.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "after": {
+                    "description": "Opaque after cursor from links.next; mutually exclusive with before. Retain the same pipeline, build and key filters",
+                    "type": "string"
+                  },
+                  "before": {
+                    "description": "Opaque before cursor from links.prev; mutually exclusive with after. Retain the same pipeline, build and key filters",
+                    "type": "string"
+                  },
+                  "build_uuid": {
+                    "description": "Build id from get_build or list_builds, not the sequential build number",
+                    "type": "string"
+                  },
+                  "key": {
+                    "description": "Case-insensitive exact pool key match",
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "per_page": {
+                    "description": "Results per page (1-100; omitted or 0 uses 30)",
+                    "type": "integer"
+                  },
+                  "pipeline_uuid": {
+                    "description": "Pipeline id from get_pipeline, not its slug",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "pipeline_uuid",
+                  "build_uuid"
+                ],
+                "type": "object"
+              },
+              "name": "list_test_pools"
             },
             {
               "annotations": {
@@ -4427,6 +4703,143 @@
                 "destructiveHint": true,
                 "idempotentHint": false,
                 "readOnlyHint": false,
+                "title": "Update Cluster Secret Access Policy"
+              },
+              "description": "Update a cluster secret's access policy without changing its key, value, or description. Returns updated metadata.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "cluster_id": {
+                    "type": "string"
+                  },
+                  "org_slug": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "description": "Full replacement access policy as a YAML list of rules",
+                    "type": "string"
+                  },
+                  "secret_id": {
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "cluster_id",
+                  "secret_id",
+                  "policy"
+                ],
+                "type": "object"
+              },
+              "name": "update_cluster_secret"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false,
+                "title": "Update Package Registry"
+              },
+              "description": "Update an existing Buildkite Packages registry's visibility, metadata, or OIDC policy. Supply at least one setting. Omitted settings stay unchanged, including the OIDC policy unless explicitly requested. Making a registry public can also make the organization public. Requires the write_registries scope and permission to edit the registry. Returns the updated registry with its public boolean.",
+              "inputSchema": {
+                "additionalProperties": false,
+                "properties": {
+                  "color": {
+                    "description": "Hex color; use null to clear",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "description": {
+                    "description": "Use null to clear",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "emoji": {
+                    "description": "Buildkite emoji shortcode or a single Unicode emoji; use null to clear",
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "description": "Renaming can change the registry slug",
+                    "type": "string"
+                  },
+                  "oidc_policy": {
+                    "description": "YAML policy string or JSON array of policy statements; replaces the policy, or clears it with null",
+                    "items": {
+                      "type": "object"
+                    },
+                    "type": [
+                      "string",
+                      "array",
+                      "null"
+                    ]
+                  },
+                  "org_slug": {
+                    "pattern": "^[A-Za-z0-9_-]+$",
+                    "type": "string"
+                  },
+                  "registry_slug": {
+                    "pattern": "^[A-Za-z0-9_-]+$",
+                    "type": "string"
+                  },
+                  "telemetry": {
+                    "additionalProperties": false,
+                    "description": "Analytics metadata describing the tool call's purpose",
+                    "properties": {
+                      "context": {
+                        "description": "Explain why calling this tool fits the user's overall goal. This parameter supports analytics and user-intent tracking. Provide 15-25 meaningful words in third-person perspective. Avoid credentials, passwords, and personal data; the server does not classify sensitive content.",
+                        "maxLength": 256,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "context"
+                    ],
+                    "type": "object"
+                  },
+                  "visibility": {
+                    "description": "Only source registries support changing visibility",
+                    "enum": [
+                      "public",
+                      "private"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "org_slug",
+                  "registry_slug"
+                ],
+                "type": "object"
+              },
+              "name": "update_package_registry"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "readOnlyHint": false,
                 "title": "Update Pipeline"
               },
               "description": "Modify an existing Buildkite pipeline's configuration, repository, settings, or metadata",
@@ -4914,6 +5327,7 @@
             "get_failed_executions",
             "get_job",
             "get_job_concurrency",
+            "get_job_diagnostics",
             "get_job_env",
             "get_pipeline",
             "get_pipeline_github_webhook_processing",
@@ -4921,6 +5335,8 @@
             "get_repository_connection",
             "get_step_upload",
             "get_test",
+            "get_test_pool",
+            "get_test_pool_metrics",
             "get_test_run",
             "get_test_workflow",
             "list_agents",
@@ -4933,6 +5349,7 @@
             "list_cluster_secrets",
             "list_clusters",
             "list_jobs",
+            "list_organization_usage",
             "list_pipeline_schedules",
             "list_pipelines",
             "list_repository_connections",
@@ -4942,6 +5359,7 @@
             "list_span_aggregate_scopes",
             "list_span_aggregate_scopes_for_build",
             "list_step_uploads",
+            "list_test_pools",
             "list_test_runs",
             "list_test_suites_for_pipeline",
             "list_test_workflows",
@@ -4963,6 +5381,8 @@
             "update_cache_registry",
             "update_cluster",
             "update_cluster_queue",
+            "update_cluster_secret",
+            "update_package_registry",
             "update_pipeline",
             "update_pipeline_schedule",
             "user_token_organization",
