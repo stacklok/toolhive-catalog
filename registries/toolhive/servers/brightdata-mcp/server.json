@@ -5,7 +5,7 @@
       "io.github.stacklok": {
         "ghcr.io/stacklok/dockyard/npx/brightdata-mcp:4.9.0": {
           "metadata": {
-            "last_updated": "2026-10-23T05:00:45Z",
+            "last_updated": "2026-11-27T01:52:40Z",
             "stars": 2551
           },
           "overview": "## Bright Data MCP Server\n\nThe brightdata-mcp server is a Model Context Protocol (MCP) server that enables AI assistants and agents to access real-time web data through Bright Data's global proxy and scraping infrastructure. It allows AI workflows to fetch live web content, extract structured data, and perform large-scale web data collection without building or maintaining custom scraping systems. This makes it ideal for research, market analysis, competitive intelligence, and any AI-driven workflow that depends on fresh, publicly available web data.",
@@ -45,12 +45,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Ask Bright Data Assistant"
               },
               "description": "Ask Bright Data's support assistant (Sophie) a question about Bright Data products, APIs, MCP usage, zones, scraping, or account setup. Use when the user asks \"how do I...\" about Bright Data, when you hit a Bright Data error you don't recognize, or when deciding between products (Web Unlocker vs. Scraping Browser vs. dataset tools). Supports threaded follow-ups via dialog_id.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "dialog_id": {
                     "description": "Optional 24-char dialog_id from a previous call to continue the same thread.",
@@ -75,12 +77,114 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Business Search"
+              },
+              "description": "Find companies or people (LinkedIn data) by description or criteria. Ranked results in one call. First choice to find companies or people.\nUp to 10 records per call; each call is billed.\nResult: JSON with meta and documents. meta.matched is a lower bound, not a total. meta.coverage_percent below 100 means a partial result. Empty documents means no match, not that the company or person does not exist. A missing field means no stored value.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "properties": {
+                  "category": {
+                    "description": "company or people. Required.",
+                    "enum": [
+                      "company",
+                      "people"
+                    ],
+                    "type": "string"
+                  },
+                  "limit": {
+                    "default": 10,
+                    "description": "Records per call, 1-10, default 10. With view full: 5 or less.",
+                    "maximum": 10,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "mode": {
+                    "default": "instant",
+                    "description": "How the query runs. Default instant.\ninstant: query is plain text. An AI planner turns it into filters and ranks the matches. Use it for most questions.\nsmart: as instant, then an AI reranks the best 50 matches for fit to the question. Slower and costs more. Use it when the order matters, for example \"the best fit\" or \"the most relevant\".\nludicrous: query is a JSON object (see query). Exact filters, no AI, fastest. Use it when you know the fields and values, when instant gives wrong matches, or to page past 100 matches.",
+                    "enum": [
+                      "instant",
+                      "smart",
+                      "ludicrous"
+                    ],
+                    "type": "string"
+                  },
+                  "offset": {
+                    "default": 0,
+                    "description": "Records to skip, default 0. For the next page, add limit to offset. instant and smart: offset+limit 100 or less. ludicrous: offset 1000 or less.",
+                    "maximum": 1000,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "query": {
+                    "anyOf": [
+                      {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": {},
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "type": "object"
+                      }
+                    ],
+                    "description": "instant and smart: plain text, 1-200 characters, for example \"fintech startups in Berlin\". ludicrous: a JSON object.\nOperators: {\"and\": [..]}, {\"or\": [..]}, {\"not\": cond}, {\"equals\": {field: value}}, {\"in\": {field: [values]}}, {\"range\": {field: {\"\u003e=\": n, \"\u003c=\": n}}}, {\"text\": {field: \"words\"}} or {\"text\": {field: {\"value\": \"words\", \"mode\": \"all\"}}}.\nExample: {\"and\": [{\"text\": {\"industry\": \"software\"}}, {\"in\": {\"headquarters_country_code\": [\"US\", \"GB\"]}}]}\nCompany fields. text: name industry about slogan specialties headquarters_location. equals/in: headquarters_country_code funding_stage. equals: headquarters_city organization_type. in: offices_country_codes offices_cities. range: employees_in_linkedin company_size_from company_size_to funding_raised linkedin_followers. range/equals: founded_year.\nPeople fields. text: name current_title about location current_company_name current_company_industry past_job_titles past_company_names certification_names education_schools education_details all_text role company skill. equals/in: city country_code linkedin_person_id. range: current_tenure_months followers. range/equals/in: experience_years.\nEach field list belongs to one category."
+                  },
+                  "view": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "summary",
+                          "full"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "fields": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "fields"
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "default": "summary",
+                    "description": "Which fields each record returns. Default summary.\nsummary: the main fields.\n  company: company_id url name slogan about industry specialties organization_type company_size_from company_size_to founded_year headquarters_location headquarters_country_code offices_cities linkedin_followers employees_in_linkedin funding_stage funding_raised domain website logo scraped_at.\n  people: name url current_title current_company_name current_tenure_months about past_job_titles location city country_code experience_years followers connections.\nfull: all fields, the summary fields plus others, for example the fields below. Records are large: use limit 5 or less.\n  company: headquarters_city offices_country_codes offices_addresses directions_urls alumni_count alumni_information linkedin_follower_to_employee_ratio investor_names crunchbase_id image linkedin_id.\n  people: first_name recommendations_count recommendations influencer patent_count past_company_names education_schools education_details certification_names languages current_company_industry current_company_specialties current_company_description current_company_slogan current_company_headquarters current_company_country_code current_company_size_from current_company_size_to current_company_funding_stage current_company_funding_raised avatar linkedin_num_id linkedin_person_id.\n{\"fields\": [..]}: only the named fields, any of the summary or full fields of the category. The smallest result. Example for people: {\"fields\": [\"name\", \"url\", \"current_title\", \"current_company_name\"]}."
+                  }
+                },
+                "required": [
+                  "category",
+                  "query"
+                ],
+                "type": "object"
+              },
+              "name": "business_search"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Chatgpt Ai Insights"
               },
               "description": "Send a prompt to ChatGPT and get back AI-generated insights.\nReturns structured answer text, citations, recommendations, and markdown. Useful for GEO and LLM as a judge.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "prompt": {
                     "type": "string"
@@ -96,38 +200,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "openWorldHint": true,
-                "readOnlyHint": true,
-                "title": "Extract Structured Data"
-              },
-              "description": "Scrape a webpage and extract structured data as JSON. First scrapes the page as markdown, then uses AI sampling to convert it to structured JSON format.",
-              "inputSchema": {
-                "properties": {
-                  "extraction_prompt": {
-                    "description": "Custom prompt to guide the extraction process. If not provided, will extract general structured data from the page.",
-                    "type": "string"
-                  },
-                  "url": {
-                    "format": "uri",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "url"
-                ],
-                "type": "object"
-              },
-              "name": "extract"
-            },
-            {
-              "annotations": {
-                "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Get Scraper Details"
               },
               "description": "Show the scraper description, input fields, example input and main output fields for one method. Call before run_scraper and build the input from sample_input or input_fields. Records may contain more fields than output_fields lists.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "dataset_id": {
                     "description": "dataset_id from search_scrapers",
@@ -149,12 +229,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Get Scraper Progress"
               },
               "description": "Status of a run: starting, running, ready, failed or canceled.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "snapshot_id": {
                     "description": "snapshot_id from run_scraper",
@@ -171,12 +253,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Get Scraper Results"
               },
               "description": "Records of a finished run. Returns status \"running\" if not ready yet.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "snapshot_id": {
                     "description": "snapshot_id from run_scraper",
@@ -193,12 +277,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "List Dataset Fields"
               },
               "description": "List the filterable fields of a searchable dataset (field name, type, and description). Call this before search_dataset to learn which field names and types you can filter on.\nSupported dataset_id values:\n- gd_l1viktl72bvl7bjuj0: LinkedIn people profiles\n- gd_me5ppxjr2ge6icjuh0: LinkedIn people profiles (contact-enriched)\n- gd_l1vikfnt1wgvvqz95w: LinkedIn company information",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "dataset_id": {
                     "enum": [
@@ -219,12 +305,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Perplexity Ai Insights"
               },
               "description": "Send a prompt to Perplexity and get back AI-generated insights.\nReturns structured answer text in markdown format.\nUseful for GEO and LLM as a judge.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "prompt": {
                     "type": "string"
@@ -240,12 +328,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Refresh Scrapers"
               },
               "description": "Reload the scraper list now instead of waiting for the daily refresh.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -255,12 +345,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Run Scraper"
               },
               "description": "Run a scraper method. input is a list of objects shaped like sample_input from get_scraper_details, one per URL or query. collect_by_url returns one record per input; discover_by_* methods return up to limit_per_input records per input, and every record is billed. Waits up to 45 seconds; if still running it returns snapshot_id with status \"running\": then poll get_scraper_progress and call get_scraper_results when ready. Records with an \"error\" field explain failed inputs.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "dataset_id": {
                     "description": "dataset_id from search_scrapers",
@@ -269,6 +361,9 @@
                   "input": {
                     "items": {
                       "additionalProperties": {},
+                      "propertyNames": {
+                        "type": "string"
+                      },
                       "type": "object"
                     },
                     "minItems": 1,
@@ -298,35 +393,36 @@
             {
               "annotations": {
                 "destructiveHint": false,
-                "openWorldHint": true,
-                "readOnlyHint": true,
-                "title": "Scrape as HTML"
-              },
-              "description": "Scrape a single webpage URL with advanced options for content extraction and get back the results in HTML.",
-              "inputSchema": {
-                "properties": {
-                  "url": {
-                    "format": "uri",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "url"
-                ],
-                "type": "object"
-              },
-              "name": "scrape_as_html"
-            },
-            {
-              "annotations": {
-                "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Scrape as Markdown"
               },
-              "description": "Scrape a single webpage URL with advanced options for content extraction and get back the results in MarkDown language.",
+              "description": "Fetch one web page. Returns JSON: url, format, content, plus title and note when present. content is the page in one format, markdown by default. Pick another with the format param:\n- text: plain text, no links or headings\n- html: raw HTML, for CSS selectors or data hidden in the markup\n- ld_json: schema.org data (price, rating, author...)\nIf the page has no data in that format, markdown is returned instead, with a note. No JavaScript rendering. Pages that take longer than 45 s time out. Pages over 40,000 characters are cut. To read the rest for free, call again with the snapshot_id and start values from the result's next field.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
+                  "format": {
+                    "default": "markdown",
+                    "enum": [
+                      "markdown",
+                      "text",
+                      "html",
+                      "ld_json"
+                    ],
+                    "type": "string"
+                  },
+                  "snapshot_id": {
+                    "description": "From next in a cut result",
+                    "type": "string"
+                  },
+                  "start": {
+                    "default": 0,
+                    "description": "Character offset to read from, from next",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
                   "url": {
                     "format": "uri",
                     "type": "string"
@@ -342,15 +438,26 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Scrape Batch"
               },
-              "description": "Scrape multiple webpages URLs with advanced options for content extraction and get back the results in MarkDown language.",
+              "description": "Fetch up to 5 web pages at once. Returns a JSON array in input order, one item per URL: url, format, content, plus title and note when present; or url and error if that page failed. content is the page in one format, markdown by default. Pick another with the format param:\n- text: plain text, no links or headings\n- html: raw HTML, for CSS selectors or data hidden in the markup\n- ld_json: schema.org data (price, rating, author...)\nIf a page has no data in that format, markdown is returned instead, with a note. No JavaScript rendering. Pages that take longer than 35 s time out (45 s when only one URL is sent). The whole result is cut at 40,000 characters, shared between pages. To read the rest of a cut page for free, call scrape_as_markdown with its url and the snapshot_id and start values from that item's next field.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
+                  "format": {
+                    "default": "markdown",
+                    "enum": [
+                      "markdown",
+                      "text",
+                      "html",
+                      "ld_json"
+                    ],
+                    "type": "string"
+                  },
                   "urls": {
-                    "description": "Array of URLs to scrape (max 5)",
                     "items": {
                       "format": "uri",
                       "type": "string"
@@ -370,12 +477,14 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Browser Click Element"
               },
               "description": "Click on an element using its ref from the ARIA snapshot.\nUse scraping_browser_snapshot first to get the correct ref values.\nThis is more reliable than CSS selectors.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "element": {
                     "description": "Description of the element being clicked for context",
@@ -396,18 +505,19 @@
             },
             {
               "annotations": {
-                "destructiveHint": false,
+                "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Browser Fill Form"
               },
               "description": "Fill multiple form fields in one operation.\nUse scraping_browser_snapshot first to get the correct ref values.\nThis is more efficient than filling fields one by one.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "fields": {
                     "description": "Fields to fill in",
                     "items": {
-                      "additionalProperties": false,
                       "properties": {
                         "name": {
                           "description": "Human-readable field name",
@@ -454,12 +564,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Get HTML"
               },
               "description": "Get the HTML content of the current page. Avoid using this tool and if used, use full_page option unless it is important to see things like script tags since this can be large",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "full_page": {
                     "description": "Whether to get the full page HTML including head and script tags\nAvoid this if you only need the extra HTML, since it can be quite large",
@@ -474,12 +586,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Get Text"
               },
               "description": "Get the text content of the current page",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -489,12 +603,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Go Back"
               },
               "description": "Go back to the previous page",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -504,12 +620,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Go Forward"
               },
               "description": "Go forward to the next page",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -519,12 +637,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Navigate"
               },
               "description": "Navigate a scraping browser session to a new URL",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "country": {
                     "description": "Optional 2-letter ISO country code to route the browser session (e.g., \"US\", \"GB\")",
@@ -533,6 +653,7 @@
                   },
                   "url": {
                     "description": "The URL to navigate to",
+                    "pattern": "^https?:\\/\\/",
                     "type": "string"
                   }
                 },
@@ -546,12 +667,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Network Requests"
               },
               "description": "Get all network requests made since loading the current page.\nShows HTTP method, URL, status code and status text for each request.\nUseful for debugging API calls, tracking data fetching, and understanding page behavior.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -561,12 +684,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Screenshot"
               },
               "description": "Take a screenshot of the current page. Set full_page to capture the whole scrollable page.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "full_page": {
                     "description": "Whether to screenshot the full page (default: false)\nYou should avoid fullscreen if it's not important, since the images can be quite large",
@@ -581,12 +706,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Scroll"
               },
               "description": "Scroll to the bottom of the current page",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -596,12 +723,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Scroll to Element"
               },
               "description": "Scroll to a specific element using its ref from the ARIA snapshot.\nUse scraping_browser_snapshot first to get the correct ref values.\nThis is more reliable than CSS selectors.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "element": {
                     "description": "Description of the element to scroll to",
@@ -623,12 +752,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Snapshot"
               },
               "description": "Capture an ARIA snapshot of the current page showing all interactive elements with their refs.\nThis provides accurate element references that can be used with ref-based tools.\nUse this before interacting with elements to get proper refs instead of guessing selectors.\nA filtered snapshot does not include page text; If necessary, call scraping_browser_get_text to read it.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "filtered": {
                     "description": "List only buttons, links and fields (default: false). Saves tokens. Use true for sensitive actions (payments, account changes) so page text cannot pose as an element.",
@@ -643,12 +774,14 @@
             {
               "annotations": {
                 "destructiveHint": true,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": false,
                 "title": "Browser Type Text"
               },
               "description": "Type text into an element using its ref from the ARIA snapshot.\nUse scraping_browser_snapshot first to get the correct ref values.\nThis is more reliable than CSS selectors.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "element": {
                     "description": "Description of the element being typed into for context",
@@ -679,12 +812,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Browser Wait for Element"
               },
               "description": "Wait for an element to be visible using its ref from the ARIA snapshot.\nUse scraping_browser_snapshot first to get the correct ref values.\nThis is more reliable than CSS selectors.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "element": {
                     "description": "Description of the element being waited for",
@@ -710,12 +845,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Search Dataset"
               },
-              "description": "Search a Bright Data dataset by a filter and get matching records back directly (fast Elasticsearch-backed search; no snapshot). Use this to FIND MANY records by criteria, as opposed to run_scraper which collects fresh records by URL.\nFirst call list_dataset_fields to get valid field names.\nA filter is a tree: a group {operator:\"and\"|\"or\", filters:[...]} or a leaf {name, value, operator}. Max nesting depth 3.\nLeaf operators: =, !=, \u003c, \u003c=, \u003e, \u003e=, in, not_in, includes, not_includes, array_includes, not_array_includes, is_null, is_not_null.\nSupported dataset_id values:\n- gd_l1viktl72bvl7bjuj0: LinkedIn people profiles\n- gd_me5ppxjr2ge6icjuh0: LinkedIn people profiles (contact-enriched)\n- gd_l1vikfnt1wgvvqz95w: LinkedIn company information",
+              "description": "Exact filters on raw LinkedIn dataset fields, the contact-enriched people dataset, or when business_search is not enabled for this account. To find companies or people by description or criteria.\nFirst call list_dataset_fields to get valid field names.\nA filter is a tree: a group {operator:\"and\"|\"or\", filters:[...]} or a leaf {name, value, operator}. Max nesting depth 3.\nLeaf operators: =, !=, \u003c, \u003c=, \u003e, \u003e=, in, not_in, includes, not_includes, array_includes, not_array_includes, is_null, is_not_null.\nSupported dataset_id values:\n- gd_l1viktl72bvl7bjuj0: LinkedIn people profiles\n- gd_me5ppxjr2ge6icjuh0: LinkedIn people profiles (contact-enriched)\n- gd_l1vikfnt1wgvvqz95w: LinkedIn company information",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "dataset_id": {
                     "enum": [
@@ -728,23 +865,19 @@
                   "filter": {
                     "anyOf": [
                       {
-                        "additionalProperties": false,
                         "properties": {
                           "filters": {
                             "items": {
                               "anyOf": [
                                 {
-                                  "additionalProperties": false,
                                   "properties": {
                                     "filters": {
                                       "items": {
                                         "anyOf": [
                                           {
-                                            "additionalProperties": false,
                                             "properties": {
                                               "filters": {
                                                 "items": {
-                                                  "additionalProperties": false,
                                                   "properties": {
                                                     "name": {
                                                       "description": "Field name to filter on. Get valid field names from the list_dataset_fields tool.",
@@ -803,7 +936,45 @@
                                             "type": "object"
                                           },
                                           {
-                                            "$ref": "#/properties/filter/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items"
+                                            "properties": {
+                                              "name": {
+                                                "description": "Field name to filter on. Get valid field names from the list_dataset_fields tool.",
+                                                "type": "string"
+                                              },
+                                              "operator": {
+                                                "description": "Filter operator, one of: =, !=, \u003c, \u003c=, \u003e, \u003e=, in, not_in, includes, not_includes, array_includes, not_array_includes, is_null, is_not_null",
+                                                "type": "string"
+                                              },
+                                              "value": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string"
+                                                  },
+                                                  {
+                                                    "type": "number"
+                                                  },
+                                                  {
+                                                    "type": "boolean"
+                                                  },
+                                                  {
+                                                    "items": {
+                                                      "type": [
+                                                        "string",
+                                                        "number",
+                                                        "boolean"
+                                                      ]
+                                                    },
+                                                    "type": "array"
+                                                  }
+                                                ],
+                                                "description": "Value to compare against. Omit for is_null / is_not_null."
+                                              }
+                                            },
+                                            "required": [
+                                              "name",
+                                              "operator"
+                                            ],
+                                            "type": "object"
                                           }
                                         ]
                                       },
@@ -825,7 +996,45 @@
                                   "type": "object"
                                 },
                                 {
-                                  "$ref": "#/properties/filter/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items"
+                                  "properties": {
+                                    "name": {
+                                      "description": "Field name to filter on. Get valid field names from the list_dataset_fields tool.",
+                                      "type": "string"
+                                    },
+                                    "operator": {
+                                      "description": "Filter operator, one of: =, !=, \u003c, \u003c=, \u003e, \u003e=, in, not_in, includes, not_includes, array_includes, not_array_includes, is_null, is_not_null",
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "number"
+                                        },
+                                        {
+                                          "type": "boolean"
+                                        },
+                                        {
+                                          "items": {
+                                            "type": [
+                                              "string",
+                                              "number",
+                                              "boolean"
+                                            ]
+                                          },
+                                          "type": "array"
+                                        }
+                                      ],
+                                      "description": "Value to compare against. Omit for is_null / is_not_null."
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "operator"
+                                  ],
+                                  "type": "object"
                                 }
                               ]
                             },
@@ -847,13 +1056,52 @@
                         "type": "object"
                       },
                       {
-                        "$ref": "#/properties/filter/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items/anyOf/0/properties/filters/items"
+                        "properties": {
+                          "name": {
+                            "description": "Field name to filter on. Get valid field names from the list_dataset_fields tool.",
+                            "type": "string"
+                          },
+                          "operator": {
+                            "description": "Filter operator, one of: =, !=, \u003c, \u003c=, \u003e, \u003e=, in, not_in, includes, not_includes, array_includes, not_array_includes, is_null, is_not_null",
+                            "type": "string"
+                          },
+                          "value": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "items": {
+                                  "type": [
+                                    "string",
+                                    "number",
+                                    "boolean"
+                                  ]
+                                },
+                                "type": "array"
+                              }
+                            ],
+                            "description": "Value to compare against. Omit for is_null / is_not_null."
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "operator"
+                        ],
+                        "type": "object"
                       }
                     ],
                     "description": "Filter tree describing which records to match. Required, cannot be empty."
                   },
                   "search_after": {
                     "description": "Pagination cursor from a previous response's search_after value.",
+                    "items": {},
                     "type": "array"
                   },
                   "size": {
@@ -881,6 +1129,9 @@
                             ],
                             "type": "string"
                           },
+                          "propertyNames": {
+                            "type": "string"
+                          },
                           "type": "object"
                         },
                         "type": "array"
@@ -900,33 +1151,52 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Search Engine"
               },
-              "description": "Scrape search results from Google, Bing or Yandex. Returns SERP results in JSON or Markdown (URL, title, description),Ideal forgathering current information, news, and detailed search results.",
+              "description": "Search Bing (default) or Google. Returns JSON: organic results with link, title and description. Searches not done within 55 s return a timeout error.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
                 "properties": {
-                  "cursor": {
-                    "description": "Pagination cursor for next page",
-                    "type": "string"
-                  },
-                  "engine": {
-                    "default": "google",
-                    "enum": [
-                      "google",
-                      "bing",
-                      "yandex"
-                    ],
-                    "type": "string"
-                  },
-                  "geo_location": {
-                    "description": "2-letter country code for geo-targeted results (e.g., \"us\", \"uk\")",
+                  "country": {
+                    "description": "2-letter country code, e.g. \"us\", \"de\"",
                     "maxLength": 2,
                     "minLength": 2,
                     "type": "string"
                   },
+                  "engine": {
+                    "default": "bing",
+                    "enum": [
+                      "bing",
+                      "google"
+                    ],
+                    "type": "string"
+                  },
+                  "page": {
+                    "default": 0,
+                    "description": "Results page, starting at 0. The number of results on a page varies.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
                   "query": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "time_range": {
+                    "default": "any",
+                    "description": "Bing supports only day, week, year and any",
+                    "enum": [
+                      "hour",
+                      "day",
+                      "week",
+                      "month",
+                      "year",
+                      "any"
+                    ],
                     "type": "string"
                   }
                 },
@@ -940,36 +1210,55 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": true,
                 "readOnlyHint": true,
                 "title": "Search Engine Batch"
               },
-              "description": "Run multiple search queries simultaneously. Returns JSON for Google, Markdown for Bing/Yandex.",
+              "description": "Run up to 5 searches at once, on Bing (default) or Google. Returns a JSON array in input order: query, engine, and result (organic link, title, description) or error. Searches not done within 55 s return a timeout error.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "queries": {
                     "items": {
                       "additionalProperties": false,
                       "properties": {
-                        "cursor": {
-                          "type": "string"
-                        },
-                        "engine": {
-                          "default": "google",
-                          "enum": [
-                            "google",
-                            "bing",
-                            "yandex"
-                          ],
-                          "type": "string"
-                        },
-                        "geo_location": {
-                          "description": "2-letter country code for geo-targeted results (e.g., \"us\", \"uk\")",
+                        "country": {
+                          "description": "2-letter country code, e.g. \"us\", \"de\"",
                           "maxLength": 2,
                           "minLength": 2,
                           "type": "string"
                         },
+                        "engine": {
+                          "default": "bing",
+                          "enum": [
+                            "bing",
+                            "google"
+                          ],
+                          "type": "string"
+                        },
+                        "page": {
+                          "default": 0,
+                          "description": "Results page, starting at 0. The number of results on a page varies.",
+                          "maximum": 9007199254740991,
+                          "minimum": 0,
+                          "type": "integer"
+                        },
                         "query": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "time_range": {
+                          "default": "any",
+                          "description": "Bing supports only day, week, year and any",
+                          "enum": [
+                            "hour",
+                            "day",
+                            "week",
+                            "month",
+                            "year",
+                            "any"
+                          ],
                           "type": "string"
                         }
                       },
@@ -993,12 +1282,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Search Scrapers"
               },
               "description": "Find a Bright Data pre-built scraper (Web Scraper API, 1,200+ sites) for a site or data type, e.g. \"amazon reviews\" or \"linkedin.com\". Returns dataset_id, name, domain and collection_methods. Next: call get_scraper_details with a dataset_id and one method.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "limit": {
                     "default": 10,
@@ -1020,12 +1311,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Session Stats"
               },
               "description": "Tell the user about the tool usage during this session",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {},
                 "required": [],
                 "type": "object"
@@ -1035,8 +1328,8 @@
           ],
           "tools": [
             "ask_brightdata_assistant",
+            "business_search",
             "chatgpt_ai_insights",
-            "extract",
             "get_scraper_details",
             "get_scraper_progress",
             "get_scraper_results",
@@ -1044,7 +1337,6 @@
             "perplexity_ai_insights",
             "refresh_scrapers",
             "run_scraper",
-            "scrape_as_html",
             "scrape_as_markdown",
             "scrape_batch",
             "scraping_browser_click_ref",
