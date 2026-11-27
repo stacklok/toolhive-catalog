@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/clarity-mcp-server:2.0.1": {
+        "ghcr.io/stacklok/dockyard/npx/clarity-mcp-server:3.0.0": {
           "custom_metadata": {
             "author": "Microsoft",
             "homepage": "https://clarity.microsoft.com/",
@@ -599,7 +599,7 @@
           "name": "CLARITY_API_TOKEN"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/clarity-mcp-server:2.0.1",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/clarity-mcp-server:3.0.0",
       "packageArguments": [
         {
           "isRequired": true,
