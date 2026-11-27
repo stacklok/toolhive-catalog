@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.14": {
+        "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.15": {
           "metadata": {
             "last_updated": "2026-11-20T09:50:32Z",
             "stars": 77
@@ -971,7 +971,7 @@
           "name": "MCP_SERVER_REQUEST_TIMEOUT"
         }
       ],
-      "identifier": "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.14",
+      "identifier": "ghcr.io/stacklok/dockyard/npx/heroku-mcp-server:1.2.15",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
