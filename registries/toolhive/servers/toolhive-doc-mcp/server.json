@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.1.0-20261119": {
+        "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.1.0-20261123": {
           "metadata": {
             "last_updated": "2026-11-20T09:49:40Z",
             "stars": 3
@@ -160,7 +160,7 @@
           "name": "OTEL_SERVICE_VERSION"
         }
       ],
-      "identifier": "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.1.0-20261119",
+      "identifier": "ghcr.io/stackloklabs/toolhive-doc-mcp:v0.1.0-20261123",
       "registryType": "oci",
       "transport": {
         "type": "streamable-http",
