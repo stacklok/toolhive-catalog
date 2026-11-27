@@ -9,7 +9,7 @@
             "stdio"
           ],
           "metadata": {
-            "last_updated": "2026-11-17T02:58:21Z",
+            "last_updated": "2026-11-27T01:51:46Z",
             "stars": 3239
           },
           "overview": "## Grafana MCP Server\n\nThe grafana MCP server is a Model Context Protocol (MCP) server that enables AI assistants and agents to interact directly with Grafana dashboards, data sources, and observability resources through a structured, AI-friendly interface. It allows AI-driven workflows to explore metrics, logs, alerts, and dashboards without switching tools or manually navigating the Grafana UI. This server is ideal for observability, incident response, performance analysis, and operational workflows where real-time telemetry and monitoring context are essential.\n\n**Note:** the upstream container's entrypoint defaults to the SSE transport, so this entry passes `--transport stdio` via its registry args to force stdio mode. If you run this server with your own custom arguments (`thv run ... -- \u003cyour args\u003e`), those arguments replace the registry defaults, so be sure to include `--transport stdio` yourself or the server will silently fall back to SSE.",
@@ -203,6 +203,10 @@
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
+                  "cursor": {
+                    "description": "Pagination cursor from a previous 'list' response. Set it to next_cursor and resend the same filters to get the next page.",
+                    "type": "string"
+                  },
                   "datasource_uid": {
                     "description": "Optional: UID of a Prometheus or Loki datasource to query for datasource-managed alert rules. If omitted, returns Grafana-managed rules.",
                     "type": "string"
@@ -317,7 +321,7 @@
                     "type": "string"
                   },
                   "disable_provenance": {
-                    "description": "If true, the alert remains editable in the Grafana UI (sets X-Disable-Provenance header). Defaults to true.",
+                    "description": "If true, the alert remains editable in the Grafana UI (sets X-Disable-Provenance header). Defaults to true. Set false to update a provisioned rule only after the user confirms they want to edit it.",
                     "type": "boolean"
                   },
                   "evaluation_interval": {
@@ -325,7 +329,12 @@
                     "type": "string"
                   },
                   "exec_err_state": {
-                    "description": "Grafana-managed only. State on execution error: NoData, Alerting, OK (required for 'create', 'update')",
+                    "description": "Grafana-managed only. State on execution error: OK, Alerting or Error. NoData is not accepted here (required for 'create', 'update')",
+                    "enum": [
+                      "OK",
+                      "Alerting",
+                      "Error"
+                    ],
                     "type": "string"
                   },
                   "expression": {
@@ -373,7 +382,12 @@
                     "type": "string"
                   },
                   "no_data_state": {
-                    "description": "Grafana-managed only. State when no data: NoData, Alerting, OK (required for 'create', 'update')",
+                    "description": "Grafana-managed only. State when no data: Alerting, NoData or OK (required for 'create', 'update')",
+                    "enum": [
+                      "Alerting",
+                      "NoData",
+                      "OK"
+                    ],
                     "type": "string"
                   },
                   "notification_settings": {
@@ -1420,7 +1434,7 @@
                 "readOnlyHint": true,
                 "title": "Get dashboard panel queries"
               },
-              "description": "Retrieve panel queries from a Grafana dashboard. Supports all datasource types (Prometheus, Loki, CloudWatch, SQL, etc.) and row-nested panels. Optionally filter to a specific panel by ID with `panelId`. Provide `variables` (an empty object uses saved selections) or `start`/`end` to populate `processedQuery` and `requiredVariables`. Referenced All selections, and variables saved without a value, return `warnings` requesting explicit values. Returns an array of objects with fields: title, query (raw expression), datasource (object with uid and type), and optionally processedQuery, refId, requiredVariables, and target. Targets built in a visual editor (CloudWatch metric search, InfluxDB query builder) have no string expression: those return an empty query plus `target`, the panel's raw query JSON. They can be executed as panel queries but not as standalone expressions.",
+              "description": "Retrieve panel queries from a Grafana dashboard. Supports all datasource types (Prometheus, Loki, CloudWatch, SQL, etc.), row-nested panels and library panels (resolved from their library element). A library panel that cannot be resolved returns an entry with a warning naming its uid. Optionally filter to a specific panel by ID with `panelId`. Provide `variables` (an empty object uses saved selections) or `start`/`end` to populate `processedQuery` and `requiredVariables`. Referenced All selections, and variables saved without a value, return `warnings` requesting explicit values. Returns an array of objects with fields: title, query (raw expression), datasource (object with uid and type), and optionally processedQuery, refId, requiredVariables, and target. Targets built in a visual editor (CloudWatch metric search, InfluxDB query builder) have no string expression: those return an empty query plus `target`, the panel's raw query JSON. They can be executed as panel queries but not as standalone expressions.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -2797,10 +2811,11 @@
                     "type": "string"
                   },
                   "format": {
-                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries.",
+                    "description": "Output format for log (streams) queries: 'full' (default) returns every entry with its own label metadata; 'compact' groups lines by stream so each label set is emitted only once, substantially reducing response size for broad queries. Structured metadata keys that are constant within a stream appear once on the stream header; keys that vary across lines appear per-line. Ignored for metric queries. 'loki' returns Loki's query_range JSON, also for metric queries.",
                     "enum": [
                       "full",
-                      "compact"
+                      "compact",
+                      "loki"
                     ],
                     "type": "string"
                   },
@@ -2815,6 +2830,10 @@
                   },
                   "queryType": {
                     "description": "Query type: 'range' (default) or 'instant'. Instant queries return a single value at one point in time. Range queries return values over a time window. Use 'instant' for metric queries when you want the current value. On VictoriaLogs, 'instant' returns the newest log lines from the hour before endRfc3339 (default now).",
+                    "enum": [
+                      "range",
+                      "instant"
+                    ],
                     "type": "string"
                   },
                   "startRfc3339": {
@@ -3146,6 +3165,7 @@
                     "anyOf": [
                       {
                         "additionalProperties": false,
+                        "description": "Query a PromQL-compatible datasource (Prometheus, Thanos, Mimir, Cloud Monitoring, etc.) using a PromQL expression. Returns data without opening a chart. Supports instant and range queries. Time: RFC3339 or relative expressions like 'now', 'now-1h'.",
                         "properties": {
                           "datasourceUid": {
                             "description": "The UID of the datasource to query",
@@ -3181,10 +3201,12 @@
                           "expr",
                           "endTime"
                         ],
+                        "title": "query_prometheus",
                         "type": "object"
                       },
                       {
                         "additionalProperties": false,
+                        "description": "Retrieve a specific trace by ID. Returns its spans grouped by service and resource, with span attributes, events and links.",
                         "properties": {
                           "datasourceUid": {
                             "description": "UID of the tempo datasource to query",
@@ -3211,12 +3233,15 @@
                           "datasourceUid",
                           "trace_id"
                         ],
+                        "title": "get_tempo_trace",
                         "type": "object"
                       }
                     ],
+                    "description": "Inputs for the selected query tool: the schema whose title is toolName",
                     "type": "object"
                   },
                   "toolName": {
+                    "description": "The query tool whose result to display",
                     "enum": [
                       "query_prometheus",
                       "get_tempo_trace"
