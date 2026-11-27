@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-object-storage:0.1.4"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/neon-object-storage:0.1.5"
     },
     {
       "registryType": "git",
       "url": "https://github.com/neondatabase/agent-skills",
-      "ref": "ccca3334a7542d3133134cc6926f2fafc6edeb1f",
+      "ref": "2b0e2b6f56d2b41c5363049e30e6ab72aa260cce",
       "subfolder": "skills/neon-object-storage"
     }
   ]

@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/vercel-cli-with-tokens:0.2.4"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/vercel-cli-with-tokens:0.2.5"
     },
     {
       "registryType": "git",
       "url": "https://github.com/vercel-labs/agent-skills",
-      "ref": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "ref": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
       "subfolder": "skills/vercel-cli-with-tokens"
     }
   ]

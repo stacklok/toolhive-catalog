@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/next-cache-components-optimizer:0.6.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/next-cache-components-optimizer:0.7.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/vercel/next.js",
-      "ref": "798f6f3fab2a194cdb6b96240de3c4ff92b08d2a",
+      "ref": "9f632df7a7a15d832a1f4924da5a13ab3479b732",
       "subfolder": "skills/next-cache-components-optimizer"
     }
   ]

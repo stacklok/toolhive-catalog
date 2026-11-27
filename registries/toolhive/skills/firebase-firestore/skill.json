@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-firestore:0.7.2"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/firebase-firestore:0.7.3"
     },
     {
       "registryType": "git",
       "url": "https://github.com/firebase/agent-skills",
-      "ref": "b76be96aaf5f152a5fb3112dde85c723c45539e7",
+      "ref": "99954a30898bb5ddc8152ee10e124dc3b4106bf7",
       "subfolder": "skills/firebase-firestore"
     }
   ]

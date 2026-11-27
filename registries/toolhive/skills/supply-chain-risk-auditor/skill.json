@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/supply-chain-risk-auditor:0.2.6"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/supply-chain-risk-auditor:0.2.7"
     },
     {
       "registryType": "git",
       "url": "https://github.com/trailofbits/skills",
-      "ref": "e4dd0bb5b15535f7c5a0834187dffba6ac37e4ff",
+      "ref": "149d7b21f4067765b82e67029730b42d228ef4b4",
       "subfolder": "plugins/supply-chain-risk-auditor/skills/supply-chain-risk-auditor"
     }
   ]

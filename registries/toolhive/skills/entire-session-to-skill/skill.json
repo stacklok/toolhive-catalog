@@ -18,12 +18,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-session-to-skill:0.2.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/entire-session-to-skill:0.2.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/entireio/skills",
-      "ref": "11902e22deddf7b867ea1cf958c0220288be4d63",
+      "ref": "af6cd3fce1852a7214c43bbf64315900196ad4ee",
       "subfolder": "skills/session-to-skill"
     }
   ]

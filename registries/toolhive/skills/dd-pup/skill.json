@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/dd-pup:0.7.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/dd-pup:0.7.1"
     },
     {
       "registryType": "git",
       "url": "https://github.com/datadog-labs/agent-skills",
-      "ref": "8e1306ada01e08bfd16ce342ff83e9334d455a15",
+      "ref": "1a0cdd0fc239e1fe14d6d4e561aca767d6fecafd",
       "subfolder": "dd-pup"
     }
   ]
