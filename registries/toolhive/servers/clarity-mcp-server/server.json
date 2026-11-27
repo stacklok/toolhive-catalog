@@ -10,7 +10,7 @@
             "license": "MIT"
           },
           "metadata": {
-            "last_updated": "2026-09-01T19:15:00Z"
+            "last_updated": "2026-11-27T01:53:15Z"
           },
           "overview": "## Microsoft Clarity MCP Server\n\nThe Microsoft Clarity MCP server gives AI assistants direct access to Clarity website analytics through the Clarity Data Export API. It enables natural-language querying of traffic metrics, user behavior insights, and performance statistics, retrieval and analysis of session recordings, and lookup of Clarity documentation. Data can be filtered by dimensions such as browser, device, and country, and results reflect real-time analytics for the configured Clarity project.",
           "permissions": {
@@ -45,12 +45,2586 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": false,
+                "title": "Create Topic Insight Report"
+              },
+              "description": "Create a new Topic Insight topic and start generating its report. Call get-topic-insight-constraints first and state its rules to the user before collecting the topic name and questions. Returns the topicId and the generation runId to poll with get-topic-insight-status. If the project has hit its weekly report limit or the topic's cooldown, the response has generated=false with a reason to relay to the user. To refresh an existing topic use regenerate-topic-insight-report instead. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "questions": {
+                    "description": "Between 10 and 15 real questions users might ask AI assistants about this topic.",
+                    "items": {
+                      "maxLength": 500,
+                      "minLength": 3,
+                      "type": "string"
+                    },
+                    "maxItems": 15,
+                    "minItems": 10,
+                    "type": "array"
+                  },
+                  "topicName": {
+                    "description": "Name of the topic to analyze.",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "topicName",
+                  "questions"
+                ],
+                "type": "object"
+              },
+              "name": "create-topic-insight-report"
+            },
+            {
+              "annotations": {
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": false,
+                "title": "Delete Topic Insight"
+              },
+              "description": "Delete a Topic Insight topic and its reports (topicId required). This is destructive and cannot be undone - confirm with the user before calling. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "topicId": {
+                    "description": "The topic to delete - use a topicId from list-topic-insights.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "topicId"
+                ],
+                "type": "object"
+              },
+              "name": "delete-topic-insight"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get AI Crawler Trends"
+              },
+              "description": "Get Bot Activity trends over time for specific AI crawlers. Requires values containing exact label and item values previously returned by list-ai-crawlers, using the same labelColumn and itemColumn - do not invent values. Returns one dated series per selected crawler.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "itemColumn": {
+                    "description": "Must match the itemColumn used in the list-ai-crawlers call the values came from.",
+                    "enum": [
+                      "BotOperator",
+                      "BotAgent",
+                      "BotCategory"
+                    ],
+                    "type": "string"
+                  },
+                  "labelColumn": {
+                    "description": "Must match the labelColumn used in the list-ai-crawlers call the values came from.",
+                    "enum": [
+                      "BotOperator",
+                      "BotAgent",
+                      "BotCategory"
+                    ],
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "Up to 5 crawler selections previously returned by list-ai-crawlers - do not invent values.",
+                    "items": {
+                      "properties": {
+                        "item": {
+                          "description": "Exact itemColumn value nested under that label. Omit to trend the label total.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "label": {
+                          "description": "Exact labelColumn value previously returned by list-ai-crawlers.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "label"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 5,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "labelColumn",
+                  "itemColumn",
+                  "values"
+                ],
+                "type": "object"
+              },
+              "name": "get-ai-crawler-trends"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Bot Activity Distribution"
+              },
+              "description": "Get a Bot Activity distribution for one dimension: content type, page type, or HTTP status code. Each entry includes count and its percent share of the distribution total. Supports all Bot Activity filters.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "dimension": {
+                    "description": "Dimension to break the bot requests down by.",
+                    "enum": [
+                      "contentType",
+                      "pageType",
+                      "statusCode"
+                    ],
+                    "type": "string"
+                  },
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "dimension"
+                ],
+                "type": "object"
+              },
+              "name": "get-bot-activity-distribution"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Bot Activity Item Trends"
+              },
+              "description": "Get Bot Activity trends over time for specific crawled paths, HTTP status codes, or content types. Requires values containing exact values previously returned by list-bot-path-requests (its full url field for paths) or get-bot-activity-distribution for the matching dimension - do not invent values. Returns one dated series per selected item.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "dimension": {
+                    "description": "Item type to trend over time.",
+                    "enum": [
+                      "path",
+                      "statusCode",
+                      "contentType"
+                    ],
+                    "type": "string"
+                  },
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "Up to 5 exact values previously returned for the matching dimension - do not invent values. For path, use the full url field (not the path field) returned by list-bot-path-requests; for statusCode or contentType, use the values returned by get-bot-activity-distribution.",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "dimension",
+                  "values"
+                ],
+                "type": "object"
+              },
+              "name": "get-bot-activity-item-trends"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Bot Activity Metric Trends"
+              },
+              "description": "Get Bot Activity trends over time for whole-project metrics: total AI requests, unique site pages crawled, or robots.txt violations. Returns one dated series where value is the filtered metric, totalValue is the comparable unfiltered total, and percent is value as a share of totalValue. Does not take selected items. The bucket size follows the date range, as in the dashboard.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "dimension": {
+                    "description": "Whole-project metric to trend over time.",
+                    "enum": [
+                      "totalRequests",
+                      "sitePagesCrawled",
+                      "violations"
+                    ],
+                    "type": "string"
+                  },
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "dimension"
+                ],
+                "type": "object"
+              },
+              "name": "get-bot-activity-metric-trends"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Bot Activity Overview"
+              },
+              "description": "Get Bot Activity (also called Crawling Activity or AI crawler activity) summary metrics for the Clarity project. Use this and the other Bot Activity tools - not the analytics dashboard tool - for any question about AI bots, crawlers, crawling activity, or bot traffic. Returns raw counts plus the percentages shown on the dashboard cards: shareOfTotalTrafficPercent (scoped vs all-traffic requests), uniqueHtmlPathsSharePercent (scoped vs all-traffic unique HTML paths), and violationsSharePercent (robots.txt violations vs scoped requests). Also returns selectedCdnProvider and cdnProviders with their connection status and last data timestamps. Does not require a verified AI Visibility domain. Unless overridden, results are scoped to the selected default CDN provider and to the domains covered by both the CDN logs and the Clarity tag.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "get-bot-activity-overview"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Citation Item Trends"
+              },
+              "description": "Get AI Visibility citation trends over time for specific queries or cited pages. Requires values containing exact values previously returned by list-citation-queries or list-top-cited-pages for the matching dimension - do not invent values. Returns one dated series per selected item.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "dimension": {
+                    "description": "Item type to trend over time.",
+                    "enum": [
+                      "query",
+                      "page"
+                    ],
+                    "type": "string"
+                  },
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "Up to 5 exact values previously returned by list-citation-queries or list-top-cited-pages for the matching dimension - do not invent values.",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "dimension",
+                  "values"
+                ],
+                "type": "object"
+              },
+              "name": "get-citation-item-trends"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Citation Metric Trends"
+              },
+              "description": "Get AI Visibility citation trends over time for whole-project metrics: total citations or share of authority. Returns one series of dated values. Does not take selected items.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "dimension": {
+                    "description": "Whole-project metric to trend over time.",
+                    "enum": [
+                      "citations",
+                      "shareOfAuthority"
+                    ],
+                    "type": "string"
+                  },
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "dimension"
+                ],
+                "type": "object"
+              },
+              "name": "get-citation-metric-trends"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Citation Overview"
+              },
+              "description": "Get an AI Visibility citations overview for the Clarity project, including citation counts, share of authority, branded and non-branded citation shares, AI referred traffic, topic availability, and data freshness. Supports date, query type, query, query topic, and cited-page filters.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "get-citation-overview"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Scrape To Referral Ratio"
+              },
+              "description": "Get the scrape-to-referral ratio for the Clarity project: how many AI scrapes each operator performed for every visit it referred back. Returns per-provider ratios, referrer breakdowns, the domains covered by CDN logs and by the Clarity tag, and a coverage state explaining any gap. Requires a date filter.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Required Bot Activity date range for the scrape-to-referral ratio.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "date"
+                    ],
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "filters"
+                ],
+                "type": "object"
+              },
+              "name": "get-scrape-to-referral-ratio"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Topic Insight Constraints"
+              },
+              "description": "Get the current validation rules for Topic Insights: the maximum topic name length, the allowed range of questions per topic, the allowed question length, the maximum number of reports a project can generate in a 7-day window, and the per-topic regeneration cooldown in days. Call this before create-topic-insight-report or regenerate-topic-insight-report and state the rules to the user before collecting their input, so their topic and questions satisfy the rules on the first try. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "get-topic-insight-constraints"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Topic Insight Report"
+              },
+              "description": "Get a completed Topic Insight report for one topic (topicId required, runId optional for a specific run; omitted selects the latest completed run). Returns the resolved runId, status, dataReady, simulation metrics (citation rate, competitive share, answer/citation counts), per-domain ranking, content strengths/opportunities, and simulated questions. In-progress runs cannot be read as final reports. If dataReady=false, wait for ingestion and do not interpret metrics. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "runId": {
+                    "description": "A specific generation run. Omit to use the topic's latest completed run.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "topicId": {
+                    "description": "The topic to fetch the report for - use a topicId from list-topic-insights.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "topicId"
+                ],
+                "type": "object"
+              },
+              "name": "get-topic-insight-report"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Get Topic Insight Status"
+              },
+              "description": "Get the generation status for one or more Topic Insight runs (runIds required). Returns each run's status, progress percentage, and - once completed - its citation rate and competitive share. Poll this after create-topic-insight-report or regenerate-topic-insight-report until the status is Completed, then call get-topic-insight-report.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "runIds": {
+                    "description": "Between 1 and 100 run ids returned by create-topic-insight-report or regenerate-topic-insight-report to check generation status for.",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "runIds"
+                ],
+                "type": "object"
+              },
+              "name": "get-topic-insight-status"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List AI Crawlers"
+              },
+              "description": "List AI crawlers and their request counts for the Clarity project. Supports Bot Activity filters plus labelColumn and itemColumn grouping.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "isSortAscending": {
+                    "description": "Sort ascending by request count instead of descending.",
+                    "type": "boolean"
+                  },
+                  "itemColumn": {
+                    "description": "Column used to break each top-level row into nested items.",
+                    "enum": [
+                      "BotOperator",
+                      "BotAgent",
+                      "BotCategory"
+                    ],
+                    "type": "string"
+                  },
+                  "labelColumn": {
+                    "description": "Column used to group crawlers into top-level rows.",
+                    "enum": [
+                      "BotOperator",
+                      "BotAgent",
+                      "BotCategory"
+                    ],
+                    "type": "string"
+                  },
+                  "limit": {
+                    "default": 100,
+                    "description": "Number of rows to return, at most 100.",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "skip": {
+                    "default": 0,
+                    "description": "Number of matching rows to skip.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "labelColumn",
+                  "itemColumn"
+                ],
+                "type": "object"
+              },
+              "name": "list-ai-crawlers"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Bot Activity Paths"
+              },
+              "description": "List the paths requested by AI bots for the Clarity project, ranked by request count. Each row includes count and its percent share. Supports Bot Activity filters, pagination, sorting, and optional content-type grouping.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "groupByContentType": {
+                    "description": "Group the returned paths by response content type.",
+                    "type": "boolean"
+                  },
+                  "isAscending": {
+                    "description": "Sort ascending by request count instead of descending.",
+                    "type": "boolean"
+                  },
+                  "limit": {
+                    "default": 100,
+                    "description": "Number of rows to return, at most 100.",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "skip": {
+                    "default": 0,
+                    "description": "Number of matching rows to skip.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-bot-path-requests"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Citation Queries"
+              },
+              "description": "List the AI queries that cite the Clarity project's verified domain, ranked by citation count. Returns query topic, citation count, share of authority, and branded status. Supports citation filters and pagination.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "limit": {
+                    "default": 100,
+                    "description": "Number of rows to return, at most 100.",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "skip": {
+                    "default": 0,
+                    "description": "Number of matching rows to skip.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-citation-queries"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Citation Topics"
+              },
+              "description": "List AI query topics that cite the Clarity project's verified domain, ranked by citation count. Returns citation count and share of authority. Supports citation filters and pagination.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "limit": {
+                    "default": 10,
+                    "description": "Number of rows to return, at most 100.",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "skip": {
+                    "default": 0,
+                    "description": "Number of matching rows to skip.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-citation-topics"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Connected CDN Providers"
+              },
+              "description": "List the CDN providers connected to the Clarity project, with each provider's connection status and the domain its bot logs cover. Use this to explain missing Bot Activity data before analyzing crawl coverage.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "botActivity": {
+                        "description": "Filter by bot category (e.g., ['AI Crawler', 'AI Assistant', 'AI Search'] for AI bots). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botAgent": {
+                        "description": "Filter by bot user agent names (e.g., ['GPTBot', 'ClaudeBot']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botOperator": {
+                        "description": "Filter by bot operator names (e.g., ['OpenAI', 'Anthropic']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "botType": {
+                        "default": "AIBots",
+                        "description": "Which traffic to scope to. AIBots covers AI crawlers only, AllBots covers every known bot, AllTraffic covers bots and humans.",
+                        "enum": [
+                          "AIBots",
+                          "AllBots",
+                          "AllTraffic"
+                        ],
+                        "type": "string"
+                      },
+                      "cdnProvider": {
+                        "description": "Filter to logs from one connected CDN provider. Omit to use the project's default provider, which is what the dashboard shows.",
+                        "enum": [
+                          "Azure",
+                          "Akamai",
+                          "Fastly",
+                          "Cloudflare",
+                          "WordPress",
+                          "CloudFront"
+                        ],
+                        "type": "string"
+                      },
+                      "contentType": {
+                        "description": "Filter by response content type. Multiple values are OR-ed.",
+                        "items": {
+                          "enum": [
+                            "Image",
+                            "Audio",
+                            "Video",
+                            "HTML",
+                            "JSON",
+                            "XML",
+                            "PDF",
+                            "Unknown",
+                            "JavaScript",
+                            "CSS",
+                            "Markdown",
+                            "Text",
+                            "Font"
+                          ],
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Bot Activity date range. Defaults to the last 7 days in your local timezone when omitted, matching the dashboard.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T23:59:59), interpreted in the user's local timezone. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the Bot Activity interval. Prefer local wall-clock with no timezone (e.g. 2026-08-24T00:00:00) - it is interpreted in the user's local timezone to match the dashboard. Append Z only for an explicit UTC instant.",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "domain": {
+                        "description": "Filter by the customer domain that was crawled. Multiple values are OR-ed. Omit to use the dashboard default, which covers the domains present in both the CDN logs and the Clarity tag.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "pageType": {
+                        "description": "Filter by inferred page type (e.g., ['Product', 'Blog']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "path": {
+                        "description": "Filter by crawled path using the selected match operator. Multiple entries are OR-ed.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the path value. StarstWith matches the start of the path.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "statusCode": {
+                        "description": "Filter by HTTP response status codes (e.g., ['200', '404']). Multiple values are OR-ed.",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "violation": {
+                        "description": "Filter to requests that did or did not violate robots.txt.",
+                        "enum": [
+                          "Violation",
+                          "NoViolation"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-connected-cdn-providers"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Clarity Projects"
+              },
+              "description": "List the Microsoft Clarity projects the signed-in user can access as an admin or member, with each project's id, name and hostname, and which one is selected. Each API request is restricted by the user's permissions for that project; being listed does not grant every action. The list is reused for a few minutes; pass refresh: true to re-read it, e.g. after the user gains access to a new project. Requires a Clarity sign-in: not available with a Data Export API token, which is tied to a single project.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "refresh": {
+                    "description": "Re-read the projects from Clarity instead of reusing the recent list, e.g. after the user gained or lost access to a project.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-projects"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "List Session Recordings"
               },
               "description": "List Microsoft Clarity session recordings based on specified filters. The filters allow you to narrow down the recordings by various criteria such as URLs, device types, browser, OS, country, city, and more. The date filter is required and must be in UTC ISO 8601 format.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "count": {
                     "default": 100,
@@ -59,7 +2633,6 @@
                     "type": "number"
                   },
                   "filters": {
-                    "additionalProperties": false,
                     "description": "A set of filters that can be applied to the Microsoft Clarity to session recordings. This allows you to filter recordings based on various criteria such as URLs, device types, browser, OS, country, city, and more. The date filter is required and must be in UTC ISO 8601 format.",
                     "properties": {
                       "browser": {
@@ -154,15 +2727,32 @@
                         "type": "array"
                       },
                       "cumulativeLayoutShift": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by Cumulative Layout Shift web vital in seconds. Set to null to ignore this filter."
+                        "description": "Filter by Cumulative Layout Shift web vital in seconds. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "cursorMovement": {
                         "description": "Filter sessions with cursor/pointer movement activity. Set to true to include only sessions with cursor movement",
                         "type": "boolean"
                       },
                       "date": {
-                        "additionalProperties": false,
                         "properties": {
                           "end": {
                             "description": "The end date of the time interval in UTC ISO 8601 with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
@@ -204,7 +2794,29 @@
                       "entryUrls": {
                         "description": "Filter by entry/landing page URLs with pattern matching.",
                         "items": {
-                          "$ref": "#/properties/filters/properties/visitedUrls/items"
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "contains",
+                                "startsWith",
+                                "endsWith",
+                                "excludes",
+                                "isExactly",
+                                "isExactlyNot",
+                                "matchesRegex",
+                                "excludesRegex"
+                              ],
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "operator"
+                          ],
+                          "type": "object"
                         },
                         "type": "array"
                       },
@@ -215,17 +2827,75 @@
                       "exitUrls": {
                         "description": "Filter by exit page URLs with pattern matching.",
                         "items": {
-                          "$ref": "#/properties/filters/properties/visitedUrls/items"
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "contains",
+                                "startsWith",
+                                "endsWith",
+                                "excludes",
+                                "isExactly",
+                                "isExactlyNot",
+                                "matchesRegex",
+                                "excludesRegex"
+                              ],
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "operator"
+                          ],
+                          "type": "object"
                         },
                         "type": "array"
                       },
                       "firstInputDelay": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by First Input Delay web vital in milliseconds. Set to null to ignore this filter."
+                        "description": "Filter by First Input Delay web vital in milliseconds. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "hiddenPageDuration": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by time spent on hidden/background pages in minutes. Set to null to ignore this filter."
+                        "description": "Filter by time spent on hidden/background pages in minutes. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "javascriptErrors": {
                         "description": "Filter by JavaScript error messages or patterns. Use empty string '' to match any JavaScript error",
@@ -235,8 +2905,26 @@
                         "type": "array"
                       },
                       "largestContentfulPaint": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by Largest Contentful Paint web vital in seconds. Set to null to ignore this filter."
+                        "description": "Filter by Largest Contentful Paint web vital in seconds. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "medium": {
                         "description": "Filter by UTM medium parameter values. Common values: ['organic', 'cpc', 'email', 'social', 'referral']",
@@ -264,19 +2952,72 @@
                         "type": "array"
                       },
                       "pageClickEventCount": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by number of clicks per page. Set to null to ignore this filter."
+                        "description": "Filter by number of clicks per page. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "pageDuration": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by total page duration in minutes. Set to null to ignore this filter."
+                        "description": "Filter by total page duration in minutes. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "pagesCount": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by number of pages visited in session. Set to null to ignore this filter."
+                        "description": "Filter by number of pages visited in session. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "performanceScore": {
-                        "additionalProperties": false,
                         "description": "Filter by overall performance score. Set to null to ignore this filter.",
                         "properties": {
                           "max": {
@@ -326,20 +3067,74 @@
                         "type": "string"
                       },
                       "productPrice": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by product price range. Set to null to ignore this filter."
+                        "description": "Filter by product price range. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "productPurchases": {
                         "description": "Filter sessions with checkout conversion/purchases. Set to true to include only sessions with purchases",
                         "type": "boolean"
                       },
                       "productRating": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by product ratings (e.g., 1-5 stars). Set to null to ignore this filter."
+                        "description": "Filter by product ratings (e.g., 1-5 stars). Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "productRatingsCount": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by number of product ratings. Set to null to ignore this filter."
+                        "description": "Filter by number of product ratings. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "quickbackClickPresent": {
                         "description": "Filter sessions with quick back navigation clicks. Set to true to include only sessions with quick back clicks",
@@ -358,7 +3153,6 @@
                         "type": "boolean"
                       },
                       "scrollDepth": {
-                        "additionalProperties": false,
                         "description": "Filter by maximum scroll depth percentage. Set to null to ignore this filter.",
                         "properties": {
                           "max": {
@@ -397,12 +3191,48 @@
                         "type": "boolean"
                       },
                       "sessionClickEventCount": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by total clicks per session. Set to null to ignore this filter."
+                        "description": "Filter by total clicks per session. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "sessionDuration": {
-                        "$ref": "#/properties/filters/properties/visiblePageDuration",
-                        "description": "Filter by total session duration in minutes. Set to null to ignore this filter."
+                        "description": "Filter by total session duration in minutes. Set to null to ignore this filter.",
+                        "properties": {
+                          "max": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "min": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "max"
+                        ],
+                        "type": "object"
                       },
                       "sessionIntent": {
                         "description": "Filter by session intention level/user behavior classification.",
@@ -443,7 +3273,6 @@
                         "type": "string"
                       },
                       "visiblePageDuration": {
-                        "additionalProperties": false,
                         "description": "Filter by time spent on visible pages in minutes. Set to null to ignore this filter.",
                         "properties": {
                           "max": {
@@ -468,7 +3297,6 @@
                       "visitedUrls": {
                         "description": "Filter by URLs visited during the session with pattern matching.",
                         "items": {
-                          "additionalProperties": false,
                           "properties": {
                             "operator": {
                               "enum": [
@@ -501,6 +3329,11 @@
                     ],
                     "type": "object"
                   },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
                   "sortBy": {
                     "default": "SessionStart_DESC",
                     "description": "Sort option for session recordings. Default is SessionStart_DESC (newest first).",
@@ -527,13 +3360,225 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Top Cited Pages"
+              },
+              "description": "List pages from the Clarity project's verified domain that were cited in AI answers, ranked by citation count. Supports citation filters and pagination.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "filters": {
+                    "properties": {
+                      "citedPages": {
+                        "description": "Filter by cited page URLs using the selected match operator.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "description": "The match operator to apply to the cited page URL. StarstWith matches the start of the URL.",
+                              "enum": [
+                                "Equals",
+                                "Contains",
+                                "StarstWith",
+                                "EndsWith",
+                                "RegexMatch"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "date": {
+                        "description": "Citation data date range. Defaults to the last 7 days when omitted.",
+                        "properties": {
+                          "end": {
+                            "description": "End of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          },
+                          "start": {
+                            "description": "Start of the citation data interval in UTC ISO 8601 format with milliseconds format (yyyy-MM-ddTHH:mm:ss.fffZ).",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "type": "object"
+                      },
+                      "queries": {
+                        "description": "Filter by exact or partially matching AI queries.",
+                        "items": {
+                          "properties": {
+                            "operator": {
+                              "enum": [
+                                "Equals",
+                                "Contains"
+                              ],
+                              "type": "string"
+                            },
+                            "value": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "operator",
+                            "value"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "queryTopic": {
+                        "description": "Filter by one exact query topic name.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "queryType": {
+                        "default": "all",
+                        "description": "Filter citations by branded query type.",
+                        "enum": [
+                          "all",
+                          "branded",
+                          "nonbranded"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "limit": {
+                    "default": 100,
+                    "description": "Number of rows to return, at most 100.",
+                    "maximum": 100,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "skip": {
+                    "default": 0,
+                    "description": "Number of matching rows to skip.",
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-top-cited-pages"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "List Topic Insights"
+              },
+              "description": "List the Topic Insight (AI Economy simulation) topics for the Clarity project. Returns two groups matching the dashboard: topics (the user's own topics - approved or already generated) and suggestedTopics (auto-generated topic suggestions the user has not adopted yet). Each entry has topicId, topicName, userApproved, questions, and its generated reports (runId, status, citationRate, competitiveShare). Also returns reportsMetadata (canGenerate and the number of reports generated in the current window). Treat suggestedTopics as suggestions, not the user's active topics, unless they ask about suggestions. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              },
+              "name": "list-topic-insights"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": true,
+                "readOnlyHint": false,
+                "title": "Sign In to Microsoft Clarity"
+              },
+              "description": "Sign in to Microsoft Clarity with the user's Clarity account. Opens the Clarity sign-in and consent page in the browser and returns its URL so it can be shown to the user if the browser does not open. Returns immediately; call login-status right away and repeat while loginPending is true, without asking the user to confirm completion. The server automatically receives the authorization code and exchanges tokens when the browser redirects. Project requests are restricted by the user's admin or member permissions for each project. Recommended instead of using a Data Export API token, especially after HTTP 401 or 403 token failures.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "login"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": true,
+                "title": "Microsoft Clarity Sign-In Status"
+              },
+              "description": "Show whether the user is signed in to Microsoft Clarity, accessible projects, the selected project, and the active credentials. While browser sign-in is pending, waits up to 10 seconds for completion or failure. Call immediately after login and repeat while loginPending is true without asking for user confirmation. Report lastLoginError and stop on failure. Project requests are restricted by the user's admin or member permissions for each project, not OAuth scopes.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "login-status"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": true,
+                "readOnlyHint": false,
+                "title": "Sign Out of Microsoft Clarity"
+              },
+              "description": "Sign out of Microsoft Clarity: ends the sign-in on the Clarity service and removes it from this machine. Does not affect a configured Data Export API token.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {},
+                "required": [],
+                "type": "object"
+              },
+              "name": "logout"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Query Analytics Dashboard"
               },
-              "description": "Fetch Microsoft Clarity analytics data using a simplified natural language search query. The query should be focused on one specific data retrieval or aggregation task. Avoid complex multi-purpose queries. Time ranges should be explicitly specified when possible. If no time range is provided, prompt the user to specify one.",
+              "description": "Fetch Microsoft Clarity analytics data using a simplified natural language search query. The query should be focused on one specific data retrieval or aggregation task. Avoid complex multi-purpose queries. Time ranges should be explicitly specified when possible. If no time range is provided, prompt the user to specify one. Do NOT use this tool for AI bot, crawler, or crawling-activity questions (which bots or AI crawlers accessed the site, crawled paths, content or page types, HTTP status codes, robots.txt violations, or scrape-to-referral) - use the dedicated Bot Activity tools for those instead.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
                   "query": {
                     "description": "A natural language search query string for filtering and shaping analytics data. The query should be specific and include temporal constraints when available. (e.g., 'Top browsers last 3 days', 'The active time duration for mobile devices in United States last week'). Time ranges should be explicitly specified when possible. If no time range is provided, prompt the user to specify one.",
                     "type": "string"
@@ -549,12 +3594,14 @@
             {
               "annotations": {
                 "destructiveHint": false,
+                "idempotentHint": false,
                 "openWorldHint": false,
                 "readOnlyHint": true,
                 "title": "Query Documentation Resources"
               },
               "description": "Retrieve Microsoft Clarity documentation snippets for finding answers to user questions including step-by-step screenshots for setup guides, features, usage, troubleshooting, and integration instructions. The query should be focused on one specific documentation topic or question. Avoid complex multi-purpose queries.",
               "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
                   "query": {
                     "description": "A natural language search query string for filtering and shaping analytics data. The query should be specific and include temporal constraints when available. (e.g., 'Top browsers last 3 days', 'The active time duration for mobile devices in United States last week'). Time ranges should be explicitly specified when possible. If no time range is provided, prompt the user to specify one.",
@@ -567,12 +3614,101 @@
                 "type": "object"
               },
               "name": "query-documentation-resources"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": false,
+                "openWorldHint": false,
+                "readOnlyHint": false,
+                "title": "Regenerate Topic Insight Report"
+              },
+              "description": "Regenerate the report for an existing Topic Insight topic (topicId and topicName required). Returns the new generation runId to poll with get-topic-insight-status. If the topic is within its 7-day cooldown or the project hit its weekly limit, the response has generated=false with a reason to relay to the user. Requires a verified AI Visibility domain.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "Optional id of the Clarity project to query, as returned by list-projects. Omit to query the selected project. To compare several projects, call this tool once per project with its id. Passing it does not change the selected project. Not supported with a Data Export API token, which always queries its own project.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "topicId": {
+                    "description": "The existing topic to regenerate - use a topicId from list-topic-insights.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "topicName": {
+                    "description": "The topic's name.",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "topicId",
+                  "topicName"
+                ],
+                "type": "object"
+              },
+              "name": "regenerate-topic-insight-report"
+            },
+            {
+              "annotations": {
+                "destructiveHint": false,
+                "idempotentHint": true,
+                "openWorldHint": false,
+                "readOnlyHint": false,
+                "title": "Select Clarity Project"
+              },
+              "description": "Select the user's default Microsoft Clarity project: the one the Clarity data tools (such as query-analytics-dashboard and list-session-recordings) query when no projectId is passed. The choice is remembered for this sign-in until another one is selected. Call it when the user chooses a default project or asks to switch their default; to query or compare other projects without changing the default, pass projectId to those tools instead. Take the project id from list-projects. Not used with a Data Export API token, which is tied to one project.",
+              "inputSchema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                  "projectId": {
+                    "description": "The id of the project to query, as returned by list-projects.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "projectId"
+                ],
+                "type": "object"
+              },
+              "name": "select-project"
             }
           ],
           "tools": [
+            "create-topic-insight-report",
+            "delete-topic-insight",
+            "get-ai-crawler-trends",
+            "get-bot-activity-distribution",
+            "get-bot-activity-item-trends",
+            "get-bot-activity-metric-trends",
+            "get-bot-activity-overview",
+            "get-citation-item-trends",
+            "get-citation-metric-trends",
+            "get-citation-overview",
+            "get-scrape-to-referral-ratio",
+            "get-topic-insight-constraints",
+            "get-topic-insight-report",
+            "get-topic-insight-status",
+            "list-ai-crawlers",
+            "list-bot-path-requests",
+            "list-citation-queries",
+            "list-citation-topics",
+            "list-connected-cdn-providers",
+            "list-projects",
             "list-session-recordings",
+            "list-top-cited-pages",
+            "list-topic-insights",
+            "login",
+            "login-status",
+            "logout",
             "query-analytics-dashboard",
-            "query-documentation-resources"
+            "query-documentation-resources",
+            "regenerate-topic-insight-report",
+            "select-project"
           ]
         }
       }
