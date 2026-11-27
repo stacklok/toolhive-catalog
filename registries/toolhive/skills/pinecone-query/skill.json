@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-query:0.2.2"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/pinecone-query:0.2.3"
     },
     {
       "registryType": "git",
       "url": "https://github.com/pinecone-io/skills",
-      "ref": "885dc539fbc2c777dee9764a5b05656663b43c5f",
+      "ref": "34f25f3eb4fd0fe1e2da6c6c4cfe84bb0c6a7273",
       "subfolder": "skills/pinecone-query"
     }
   ]

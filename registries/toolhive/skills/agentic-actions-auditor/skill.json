@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/agentic-actions-auditor:0.3.4"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/agentic-actions-auditor:0.3.5"
     },
     {
       "registryType": "git",
       "url": "https://github.com/trailofbits/skills",
-      "ref": "e4dd0bb5b15535f7c5a0834187dffba6ac37e4ff",
+      "ref": "149d7b21f4067765b82e67029730b42d228ef4b4",
       "subfolder": "plugins/agentic-actions-auditor/skills/agentic-actions-auditor"
     }
   ]

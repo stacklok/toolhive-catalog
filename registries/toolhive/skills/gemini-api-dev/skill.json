@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/gemini-api-dev:0.5.0"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/gemini-api-dev:0.6.0"
     },
     {
       "registryType": "git",
       "url": "https://github.com/google-gemini/gemini-skills",
-      "ref": "7cfc690ba9c8efe36a5316e6d4000e2b6aa25dbf",
+      "ref": "c4d0c62c1240e08a90546186bf320600ab6a039a",
       "subfolder": "skills/gemini-api-dev"
     }
   ]

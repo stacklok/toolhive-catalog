@@ -19,12 +19,12 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/stacklok/dockyard/skills/huggingface-paper-publisher:0.3.5"
+      "identifier": "ghcr.io/stacklok/dockyard/skills/huggingface-paper-publisher:0.3.6"
     },
     {
       "registryType": "git",
       "url": "https://github.com/huggingface/skills",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "subfolder": "skills/huggingface-paper-publisher"
     }
   ]
