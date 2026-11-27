@@ -1,0 +1,55 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stacklok/konverter-pro-remote",
+  "description": "German bank statements and PayPal, SumUp, Stripe reports to verified DATEV, Lexware or MT940 files",
+  "title": "Konverter Pro (Remote)",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://konverter-pro.de/api/v1/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional: Bearer kp_live_... API key of a Konverter Pro account. Without it, each job is a Single Order paid per job.",
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.stacklok": {
+        "https://konverter-pro.de/api/v1/mcp": {
+          "custom_metadata": {
+            "author": "Konverter Pro",
+            "homepage": "https://konverter-pro.de"
+          },
+          "overview": "## Konverter Pro Remote MCP Server\n\nKonverter Pro converts German bank statements (PDF, CSV, MT940, camt.053) and payment-provider reports (PayPal, Stripe, SumUp, Shopify) into DATEV, Lexware or MT940 booking files. Every booking is checked against the statement (balances, record counts) before a file is offered.\n\n### Access\n\nHosted Streamable HTTP endpoint. Without an API key, jobs are anonymous Single Orders for businesses: a free preview, then payment per job through a Stripe payment link (EUR 0.05 per unit, EUR 1 minimum, plus VAT). With an optional Konverter Pro API key (Authorization: Bearer kp_live_...) the user's plan and accounting profiles apply.\n\n### Workflow\n\n1. `upload_statements` (base64 file or public https link; `buyer_is_business` and `accept_avv` for a new anonymous job)\n2. `get_job_status`, `list_open_questions`, `answer_questions`\n3. `get_preview` (free DATEV draft) and `get_price_quote`\n4. `create_payment_link`, then `download_result`\n\nPrivacy: https://konverter-pro.de/en/datenschutz#ai-agents. Terms: https://konverter-pro.de/en/agb.",
+          "status": "Active",
+          "tags": [
+            "remote",
+            "accounting",
+            "datev",
+            "bank-statements",
+            "finance",
+            "germany",
+            "lexware",
+            "mt940"
+          ],
+          "tier": "Community",
+          "tools": [
+            "upload_statements",
+            "get_job_status",
+            "list_open_questions",
+            "answer_questions",
+            "get_preview",
+            "get_price_quote",
+            "create_payment_link",
+            "download_result"
+          ]
+        }
+      }
+    }
+  }
+}
