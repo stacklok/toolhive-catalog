@@ -3,7 +3,7 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.stacklok": {
-        "docker.io/snyk/snyk:alpine@sha256:797d0046945f6e57d3943278f6e89cde3fb946bf10a052ba58722f4297b57ecc": {
+        "docker.io/snyk/snyk:alpine@sha256:7ed554c3ed4c0efe007b7c74562d02095bdb81789e4e1d482d36b189f1d3aaff": {
           "args": [
             "snyk",
             "mcp",
@@ -798,7 +798,7 @@
           "name": "SNYK_API"
         }
       ],
-      "identifier": "docker.io/snyk/snyk:alpine@sha256:797d0046945f6e57d3943278f6e89cde3fb946bf10a052ba58722f4297b57ecc",
+      "identifier": "docker.io/snyk/snyk:alpine@sha256:7ed554c3ed4c0efe007b7c74562d02095bdb81789e4e1d482d36b189f1d3aaff",
       "registryType": "oci",
       "transport": {
         "type": "stdio"
